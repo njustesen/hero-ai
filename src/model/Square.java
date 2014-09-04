@@ -1,0 +1,6 @@
+package model;
+
+public enum Square {
+
+	EMPTY, P1DEPLOY, P2DEPLOY, ASSULT_BOOST, POWER_BOOST, DEFENSE_BOOST, P1CRYSTAL, P2CRYSTAL; 
+}
