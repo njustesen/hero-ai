@@ -1,7 +1,5 @@
 package gameobjects;
 
-import game.Game;
-
 import java.util.ArrayList;
 import java.util.List;
 

@@ -1,6 +1,8 @@
 package gameobjects;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class HAMap {
@@ -45,25 +47,41 @@ public class HAMap {
 		// Power boost squares
 		grid[4][4] = 5;
 		
-		return new HAMap((byte)grid.length, (byte)grid[0].length, grid);
+		HAMap map = new HAMap((byte)grid.length, (byte)grid[0].length, grid);
+		map.deploySquares1.add(new Position(0, 0));
+		map.deploySquares1.add(new Position(0, 4));
+		map.deploySquares2.add(new Position(8, 0));
+		map.deploySquares2.add(new Position(8, 4));
+		
+		return map;
 	
 	}
 	
 	public byte width;
 	public byte height;
 	public byte[][] squares;
+	public List<Position> deploySquares1;
+	public List<Position> deploySquares2;
 	
 	public HAMap(byte width, byte height, byte[][] squares) {
 		super();
 		this.width = width;
 		this.height = height;
 		this.squares = squares;
+		this.deploySquares1 = new ArrayList<Position>();
+		this.deploySquares2 = new ArrayList<Position>();
 	}
 	
 	public Square squareAt(byte x, byte y){
 		
 		return encoding.get(squares[x][y]);
 		
+	}
+
+	public List<Position> deploySquares(int player) {
+		if (player == 1)
+			return deploySquares1;
+		return deploySquares2;
 	}
 	
 }

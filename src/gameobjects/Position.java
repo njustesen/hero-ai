@@ -5,10 +5,10 @@ public class Position {
 	public byte x;
 	public byte y;
 	
-	public Position(byte x, byte y) {
+	public Position(int x, int y) {
 		super();
-		this.x = x;
-		this.y = y;
+		this.x = (byte) x;
+		this.y = (byte) y;
 	}
 
 	@Override
@@ -18,6 +18,11 @@ public class Position {
 		result = prime * result + x;
 		result = prime * result + y;
 		return result;
+	}
+	
+	@Override
+	public String toString() {
+		return "[x=" + x + ", y=" + y + "]";
 	}
 
 	@Override

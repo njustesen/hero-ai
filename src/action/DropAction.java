@@ -13,5 +13,10 @@ public class DropAction extends Action {
 		this.type = type;
 		this.to = to;
 	}
+
+	@Override
+	public String toString() {
+		return "DropAction [type=" + type + ", to=" + to + "]";
+	}
 	
 }

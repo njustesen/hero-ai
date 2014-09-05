@@ -26,23 +26,22 @@ import lib.ImageLib;
 
 public class UI extends JComponent {
 	
-	JFrame frame;
-	Image background;
-	private int width;
-	private int height;
-	private int squareSize = 64;
-	private GameState state;
+	public JFrame frame;
+	public int width;
+	public int height;
+	public int squareSize = 64;
+	public GameState state;
 	int bottom;
 	
 	public UI(GameState state){
-		JFrame f = new JFrame();
+		frame = new JFrame();
 		width = state.map.width * squareSize + squareSize*2;
 		height = state.map.height * squareSize + squareSize*2 + squareSize / 2;
-        f.setSize(width, height);
-        f.setTitle("Hero Academy");
-        f.setDefaultCloseOperation (JFrame.EXIT_ON_CLOSE);
-        f.getContentPane().add(this);    
-        f.setVisible(true);
+		frame.setSize(width, height);
+		frame.setTitle("Hero Academy");
+		frame.setDefaultCloseOperation (JFrame.EXIT_ON_CLOSE);
+		frame.getContentPane().add(this);    
+		frame.setVisible(true);
         this.state = state;
         this.bottom = squareSize + state.map.height * squareSize + squareSize / 4;
 	}
@@ -129,7 +128,11 @@ public class UI extends JComponent {
 				int p = 1;
 				if (!((Unit)state.objects.get(pos)).p1Owner)
 					p+=1;
-				image = ImageLib.lib.get(((Unit)state.objects.get(pos)).unitClass.unitType.name().toString().toLowerCase() + "-" + p);
+				String name = ((Unit)state.objects.get(pos)).unitClass.unitType.name().toString().toLowerCase() + "-" + p;
+				//System.out.println(name);
+				image = ImageLib.lib.get(name);
+			} else {
+				//System.out.println(state.objects.get(pos));
 			}
 				
 			g.drawImage(image, squareSize + pos.x * squareSize + squareSize/2 - image.getWidth()/2 , squareSize + pos.y * squareSize - 18, null, null);
@@ -143,7 +146,7 @@ public class UI extends JComponent {
 		int start = (width / 2) - ((6 * squareSize) / 2);
 		
 		for(int x = 0; x < 6; x++){
-			g.setColor(new Color(0, 0, 0, 50));
+			g.setColor(new Color(140, 155, 48));
 			g.fillRect(start + x * squareSize, bottom, squareSize, squareSize);
 		}
 		/*
@@ -183,7 +186,6 @@ public class UI extends JComponent {
 			}
 			
 			if (image != null){
-				System.out.println(image.toString() + "found.");
 				g.drawImage(image, x + squareSize/2 - image.getWidth()/2, bottom, null, null);
 			}else{
 				System.out.println("Could not find " + hand.get(i).toString());
@@ -223,9 +225,10 @@ public class UI extends JComponent {
             }	
         }
         
+        
         for(int x = 0; x < state.map.width; x++){
         	for(int y = 0; y < state.map.height; y++){
-        		g.setColor(new Color(255, 255, 255, 30));
+        		g.setColor(new Color(155, 155, 155));
                 g.drawRect(squareSize + x * squareSize, squareSize + y * squareSize, squareSize, squareSize);
             }	
         }

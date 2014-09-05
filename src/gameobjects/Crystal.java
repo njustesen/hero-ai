@@ -2,7 +2,7 @@ package gameobjects;
 
 public class Crystal extends GameObject {
 	
-	public static short STANDARD_HP = 2500;
+	public static short STANDARD_HP = 4500;
 	
 	public boolean p1Owner;
 	public short hp;

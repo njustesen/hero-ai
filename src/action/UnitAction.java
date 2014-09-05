@@ -12,5 +12,10 @@ public class UnitAction extends Action  {
 		this.from = from;
 		this.to = to;
 	}
+
+	@Override
+	public String toString() {
+		return "UnitAction [from=" + from + ", to=" + to + "]";
+	}
 	
 }

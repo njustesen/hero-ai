@@ -9,6 +9,7 @@ import action.DropAction;
 import action.EndTurnAction;
 import action.UndoAction;
 import action.UnitAction;
+import ai.RandomAI;
 import gameobjects.AttackType;
 import gameobjects.Crystal;
 import gameobjects.GameObject;
@@ -29,14 +30,22 @@ public class Game {
 	private boolean p1Winner;
 	private Stack<GameState> history;
 	
+	public static void main(String [ ] args)
+	{
+		Game game = new Game(null, true, new RandomAI(), new RandomAI());
+	}
+	
 	public Game(GameState state, boolean ui, AI player1, AI player2){
+		this.player1 = player1;
+		this.player2 = player2;
+		this.history = new Stack<GameState>();
 		if (state != null)
 			this.state = state;
 		else 
 			this.state = new GameState(HAMap.getMap());
 		
 		p1Winner = false;
-		
+		/*
 		// Add units
 		this.state.objects.put(new Position((byte)0,(byte)0), new Unit(GameObjectType.Knight, true));
 		this.state.objects.put(new Position((byte)0,(byte)1), new Unit(GameObjectType.Archer, true));
@@ -50,20 +59,36 @@ public class Game {
 		this.state.objects.put(new Position((byte)8,(byte)2), new Unit(GameObjectType.Wizard, false));
 		this.state.objects.put(new Position((byte)8,(byte)3), new Unit(GameObjectType.Cleric, false));
 		this.state.objects.put(new Position((byte)8,(byte)4), new Unit(GameObjectType.Ninja, false));
+		*/
+		history.push(this.state.copy());
 		
 		this.ui = new UI(this.state);
+		
+		run();
 	}
 	
 	public void run(){
 		
 		while(!state.isTerminal){
 			
+			//if (state.turn % 10 == 1){
+				ui.state = state.copy();
+				ui.repaint();
+			//}
+			
+			try {
+				// Wait for human input
+				Thread.sleep(20);
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
+			
 			int ap = state.APLeft;
 			
 			if (state.p1Turn && player1 != null) {
-				update(player1.act(state, TIME_LIMIT));
+				update(player1.act(state.copy(), TIME_LIMIT));
 			} else if (!state.p1Turn && player2 != null){
-				update(player2.act(state, TIME_LIMIT));
+				update(player2.act(state.copy(), TIME_LIMIT));
 			} else {
 				try {
 					// Wait for human input
@@ -75,6 +100,10 @@ public class Game {
 			if (state.APLeft < ap)
 				history.push(state.copy());
 		}
+		
+		ui.state = state.copy();
+		ui.repaint();
+		System.out.println("Player " + (p1Winner ? 1 : 2) + " won the game!");
 		
 	}
 
@@ -102,11 +131,11 @@ public class Game {
 			DropAction drop = (DropAction)action;
 	
 			// Not a type in current players hand
-			if (!currentHand().contains(drop.type))
+			if (!state.currentHand().contains(drop.type))
 				return;
 			
 			// Unit
-			if (!isUnit(drop.type)){
+			if (state.isUnit(drop.type)){
 				
 				// Not a deploy square
 				if (!(state.map.squareAt(drop.to.x, drop.to.y) == Square.P1DEPLOY) && !(state.map.squareAt(drop.to.x, drop.to.y) == Square.P2DEPLOY))
@@ -123,7 +152,7 @@ public class Game {
 			}
 			
 			// Equipment
-			if (!isEquipment(drop.type)){
+			if (state.isEquipment(drop.type)){
 				
 				// Not a unit square
 				if (!(state.objects.get(drop.to) instanceof Unit))
@@ -145,7 +174,7 @@ public class Game {
 			}
 			
 			// Spell
-			if (!isSpell(drop.type)){
+			if (state.isSpell(drop.type)){
 				
 				dropInferno(drop.to);
 				
@@ -175,7 +204,7 @@ public class Game {
 			GameObject objTo = state.objects.get(unitAction.to);
 			if (objTo == null){
 				
-				if (distance(unitAction.from, unitAction.to) > unitFrom.unitClass.speed)
+				if (state.distance(unitAction.from, unitAction.to) > unitFrom.unitClass.speed)
 					return;
 				
 				if ((state.map.squareAt(unitAction.to.x, unitAction.to.y) == Square.P1DEPLOY) && !unitFrom.p1Owner)
@@ -200,7 +229,7 @@ public class Game {
 					}
 					if(unitFrom.unitClass.heal == null)
 						return;
-					if(unitFrom.unitClass.heal.range > distance(unitAction.from,unitAction.to))
+					if(unitFrom.unitClass.heal.range > state.distance(unitAction.from,unitAction.to))
 						return;
 					if(unitTo.hp == unitTo.unitClass.maxHP)
 						return;
@@ -209,7 +238,7 @@ public class Game {
 				}
 				
 				// Attack unit
-				if (distance(unitAction.from, unitAction.to) > unitFrom.unitClass.attack.range)
+				if (state.distance(unitAction.from, unitAction.to) > unitFrom.unitClass.attack.range)
 					return;
 				
 				attackUnit(unitFrom, unitAction.from, unitTo, unitAction.to);
@@ -220,7 +249,7 @@ public class Game {
 			if (objTo instanceof Crystal){
 				
 				// Attack crystal
-				if (distance(unitAction.from, unitAction.to) > unitFrom.unitClass.attack.range)
+				if (state.distance(unitAction.from, unitAction.to) > unitFrom.unitClass.attack.range)
 					return;
 				
 				attackCrystal(unitFrom, unitAction.from, (Crystal)objTo, unitAction.to);
@@ -252,14 +281,22 @@ public class Game {
 			}
 		}
 		
-		currentHand().remove(GameObjectType.Inferno);
+		state.currentHand().remove(GameObjectType.Inferno);
 		state.APLeft--;
 		
 	}
 
 	private void equip(GameObjectType type, Unit unit) {
-		unit.equipment.add(type);
-		currentHand().remove(type);
+		if (type == GameObjectType.RevivePotion){
+			if (unit.hp == 0)
+				unit.hp += 100;
+			else
+				unit.hp += 600;
+			unit.hp = (short) Math.max(unit.hp, state.maxHP(unit));
+		} else {
+			unit.equipment.add(type);
+		}
+		state.currentHand().remove(type);
 		state.APLeft--;
 	}
 
@@ -270,6 +307,7 @@ public class Game {
 			state.objects.remove(cryPos);
 			checkWinOnCrystals();
 		}
+		attacker.equipment.remove(GameObjectType.Scroll);
 		state.APLeft--;
 	}
 
@@ -288,7 +326,7 @@ public class Game {
 				// TODO
 			}
 		}
-		
+		attacker.equipment.remove(GameObjectType.Scroll);
 		state.APLeft--;
 	}
 
@@ -319,22 +357,22 @@ public class Game {
 		}
 		
 		for(GameObjectType type : state.p1Deck){
-			if (isUnit(type)){
+			if (state.isUnit(type)){
 				p1Alive = true;
 			}
 		}
 		for(GameObjectType type : state.p1Hand){
-			if (isUnit(type)){
+			if (state.isUnit(type)){
 				p1Alive = true;
 			}
 		}
 		for(GameObjectType type : state.p2Deck){
-			if (isUnit(type)){
+			if (state.isUnit(type)){
 				p2Alive = true;
 			}
 		}
 		for(GameObjectType type : state.p2Hand){
-			if (isUnit(type)){
+			if (state.isUnit(type)){
 				p2Alive = true;
 			}
 		}
@@ -411,7 +449,7 @@ public class Game {
 		
 		int dam = power(attacker, attPos);
 		
-		if (distance(attPos, defPos) == 1)
+		if (state.distance(attPos, defPos) == 1)
 			dam *= attacker.unitClass.attack.meleeMultiplier;
 		else
 			dam *= attacker.unitClass.attack.rangeMultiplier;
@@ -425,7 +463,7 @@ public class Game {
 	private short damage(Unit attacker, Position attPos, Crystal crystal, Position cryPos) {
 		int dam = power(attacker, attPos);
 		
-		if (distance(attPos, cryPos) == 1)
+		if (state.distance(attPos, cryPos) == 1)
 			dam *= attacker.unitClass.attack.meleeMultiplier;
 		else
 			dam *= attacker.unitClass.attack.rangeMultiplier;
@@ -474,24 +512,13 @@ public class Game {
 		
 		unitTo.hp += power;
 		
-		int maxHP = maxHP(unitTo);
+		int maxHP = state.maxHP(unitTo);
 		if (unitTo.hp > maxHP)
 			unitTo.hp = (short) maxHP;
 			
+		healer.equipment.remove(GameObjectType.Scroll);
 		state.APLeft--;
 		
-	}
-
-	private int maxHP(Unit unit) {
-		
-		int max = unit.unitClass.maxHP;
-		
-		if (unit.equipment.contains(GameObjectType.Dragonscale))
-			max += unit.unitClass.maxHP/10;
-		if (unit.equipment.contains(GameObjectType.ShiningHelm))
-			max += unit.unitClass.maxHP/10;
-		
-		return max;
 	}
 
 	private int power(Unit unit, Position pos) {
@@ -506,6 +533,11 @@ public class Game {
 		// Power boost
 		if (state.map.squareAt(pos.x, pos.y) == Square.POWER_BOOST)
 			power += 100;
+		
+		// SCroll
+		if (unit.equipment.contains(GameObjectType.Scroll))
+			power *= 3;
+		
 		
 		return power;
 	}
@@ -526,7 +558,7 @@ public class Game {
 
 	private void deploy(GameObjectType unitType, Position pos) {
 		state.objects.put(pos, new Unit(unitType, state.p1Turn));
-		currentHand().remove(unitType);
+		state.currentHand().remove(unitType);
 		state.APLeft--;
 	}
 
@@ -538,7 +570,8 @@ public class Game {
 	}
 
 	private void endTurn() {
-		drawCards();
+		state.removeDying();
+		state.drawCards();
 		state.p1Turn = !state.p1Turn;
 		state.APLeft = 5;
 		state.turn++;
@@ -546,71 +579,5 @@ public class Game {
 		history.push(state.copy());
 	}
 
-	private void drawCards() {
-		
-		while(currentHand().size() < 6 && !currentDeck().isEmpty()){
-			int idx = (int) (Math.random() * currentDeck().size());
-			GameObjectType card = currentDeck().get(idx);
-			currentDeck().remove(idx);
-			currentHand().add(card);
-		}
-		
-	}
-
-	private byte distance(Position from, Position to) {
-		int x = from.x - to.x;
-		if (x < 0)
-			x = x * -1;
-		int y = from.y - to.y;
-		if (y < 0)
-			y = y * -1;
-		return (byte) (x + y);
-	}
-	
-	private boolean isUnit(GameObjectType type) {
-		if (type == GameObjectType.Archer || 
-				type == GameObjectType.Cleric || 
-				type == GameObjectType.Knight || 
-				type == GameObjectType.Ninja || 
-				type == GameObjectType.Wizard){
-			return true;
-		}
-		return false;
-	}
-	
-	private boolean isEquipment(GameObjectType type) {
-		if (type == GameObjectType.Dragonscale || 
-				type == GameObjectType.RevivePotion || 
-				type == GameObjectType.Scroll || 
-				type == GameObjectType.Runemetal || 
-				type == GameObjectType.ShiningHelm){
-			return true;
-		}
-		return false;
-	}
-	
-	private boolean isSpell(GameObjectType type) {
-		if (type == GameObjectType.Inferno){
-			return true;
-		}
-		return false;
-	}
-
-	private List<GameObjectType> currentHand() {
-		if (state.p1Turn)
-			return state.p1Hand;
-		return state.p2Hand;
-	}
-	
-	private List<GameObjectType> currentDeck() {
-		if (state.p1Turn)
-			return state.p1Deck;
-		return state.p2Deck;
-	}
-
-	public static void main(String [ ] args)
-	{
-		Game game = new Game(null, true, null, null);
-	}
 	
 }
