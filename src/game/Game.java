@@ -5,7 +5,7 @@ import java.util.List;
 import java.util.Stack;
 
 import action.Action;
-import action.DeployAction;
+import action.DropAction;
 import action.EndTurnAction;
 import action.UndoAction;
 import action.UnitAction;
@@ -97,25 +97,60 @@ public class Game {
 		if (state.APLeft == 0)
 			return;
 		
-		if (action instanceof DeployAction){
+		if (action instanceof DropAction){
 			
-			DeployAction deploy = (DeployAction)action;
+			DropAction drop = (DropAction)action;
 	
-			// Not a unit or a type in current players hand
-			if (!isUnit(deploy.type) || !currentHand().contains(deploy.type))
+			// Not a type in current players hand
+			if (!currentHand().contains(drop.type))
 				return;
 			
-			// Not a deploy square
-			if (!(state.map.squareAt(deploy.to.x, deploy.to.y) == Square.P1DEPLOY) && !(state.map.squareAt(deploy.to.x, deploy.to.y) == Square.P2DEPLOY))
-				return;
+			// Unit
+			if (!isUnit(drop.type)){
+				
+				// Not a deploy square
+				if (!(state.map.squareAt(drop.to.x, drop.to.y) == Square.P1DEPLOY) && !(state.map.squareAt(drop.to.x, drop.to.y) == Square.P2DEPLOY))
+					return;
+				
+				// Not current players deploy square
+				if (state.map.squareAt(drop.to.x, drop.to.y) == Square.P1DEPLOY && !state.p1Turn)
+					return;
+				if (state.map.squareAt(drop.to.x, drop.to.y) == Square.P2DEPLOY && state.p1Turn)
+					return;
+				
+				deploy(drop.type, drop.to);
+				
+			}
 			
-			// Not current players deploy square
-			if (state.map.squareAt(deploy.to.x, deploy.to.y) == Square.P1DEPLOY && !state.p1Turn)
-				return;
-			if (state.map.squareAt(deploy.to.x, deploy.to.y) == Square.P2DEPLOY && state.p1Turn)
-				return;
+			// Equipment
+			if (!isEquipment(drop.type)){
+				
+				// Not a unit square
+				if (!(state.objects.get(drop.to) instanceof Unit))
+					return;
+				
+				Unit unit = ((Unit)state.objects.get(drop.to));
+				
+				if (unit.p1Owner != state.p1Turn)
+					return;
+					
+				if (unit.hp == 0)
+					return;
+				
+				if (unit.equipment.contains(drop.type))
+					return;
+							
+				equip(drop.type, unit);
+				
+			}
 			
-			deploy(deploy.type, deploy.to);
+			// Spell
+			if (!isSpell(drop.type)){
+				
+				dropInferno(drop.to);
+				
+			}
+			
 			return;
 			
 		}
@@ -195,6 +230,37 @@ public class Game {
 		}
 		
 		
+	}
+
+	private void dropInferno(Position to) {
+		
+		for(byte x = -1; x <= 1; x++){
+			for(byte y = -1; y <= 1; y++){
+				Position pos = new Position((byte)(to.x + x), (byte)(to.y + y));
+				GameObject obj = state.objects.get(pos);
+				if (obj != null && obj instanceof Unit){
+					Unit def = ((Unit)obj);
+					int dam = 300;
+					int resistance = resistance(def, pos, AttackType.Magical);
+					dam = dam * ((100 - resistance)/100);
+					def.hp -= Math.max(dam, def.hp);
+				} else if (obj != null && obj instanceof Crystal){
+					Crystal cry = ((Crystal)obj);
+					int dam = 300;
+					cry.hp -= Math.max(dam, cry.hp);
+				}
+			}
+		}
+		
+		currentHand().remove(GameObjectType.Inferno);
+		state.APLeft--;
+		
+	}
+
+	private void equip(GameObjectType type, Unit unit) {
+		unit.equipment.add(type);
+		currentHand().remove(type);
+		state.APLeft--;
 	}
 
 	private void attackCrystal(Unit attacker, Position attPos, Crystal crystal, Position cryPos) {
@@ -507,6 +573,24 @@ public class Game {
 				type == GameObjectType.Knight || 
 				type == GameObjectType.Ninja || 
 				type == GameObjectType.Wizard){
+			return true;
+		}
+		return false;
+	}
+	
+	private boolean isEquipment(GameObjectType type) {
+		if (type == GameObjectType.Dragonscale || 
+				type == GameObjectType.RevivePotion || 
+				type == GameObjectType.Scroll || 
+				type == GameObjectType.Runemetal || 
+				type == GameObjectType.ShiningHelm){
+			return true;
+		}
+		return false;
+	}
+	
+	private boolean isSpell(GameObjectType type) {
+		if (type == GameObjectType.Inferno){
 			return true;
 		}
 		return false;
