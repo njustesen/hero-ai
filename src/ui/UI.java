@@ -54,6 +54,8 @@ public class UI extends JComponent {
 			paintBoard(g);
 			paintHeader(g);
 			paintGameObjects(g);
+			paintHP(g);
+			paintInfo(g);
 			paintHand(g);
 			paintAP(g);
 			paintGo(g);
@@ -63,6 +65,63 @@ public class UI extends JComponent {
 		}
         
     }
+
+	private void paintHP(Graphics g) {
+		
+		for (Position pos : state.objects.keySet()){
+			
+			double hp = -1;
+			double maxHP = -1;
+			
+			if (state.objects.get(pos) instanceof Crystal){
+				hp = ((Crystal)state.objects.get(pos)).hp;
+				maxHP = Crystal.STANDARD_HP;				
+			} else if (state.objects.get(pos) instanceof Unit){
+				hp = ((Unit)state.objects.get(pos)).hp;
+				maxHP = state.maxHP(((Unit)state.objects.get(pos)));
+			}
+				
+			//if (maxHP > 0){
+				int w = (int) (squareSize * 0.8);
+				int h = 6;
+				int x = squareSize + pos.x * squareSize;
+				x += (squareSize - w) / 2;
+				int y = squareSize + pos.y * squareSize - 16;
+				g.setColor(new Color(50,50,50));
+				g.fillRect(x, y, w, h);
+				g.setColor(new Color(50,255,50));
+				double p = (hp/maxHP);
+				g.fillRect(x+1, y+1, (int) ((w-2)*p), h-2);
+			//}
+			
+		}
+	}
+	
+	private void paintInfo(Graphics g) {
+		
+		for (Position pos : state.objects.keySet()){
+			
+			if (state.objects.get(pos) instanceof Unit){
+				g.setColor(new Color(50,255,50));
+				g.setFont(new Font("Arial", Font.PLAIN, 11));
+				Unit unit = (Unit)state.objects.get(pos);
+				g.drawString(unit.hp + "/" + state.maxHP(unit), 
+						squareSize + squareSize * pos.x + squareSize/8, 
+						squareSize + squareSize * pos.y - (int)(squareSize/3.75));
+				g.setColor(new Color(255,15,25));
+				g.setFont(new Font("Arial", Font.BOLD, 11));
+				g.drawString(state.power(unit, pos) + "", 
+						squareSize + squareSize * pos.x + squareSize/8, 
+						squareSize + squareSize * pos.y);
+				if (unit.hp < 0){
+					g.setColor(new Color(255,50,50));
+					g.fillRect(	squareSize + squareSize * pos.x, 
+								squareSize + squareSize * pos.y, 
+								squareSize, squareSize);
+				}
+			}
+		}
+	}
 
 	private void paintDoors(Graphics g) throws IOException {
 		
@@ -94,6 +153,8 @@ public class UI extends JComponent {
 	private void paintAP(Graphics g) throws IOException {
 		
 		BufferedImage image = ImageLib.lib.get("ap-" + state.APLeft + "");
+		if (image == null)
+			System.out.println(state.APLeft);
 		g.drawImage(image, squareSize + squareSize / 4, bottom + (squareSize - image.getHeight()) / 2, null, null);
 		
 	}
@@ -129,13 +190,13 @@ public class UI extends JComponent {
 				if (!((Unit)state.objects.get(pos)).p1Owner)
 					p+=1;
 				String name = ((Unit)state.objects.get(pos)).unitClass.unitType.name().toString().toLowerCase() + "-" + p;
-				//System.out.println(name);
 				image = ImageLib.lib.get(name);
-			} else {
-				//System.out.println(state.objects.get(pos));
 			}
-				
-			g.drawImage(image, squareSize + pos.x * squareSize + squareSize/2 - image.getWidth()/2 , squareSize + pos.y * squareSize - 18, null, null);
+			
+			if (image == null)
+				System.out.println(state.objects.get(pos));
+			else
+				g.drawImage(image, squareSize + pos.x * squareSize + squareSize/2 - image.getWidth()/2 , squareSize + pos.y * squareSize - 18, null, null);
 			
 		}
 		
@@ -210,7 +271,7 @@ public class UI extends JComponent {
         		BufferedImage image = null;
         			
         		if (state.map.squareAt(x, y) == Square.ASSAULT_BOOST)
-        			image = ImageLib.lib.get("assult");
+        			image = ImageLib.lib.get("assault");
         		else if (state.map.squareAt(x, y) == Square.DEFENSE_BOOST)
         			image = ImageLib.lib.get("defense");
         		else if (state.map.squareAt(x, y) == Square.POWER_BOOST)

@@ -37,7 +37,7 @@ public class HAMap {
 		grid[6][1] = 20;
 		grid[7][3] = 20;
 		
-		// Assult boost squares
+		// Assault boost squares
 		grid[2][2] = 3;
 		grid[6][2] = 3;
 		

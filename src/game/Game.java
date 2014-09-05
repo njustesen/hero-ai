@@ -62,33 +62,49 @@ public class Game {
 		*/
 		history.push(this.state.copy());
 		
-		this.ui = new UI(this.state);
+		//this.ui = new UI(this.state);
 		
 		run();
 	}
 	
 	public void run(){
 		
+		long start = System.nanoTime();
+		long ai = 0;
+		long engine = 0;
+		
 		while(!state.isTerminal){
 			
-			//if (state.turn % 10 == 1){
+			if (ui != null){
 				ui.state = state.copy();
 				ui.repaint();
-			//}
-			
-			try {
-				// Wait for human input
-				Thread.sleep(20);
-			} catch (InterruptedException e) {
-				e.printStackTrace();
+				try {
+					Thread.sleep(1);
+				} catch (InterruptedException e) {
+					e.printStackTrace();
+				}
 			}
 			
 			int ap = state.APLeft;
 			
 			if (state.p1Turn && player1 != null) {
-				update(player1.act(state.copy(), TIME_LIMIT));
+				long aiStart = System.nanoTime();
+				Action action = player1.act(state, TIME_LIMIT);
+				long aiEnd = System.nanoTime();
+				long engineStart = System.nanoTime();
+				update(action);
+				long engineEnd = System.nanoTime();
+				ai += aiEnd - aiStart;
+				engine += engineEnd - engineStart;
 			} else if (!state.p1Turn && player2 != null){
-				update(player2.act(state.copy(), TIME_LIMIT));
+				long aiStart = System.nanoTime();
+				Action action = player2.act(state, TIME_LIMIT);
+				long aiEnd = System.nanoTime();
+				long engineStart = System.nanoTime();
+				update(action);
+				long engineEnd = System.nanoTime();
+				ai += aiEnd - aiStart;
+				engine += engineEnd - engineStart;
 			} else {
 				try {
 					// Wait for human input
@@ -97,12 +113,21 @@ public class Game {
 					e.printStackTrace();
 				}
 			}
+			/*
 			if (state.APLeft < ap)
 				history.push(state.copy());
+				*/
 		}
-		
-		ui.state = state.copy();
-		ui.repaint();
+		long end = System.nanoTime();
+		System.out.println("Game took " + ((end - start)/1000000d) + " ms. (" + ((end - start)/1000000d)/(double)state.turn + " per turn.");
+		System.out.println("Game had " + state.turn + " turns.");
+		System.out.println("AI spend " + (ai/1000000d) + " ms. (" + (ai/1000000d)/(double)state.turn + " per turn." );
+		System.out.println("Engine spend " + (engine/1000000d) + " ms. (" + (engine/1000000d)/(double)state.turn + " per turn." );
+		System.out.println("Missing " + (((end - start) - (engine+ai))/1000000d) + " ms.");
+		if (ui != null){
+			ui.state = state.copy();
+			ui.repaint();
+		}
 		System.out.println("Player " + (p1Winner ? 1 : 2) + " won the game!");
 		
 	}
@@ -269,14 +294,14 @@ public class Game {
 				GameObject obj = state.objects.get(pos);
 				if (obj != null && obj instanceof Unit){
 					Unit def = ((Unit)obj);
-					int dam = 300;
-					int resistance = resistance(def, pos, AttackType.Magical);
-					dam = dam * ((100 - resistance)/100);
-					def.hp -= Math.max(dam, def.hp);
+					double dam = 300;
+					double resistance = resistance(def, pos, AttackType.Magical);
+					dam = dam * ((100d - resistance)/100d);
+					def.hp -= Math.min(dam, def.hp);
 				} else if (obj != null && obj instanceof Crystal){
 					Crystal cry = ((Crystal)obj);
 					int dam = 300;
-					cry.hp -= Math.max(dam, cry.hp);
+					cry.hp -= Math.min(dam, cry.hp);
 				}
 			}
 		}
@@ -292,10 +317,12 @@ public class Game {
 				unit.hp += 100;
 			else
 				unit.hp += 600;
-			unit.hp = (short) Math.max(unit.hp, state.maxHP(unit));
 		} else {
 			unit.equipment.add(type);
+			if (type == GameObjectType.Dragonscale || type == GameObjectType.ShiningHelm)
+				unit.hp += (double)unit.hp / 10d;			
 		}
+		unit.hp = (short) Math.min(unit.hp, state.maxHP(unit));
 		state.currentHand().remove(type);
 		state.APLeft--;
 	}
@@ -447,7 +474,7 @@ public class Game {
 
 	private int damage(Unit attacker, Position attPos, Unit defender, Position defPos) {
 		
-		int dam = power(attacker, attPos);
+		int dam = state.power(attacker, attPos);
 		
 		if (state.distance(attPos, defPos) == 1)
 			dam *= attacker.unitClass.attack.meleeMultiplier;
@@ -461,7 +488,7 @@ public class Game {
 	
 
 	private short damage(Unit attacker, Position attPos, Crystal crystal, Position cryPos) {
-		int dam = power(attacker, attPos);
+		int dam = state.power(attacker, attPos);
 		
 		if (state.distance(attPos, cryPos) == 1)
 			dam *= attacker.unitClass.attack.meleeMultiplier;
@@ -504,7 +531,7 @@ public class Game {
 
 	private void heal(Unit healer, Position pos, Unit unitTo) {
 		
-		int power = power(healer, pos);
+		int power = state.power(healer, pos);
 		if (unitTo.hp == 0)
 			power *= healer.unitClass.heal.revive;
 		else
@@ -519,27 +546,6 @@ public class Game {
 		healer.equipment.remove(GameObjectType.Scroll);
 		state.APLeft--;
 		
-	}
-
-	private int power(Unit unit, Position pos) {
-		
-		// Initial power
-		int power = unit.unitClass.power;
-		
-		// Sword
-		if (unit.equipment.contains(GameObjectType.Runemetal))
-			power += power/2;
-		
-		// Power boost
-		if (state.map.squareAt(pos.x, pos.y) == Square.POWER_BOOST)
-			power += 100;
-		
-		// SCroll
-		if (unit.equipment.contains(GameObjectType.Scroll))
-			power *= 3;
-		
-		
-		return power;
 	}
 
 	private void swap(Unit unitFrom, Position from, Unit unitTo, Position to) {

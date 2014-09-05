@@ -29,7 +29,7 @@ public class ImageLib {
 			lib.put("ap-5", 		ImageIO.read(new File("img/ap-5.png")));
 			lib.put("header", 		ImageIO.read(new File("img/header.png")));
 			lib.put("bar", 			ImageIO.read(new File("img/bar.png")));
-			lib.put("assault", 		ImageIO.read(new File("img/defense.png")));
+			lib.put("assault", 		ImageIO.read(new File("img/assault.png")));
 			lib.put("defense",		ImageIO.read(new File("img/defense.png")));
 			lib.put("power", 		ImageIO.read(new File("img/power.png")));
 			lib.put("deploy-1", 	ImageIO.read(new File("img/deploy-1.png")));

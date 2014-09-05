@@ -93,9 +93,16 @@ public class GameState {
 		
 		if (isEquipment(card)){
 			for (Position pos : objects.keySet()){
-				if (objects.get(pos) instanceof Unit)
-					if (((Unit)objects.get(pos)).p1Owner == p1Turn && ((Unit)objects.get(pos)).hp != 0)
+				if (objects.get(pos) instanceof Unit){
+					Unit unit = ((Unit)objects.get(pos));
+					if (unit.equipment.contains(card))
+						continue;
+					if (unit.p1Owner == p1Turn && unit.hp != 0){
+						if (card == GameObjectType.RevivePotion && unit.hp == maxHP(unit))
+							continue;
 						actions.add(new DropAction(card, pos));
+					}
+				}
 			}
 		} else if(isSpell(card)){
 			Set<Position> squares = new HashSet<Position>();
@@ -299,6 +306,28 @@ public class GameState {
 			return true;
 		}
 		return false;
+	}
+	
+
+	public int power(Unit unit, Position pos) {
+		
+		// Initial power
+		int power = unit.unitClass.power;
+		
+		// Sword
+		if (unit.equipment.contains(GameObjectType.Runemetal))
+			power += power/2;
+		
+		// Power boost
+		if (map.squareAt(pos.x, pos.y) == Square.POWER_BOOST)
+			power += 100;
+		
+		// SCroll
+		if (unit.equipment.contains(GameObjectType.Scroll))
+			power *= 3;
+		
+		
+		return power;
 	}
 	
 	public int maxHP(Unit unit) {

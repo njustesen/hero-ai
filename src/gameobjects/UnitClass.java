@@ -12,7 +12,7 @@ public class UnitClass {
 	public Heal heal;
 	public boolean swap;
 	
-	public UnitClass(GameObjectType unitType, short maxHP, byte speed, byte physicalResistance, 
+	public UnitClass(GameObjectType unitType, short maxHP, byte speed, short power, byte physicalResistance, 
 			byte magicalResistance, Attack attack,
 			Heal heal, boolean swap) {
 		super();
@@ -20,6 +20,7 @@ public class UnitClass {
 		this.unitType = unitType;
 		this.maxHP = maxHP;
 		this.speed = speed;
+		this.power = power;
 		this.attack = attack;
 		this.heal = heal;
 		this.physicalResistance = physicalResistance;

@@ -20,7 +20,7 @@ public class RandomAI implements AI {
 		}
 		*/
 		if (actions.isEmpty()){
-			System.out.println("No actions!");
+			//System.out.println("No actions!");
 			return new EndTurnAction();
 		}
 		//System.out.println("---------------------");
