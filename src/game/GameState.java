@@ -1,4 +1,13 @@
-package model;
+package game;
+
+
+import gameobjects.Council;
+import gameobjects.Crystal;
+import gameobjects.GameObject;
+import gameobjects.GameObjectType;
+import gameobjects.HAMap;
+import gameobjects.Position;
+import gameobjects.Square;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -16,9 +25,11 @@ public class GameState {
 	public List<GameObjectType> p2Deck;
 	public List<GameObjectType> p1Hand;
 	public List<GameObjectType> p2Hand;
+	public boolean isTerminal;
 	
 	public GameState(HAMap map) {
 		super();
+		this.isTerminal = false;
 		this.map = map;
 		this.p1Turn = true;
 		this.turn = 1;
@@ -30,7 +41,7 @@ public class GameState {
 	
 	public GameState(HAMap map, boolean p1Turn, short turn, byte APLeft,
 			Map<Position, GameObject> objects, List<GameObjectType> p1Hand,
-			List<GameObjectType> p2Hand) {
+			List<GameObjectType> p2Hand, boolean isTerminal) {
 		super();
 		this.map = map;
 		this.p1Turn = p1Turn;
@@ -39,6 +50,7 @@ public class GameState {
 		this.objects = objects;
 		this.p1Hand = p1Hand;
 		this.p1Hand = p2Hand;
+		this.isTerminal = isTerminal;
 	}
 	
 	private void setupCrystals(HAMap map) {
@@ -80,6 +92,34 @@ public class GameState {
 		}
 		
 		return hand;
+	}
+
+	public GameState copy() {
+		GameState copy = new GameState(map);
+		copy.APLeft = APLeft;
+		copy.isTerminal = isTerminal;
+		copy.p1Turn = p1Turn;
+		copy.turn = turn;
+		copy.objects = new HashMap<Position, GameObject>();
+		
+		for (Position pos : objects.keySet())
+			copy.objects.put(new Position(pos.x, pos.y), objects.get(pos).copy());
+		
+		copy.p1Deck = new ArrayList<GameObjectType>();
+		for (GameObjectType obj : p1Deck)
+			copy.p1Deck.add(obj);
+		copy.p2Deck = new ArrayList<GameObjectType>();
+		for (GameObjectType obj : p2Deck)
+			copy.p2Deck.add(obj);
+		
+		copy.p1Hand = new ArrayList<GameObjectType>();
+		for (GameObjectType obj : p1Hand)
+			copy.p2Hand.add(obj);
+		copy.p2Hand = new ArrayList<GameObjectType>();
+		for (GameObjectType obj : p2Hand)
+			copy.p2Hand.add(obj);
+		
+		return copy;
 	}
 	
 }

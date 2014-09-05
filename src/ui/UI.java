@@ -1,5 +1,12 @@
 package ui;
 
+import game.GameState;
+import gameobjects.Crystal;
+import gameobjects.GameObjectType;
+import gameobjects.Position;
+import gameobjects.Square;
+import gameobjects.Unit;
+
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.Graphics;
@@ -16,12 +23,6 @@ import javax.swing.JComponent;
 import javax.swing.JFrame;
 
 import lib.ImageLib;
-import model.Crystal;
-import model.GameObjectType;
-import model.GameState;
-import model.Position;
-import model.Square;
-import model.Unit;
 
 public class UI extends JComponent {
 	
@@ -206,7 +207,7 @@ public class UI extends JComponent {
         		
         		BufferedImage image = null;
         			
-        		if (state.map.squareAt(x, y) == Square.ASSULT_BOOST)
+        		if (state.map.squareAt(x, y) == Square.ASSAULT_BOOST)
         			image = ImageLib.lib.get("assult");
         		else if (state.map.squareAt(x, y) == Square.DEFENSE_BOOST)
         			image = ImageLib.lib.get("defense");

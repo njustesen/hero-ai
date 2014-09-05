@@ -1,4 +1,4 @@
-package model;
+package gameobjects;
 
 public enum AttackType {
 

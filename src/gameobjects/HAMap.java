@@ -1,4 +1,4 @@
-package model;
+package gameobjects;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -14,7 +14,7 @@ public class HAMap {
 		encoding.put((byte)2, Square.P2DEPLOY);
 		encoding.put((byte)10, Square.P1CRYSTAL);
 		encoding.put((byte)20, Square.P2CRYSTAL);
-		encoding.put((byte)3, Square.ASSULT_BOOST);
+		encoding.put((byte)3, Square.ASSAULT_BOOST);
 		encoding.put((byte)4, Square.DEFENSE_BOOST);
 		encoding.put((byte)5, Square.POWER_BOOST);
     }

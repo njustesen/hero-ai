@@ -1,3 +1,9 @@
 /lib/
 /model/
 /ui/
+/gameobjects/
+/actions/
+/action/
+/Game.class
+/GameState.class
+/game/

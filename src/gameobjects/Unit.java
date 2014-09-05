@@ -1,4 +1,6 @@
-package model;
+package gameobjects;
+
+import game.Game;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -21,12 +23,29 @@ public class Unit extends GameObject {
 		this.p1Owner = p1Owner;
 	}
 	
-	public Unit(byte x, byte y, short hp, GameObjectType unit, boolean p1Owner, List<GameObjectType> equipment) {
+	public Unit(short hp, GameObjectType unit, boolean p1Owner, List<GameObjectType> equipment) {
 		super();
 		this.unitClass = UnitClassLib.lib.get(unit);
 		this.hp = hp;
 		this.equipment = equipment;
 		this.p1Owner = p1Owner;
+	}
+	
+	public Unit(short hp, UnitClass uclass, boolean p1Owner, List<GameObjectType> equipment) {
+		super();
+		this.unitClass = uclass;
+		this.hp = hp;
+		this.equipment = equipment;
+		this.p1Owner = p1Owner;
+	}
+
+	@Override
+	public GameObject copy() {
+		List<GameObjectType> eq = new ArrayList<GameObjectType>();
+		for (GameObjectType type : equipment)
+			eq.add(type);
+		
+		return new Unit(hp, unitClass, p1Owner, eq);
 	}
 	
 }

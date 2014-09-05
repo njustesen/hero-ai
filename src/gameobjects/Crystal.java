@@ -1,4 +1,4 @@
-package model;
+package gameobjects;
 
 public class Crystal extends GameObject {
 	
@@ -17,6 +17,11 @@ public class Crystal extends GameObject {
 		super();
 		this.p1Owner = p1Owner;
 		this.hp = STANDARD_HP;
+	}
+
+	@Override
+	public GameObject copy() {
+		return new Crystal(p1Owner, hp);
 	}
 	
 }

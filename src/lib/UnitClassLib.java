@@ -1,12 +1,13 @@
 package lib;
 
+import gameobjects.Attack;
+import gameobjects.AttackType;
+import gameobjects.GameObjectType;
+import gameobjects.Heal;
+import gameobjects.UnitClass;
+
 import java.util.HashMap;
 
-import model.Attack;
-import model.AttackType;
-import model.GameObjectType;
-import model.Heal;
-import model.UnitClass;
 
 
 public class UnitClassLib {
@@ -30,7 +31,7 @@ public class UnitClassLib {
 		lib.get(GameObjectType.Ninja).attack = new Attack((byte)1,AttackType.Physical,(short)200,2,1,false,false);
 		
 		// Add heal
-		lib.get(GameObjectType.Cleric).heal = new Heal((byte)2, (short)600, (short)400);
+		lib.get(GameObjectType.Cleric).heal = new Heal((byte)2, (short)3, (short)2);
 		
 	}
 	
