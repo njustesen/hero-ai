@@ -78,6 +78,20 @@ public class Unit {
 		return power;
 	}
 	
+	public int damage( GameState state, Position attPos, Unit defender, Position defPos) {
+		
+		int dam = power(state, attPos);
+		
+		if (state.distance(attPos, defPos) == 1)
+			dam *= unitClass.attack.meleeMultiplier;
+		else
+			dam *= unitClass.attack.rangeMultiplier;
+		
+		int resistance = defender.resistance(state, defPos, unitClass.attack.attackType);
+		
+		return dam * ((100 - resistance)/100);
+	}
+	
 	public short maxHP() {
 		
 		short max = unitClass.maxHP;
@@ -88,6 +102,33 @@ public class Unit {
 			max += unitClass.maxHP/10;
 		
 		return max;
+	}
+	
+	public int resistance(GameState state, Position pos, AttackType attackType) {
+		
+		int res = 0;
+		
+		if (attackType == AttackType.Magical){
+			res += unitClass.magicalResistance;
+			if (equipment.contains(Card.SHINING_HELM))
+				res += 20;
+			// TODO : also +20 for defense square?
+		} else if (attackType == AttackType.Physical){
+			res += unitClass.physicalResistance;
+			if (equipment.contains(Card.DRAGONSCALE))
+				res += 20;
+			if (state.map.squareAt(pos.x, pos.y).type == SquareType.DEFENSE)
+				res += 20;
+		}
+		
+		return res;
+		
+	}
+	
+	public boolean fullHealth() {
+		if (hp == maxHP())
+			return true;
+		return false;
 	}
 
 	public Unit copy() {

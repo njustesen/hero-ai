@@ -14,6 +14,10 @@ public class HAMap {
 		
 		Square[][] grid = new Square[9][5];
 		
+		for(int x = 0; x < grid.length; x++)
+			for(int y = 0; y < grid[0].length; y++)
+				grid[x][y] = new Square(SquareType.NONE, null);
+		
 		// Deploy squares
 		grid[0][0] = new Square(SquareType.DEPLOY_1, null);
 		grid[0][4] = new Square(SquareType.DEPLOY_1, null);
@@ -55,10 +59,10 @@ public class HAMap {
 		this.width = width;
 		this.height = height;
 		this.squares = squares;
-		List<Position> deploy1 = new ArrayList<Position>();
-		List<Position> deploy2 = new ArrayList<Position>();
-		List<Position> crystals1 = new ArrayList<Position>();
-		List<Position> crystals2 = new ArrayList<Position>();
+		this.p1DeploySquares = new ArrayList<Position>();
+		this.p2DeploySquares = new ArrayList<Position>();
+		this.p1Crystals = new ArrayList<Position>();
+		this.p2Crystals = new ArrayList<Position>();
 		for(int x = 0; x < squares.length; x++){
 			for(int y = 0; y < squares[0].length; y++){
 				if (squares[x][y].type == SquareType.DEPLOY_1)

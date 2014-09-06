@@ -12,6 +12,8 @@ public class Square {
 	}
 	
 	public Square copy(){
+		if (unit == null)
+			return new Square(type, null);
 		return new Square(type, unit.copy());
 	}
 

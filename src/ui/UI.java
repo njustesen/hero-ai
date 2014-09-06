@@ -17,9 +17,11 @@ import javax.imageio.ImageIO;
 import javax.swing.JComponent;
 import javax.swing.JFrame;
 
+import lib.Card;
 import lib.ImageLib;
 import model.Position;
 import model.Square;
+import model.SquareType;
 import model.Unit;
 
 public class UI extends JComponent {
@@ -66,55 +68,51 @@ public class UI extends JComponent {
 
 	private void paintHP(Graphics g) {
 		
-		for (Position pos : state.objects.keySet()){
-			
-			double hp = -1;
-			double maxHP = -1;
-			
-			if (state.objects.get(pos) instanceof Crystal){
-				hp = ((Crystal)state.objects.get(pos)).hp;
-				maxHP = Crystal.STANDARD_HP;				
-			} else if (state.objects.get(pos) instanceof Unit){
-				hp = ((Unit)state.objects.get(pos)).hp;
-				maxHP = state.maxHP(((Unit)state.objects.get(pos)));
-			}
+		for (int x = 0; x < state.map.width; x++){
+			for (int y = 0; y < state.map.height; y++){
+				if (state.squares[x][y].unit == null)
+					continue;
+				double hp = state.squares[x][y].unit.hp;
+				double maxHP = state.squares[x][y].unit.maxHP();
 				
-			//if (maxHP > 0){
-				int w = (int) (squareSize * 0.8);
-				int h = 6;
-				int x = squareSize + pos.x * squareSize;
-				x += (squareSize - w) / 2;
-				int y = squareSize + pos.y * squareSize - 16;
-				g.setColor(new Color(50,50,50));
-				g.fillRect(x, y, w, h);
-				g.setColor(new Color(50,255,50));
-				double p = (hp/maxHP);
-				g.fillRect(x+1, y+1, (int) ((w-2)*p), h-2);
-			//}
-			
+				//if (maxHP > 0){
+					int w = (int) (squareSize * 0.8);
+					int h = 6;
+					int xx = squareSize + x * squareSize;
+					xx += (squareSize - w) / 2;
+					int yy = squareSize + y * squareSize - 16;
+					g.setColor(new Color(50,50,50));
+					g.fillRect(xx, yy, w, h);
+					g.setColor(new Color(50,255,50));
+					double p = (hp/maxHP);
+					g.fillRect(xx+1, yy+1, (int) ((w-2)*p), h-2);
+				//}
+				
+			}
 		}
 	}
 	
 	private void paintInfo(Graphics g) {
 		
-		for (Position pos : state.objects.keySet()){
-			
-			if (state.objects.get(pos) instanceof Unit){
+		for (int x = 0; x < state.map.width; x++){
+			for (int y = 0; y < state.map.height; y++){
+				if (state.squares[x][y].unit == null)
+					continue;
 				g.setColor(new Color(50,255,50));
 				g.setFont(new Font("Arial", Font.PLAIN, 11));
-				Unit unit = (Unit)state.objects.get(pos);
-				g.drawString(unit.hp + "/" + state.maxHP(unit), 
-						squareSize + squareSize * pos.x + squareSize/8, 
-						squareSize + squareSize * pos.y - (int)(squareSize/3.75));
+				
+				g.drawString(state.squares[x][y].unit.hp + "/" + state.squares[x][y].unit.maxHP(), 
+						squareSize + squareSize * x + squareSize/8, 
+						squareSize + squareSize * y - (int)(squareSize/3.75));
 				g.setColor(new Color(255,15,25));
 				g.setFont(new Font("Arial", Font.BOLD, 11));
-				g.drawString(state.power(unit, pos) + "", 
-						squareSize + squareSize * pos.x + squareSize/8, 
-						squareSize + squareSize * pos.y);
-				if (unit.hp <= 0){
+				g.drawString(state.squares[x][y].unit.power(state, new Position(x, y)) + "", 
+						squareSize + squareSize * x + squareSize/8, 
+						squareSize + squareSize * y);
+				if (state.squares[x][y].unit.hp <= 0){
 					g.setColor(new Color(255,50,50));
-					g.fillRect(	squareSize + squareSize * pos.x, 
-								squareSize + squareSize * pos.y, 
+					g.fillRect(	squareSize + squareSize * x, 
+								squareSize + squareSize * y, 
 								squareSize, squareSize);
 				}
 			}
@@ -174,30 +172,33 @@ public class UI extends JComponent {
 
 	private void paintGameObjects(Graphics g) throws IOException {
 		
-		for (Position pos : state.objects.keySet()){
-			
-			BufferedImage image = null;
-			
-			if (state.objects.get(pos) instanceof Crystal){
-				int p = 1;
-				if (!((Crystal)state.objects.get(pos)).p1Owner)
-					p+=1;
-				image = ImageLib.lib.get("crystal-" + p + "");
-			} else if (state.objects.get(pos) instanceof Unit){
-				int p = 1;
-				if (!((Unit)state.objects.get(pos)).p1Owner)
-					p+=1;
-				String name = ((Unit)state.objects.get(pos)).unitClass.unitType.name().toString().toLowerCase() + "-" + p;
-				image = ImageLib.lib.get(name);
+		for (int x = 0; x < state.squares.length; x++){
+			for (int y = 0; y < state.squares[0].length; y++){
+				if (state.squares[x][y].unit == null)
+					continue;
+				
+				BufferedImage image = null;
+				
+				if (state.squares[x][y].unit.unitClass.card == Card.CRYSTAL){
+					int p = 1;
+					if (!state.squares[x][y].unit.p1Owner)
+						p+=1;
+					image = ImageLib.lib.get("crystal-" + p + "");
+				} else {
+					int p = 1;
+					if (!state.squares[x][y].unit.p1Owner)
+						p+=1;
+					String name = state.squares[x][y].unit.unitClass.card.name().toString().toLowerCase() + "-" + p;
+					image = ImageLib.lib.get(name);
+				}
+				
+				if (image == null)
+					System.out.println(state.squares[x][y].unit.unitClass.card.name());
+				else
+					g.drawImage(image, squareSize + x * squareSize + squareSize/2 - image.getWidth()/2 , squareSize + y * squareSize - 18, null, null);
+				
 			}
-			
-			if (image == null)
-				System.out.println(state.objects.get(pos));
-			else
-				g.drawImage(image, squareSize + pos.x * squareSize + squareSize/2 - image.getWidth()/2 , squareSize + pos.y * squareSize - 18, null, null);
-			
 		}
-		
 	}
 
 	private void paintHand(Graphics g) {
@@ -221,7 +222,7 @@ public class UI extends JComponent {
 		
 	}
 
-	private void paintHand(Graphics g, int from, List<GameObjectType> hand, int p) {
+	private void paintHand(Graphics g, int from, List<Card> hand, int p) {
 		
 		for(int i = 0; i < hand.size(); i++){
 			
@@ -229,17 +230,17 @@ public class UI extends JComponent {
 			
 			BufferedImage image = null;
 			switch (hand.get(i)) {
-			case Archer: image = ImageLib.lib.get("archer-" + p);break;
-			case Cleric: image = ImageLib.lib.get("cleric-" + p);break;
-			case Dragonscale: image = ImageLib.lib.get("shield");break;
-			case Inferno: image = ImageLib.lib.get("inferno");break;
-			case Knight: image = ImageLib.lib.get("knight-" + p);break;
-			case Ninja: image = ImageLib.lib.get("ninja-" + p);break;
-			case RevivePotion: image = ImageLib.lib.get("potion");break;
-			case Runemetal: image = ImageLib.lib.get("sword");break;
-			case Scroll: image = ImageLib.lib.get("scroll-" + p);break;
-			case ShiningHelm: image = ImageLib.lib.get("helmet-" + p);break;
-			case Wizard: image = ImageLib.lib.get("wizard-" + p);break;
+			case ARCHER: image = ImageLib.lib.get("archer-" + p);break;
+			case CLERIC: image = ImageLib.lib.get("cleric-" + p);break;
+			case DRAGONSCALE: image = ImageLib.lib.get("shield");break;
+			case INFERNO: image = ImageLib.lib.get("inferno");break;
+			case KNIGHT: image = ImageLib.lib.get("knight-" + p);break;
+			case NINJA: image = ImageLib.lib.get("ninja-" + p);break;
+			case REVIVE_POTION: image = ImageLib.lib.get("potion");break;
+			case RUNEMETAL: image = ImageLib.lib.get("sword");break;
+			case SCROLL: image = ImageLib.lib.get("scroll-" + p);break;
+			case SHINING_HELM: image = ImageLib.lib.get("helmet-" + p);break;
+			case WIZARD: image = ImageLib.lib.get("wizard-" + p);break;
 			default:
 				break;
 			}
@@ -268,15 +269,15 @@ public class UI extends JComponent {
         		
         		BufferedImage image = null;
         			
-        		if (state.map.squareAt(x, y) == Square.ASSAULT_BOOST)
+        		if (state.map.squareAt(x, y).type == SquareType.ASSAULT)
         			image = ImageLib.lib.get("assault");
-        		else if (state.map.squareAt(x, y) == Square.DEFENSE_BOOST)
+        		else if (state.map.squareAt(x, y).type == SquareType.DEFENSE)
         			image = ImageLib.lib.get("defense");
-        		else if (state.map.squareAt(x, y) == Square.POWER_BOOST)
+        		else if (state.map.squareAt(x, y).type == SquareType.POWER)
         			image = ImageLib.lib.get("power");
-        		else if (state.map.squareAt(x, y) == Square.P1DEPLOY)
+        		else if (state.map.squareAt(x, y).type == SquareType.DEPLOY_1)
         			image = ImageLib.lib.get("deploy-1");
-        		else if (state.map.squareAt(x, y) == Square.P2DEPLOY)
+        		else if (state.map.squareAt(x, y).type == SquareType.DEPLOY_2)
         			image = ImageLib.lib.get("deploy-2");
         		
         		if (image != null)
