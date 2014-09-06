@@ -60,9 +60,9 @@ public class Game {
 		this.state.objects.put(new Position((byte)8,(byte)3), new Unit(GameObjectType.Cleric, false));
 		this.state.objects.put(new Position((byte)8,(byte)4), new Unit(GameObjectType.Ninja, false));
 		*/
-		history.push(this.state.copy());
+		//history.push(this.state.copy());
 		
-		//this.ui = new UI(this.state);
+		this.ui = new UI(this.state);
 		
 		run();
 	}
@@ -74,7 +74,7 @@ public class Game {
 		long engine = 0;
 		
 		while(!state.isTerminal){
-			
+			/*
 			if (ui != null){
 				ui.state = state.copy();
 				ui.repaint();
@@ -84,8 +84,8 @@ public class Game {
 					e.printStackTrace();
 				}
 			}
-			
-			int ap = state.APLeft;
+			*/
+			//int ap = state.APLeft;
 			
 			if (state.p1Turn && player1 != null) {
 				long aiStart = System.nanoTime();
@@ -581,8 +581,8 @@ public class Game {
 		state.p1Turn = !state.p1Turn;
 		state.APLeft = 5;
 		state.turn++;
-		history.clear();
-		history.push(state.copy());
+		//history.clear();
+		//history.push(state.copy());
 	}
 
 	

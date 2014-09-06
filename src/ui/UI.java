@@ -113,7 +113,7 @@ public class UI extends JComponent {
 				g.drawString(state.power(unit, pos) + "", 
 						squareSize + squareSize * pos.x + squareSize/8, 
 						squareSize + squareSize * pos.y);
-				if (unit.hp < 0){
+				if (unit.hp <= 0){
 					g.setColor(new Color(255,50,50));
 					g.fillRect(	squareSize + squareSize * pos.x, 
 								squareSize + squareSize * pos.y, 

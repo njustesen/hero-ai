@@ -13,6 +13,7 @@ public class RandomAI implements AI {
 	public Action act(GameState state, long ms) {
 		
 		List<Action> actions = state.possibleActions();
+		System.out.println(actions.size());
 		/*
 		System.out.println("-- Posible actions --");
 		for(Action action : actions){

@@ -47,5 +47,46 @@ public class Unit extends GameObject {
 		
 		return new Unit(hp, unitClass, p1Owner, eq);
 	}
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result
+				+ ((equipment == null) ? 0 : equipment.hashCode());
+		result = prime * result + hp;
+		result = prime * result + (p1Owner ? 1231 : 1237);
+		result = prime * result
+				+ ((unitClass == null) ? 0 : unitClass.hashCode());
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		Unit other = (Unit) obj;
+		if (equipment == null) {
+			if (other.equipment != null)
+				return false;
+		} else if (!equipment.equals(other.equipment))
+			return false;
+		if (hp != other.hp)
+			return false;
+		if (p1Owner != other.p1Owner)
+			return false;
+		if (unitClass == null) {
+			if (other.unitClass != null)
+				return false;
+		} else if (!unitClass.equals(other.unitClass))
+			return false;
+		return true;
+	}
+	
+	
 	
 }
