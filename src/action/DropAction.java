@@ -1,14 +1,14 @@
 package action;
 
-import gameobjects.GameObjectType;
-import gameobjects.Position;
+import lib.Card;
+import model.Position;
 
 public class DropAction extends Action {
 
-	public GameObjectType type;
+	public Card type;
 	public Position to;
 	
-	public DropAction(GameObjectType type, Position to) {
+	public DropAction(Card type, Position to) {
 		super();
 		this.type = type;
 		this.to = to;

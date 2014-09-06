@@ -1,4 +1,4 @@
-package gameobjects;
+package model;
 
 public class Position {
 

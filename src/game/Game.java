@@ -4,20 +4,18 @@ package game;
 import java.util.List;
 import java.util.Stack;
 
+import model.AttackType;
+import model.HAMap;
+import model.Position;
+import model.Square;
+import model.Unit;
+
 import action.Action;
 import action.DropAction;
 import action.EndTurnAction;
 import action.UndoAction;
 import action.UnitAction;
 import ai.RandomAI;
-import gameobjects.AttackType;
-import gameobjects.Crystal;
-import gameobjects.GameObject;
-import gameobjects.GameObjectType;
-import gameobjects.HAMap;
-import gameobjects.Position;
-import gameobjects.Square;
-import gameobjects.Unit;
 import ui.UI;
 
 public class Game {
@@ -309,22 +307,6 @@ public class Game {
 		state.currentHand().remove(GameObjectType.Inferno);
 		state.APLeft--;
 		
-	}
-
-	private void equip(GameObjectType type, Unit unit) {
-		if (type == GameObjectType.RevivePotion){
-			if (unit.hp == 0)
-				unit.hp += 100;
-			else
-				unit.hp += 600;
-		} else {
-			unit.equipment.add(type);
-			if (type == GameObjectType.Dragonscale || type == GameObjectType.ShiningHelm)
-				unit.hp += (double)unit.hp / 10d;			
-		}
-		unit.hp = (short) Math.min(unit.hp, state.maxHP(unit));
-		state.currentHand().remove(type);
-		state.APLeft--;
 	}
 
 	private void attackCrystal(Unit attacker, Position attPos, Crystal crystal, Position cryPos) {

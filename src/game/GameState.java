@@ -1,14 +1,6 @@
 package game;
 
 
-import gameobjects.Council;
-import gameobjects.Crystal;
-import gameobjects.GameObject;
-import gameobjects.Unit;
-import gameobjects.GameObjectType;
-import gameobjects.HAMap;
-import gameobjects.Position;
-import gameobjects.Square;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -16,6 +8,14 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+
+import lib.Card;
+import lib.CardType;
+import model.Council;
+import model.HAMap;
+import model.Position;
+import model.Square;
+import model.Unit;
 
 import action.Action;
 import action.DropAction;
@@ -28,11 +28,11 @@ public class GameState {
 	public boolean p1Turn;
 	public short turn;
 	public byte APLeft;
-	public Map<Position, GameObject> objects;
-	public List<GameObjectType> p1Deck;
-	public List<GameObjectType> p2Deck;
-	public List<GameObjectType> p1Hand;
-	public List<GameObjectType> p2Hand;
+	public Square[][] squares;
+	public List<Card> p1Deck;
+	public List<Card> p2Deck;
+	public List<Card> p1Hand;
+	public List<Card> p2Hand;
 	public boolean isTerminal;
 	
 	public GameState(HAMap map) {
@@ -42,22 +42,36 @@ public class GameState {
 		this.p1Turn = true;
 		this.turn = 1;
 		APLeft = 5;
-		this.objects = new HashMap<Position, GameObject>();
-		setupCrystals(map);
+		p1Hand = new ArrayList<Card>(6);
+		p2Hand = new ArrayList<Card>(6);
+		this.squares = new Square[map.width][map.height];
+		for(int x = 0; x < map.width; x++)
+			for(int y = 0; y < map.height; y++)
+				squares[x][y] = map.squares[x][y].copy();
 		dealCards();
 	}
 	
-	public GameState(HAMap map, boolean p1Turn, short turn, byte APLeft,
-			Map<Position, GameObject> objects, List<GameObjectType> p1Hand,
-			List<GameObjectType> p2Hand, boolean isTerminal) {
+	public GameState(
+			HAMap map, 
+			boolean p1Turn, 
+			short turn, 
+			byte APLeft,
+			Square[][] squares, 
+			List<Card> p1Hand,
+			List<Card> p2Hand, 
+			List<Card> p1Deck,
+			List<Card> p2Deck, 
+			boolean isTerminal) {
 		super();
 		this.map = map;
 		this.p1Turn = p1Turn;
 		this.turn = turn;
 		this.APLeft = APLeft;
-		this.objects = objects;
+		this.squares = squares;
 		this.p1Hand = p1Hand;
 		this.p1Hand = p2Hand;
+		this.p1Hand = p1Deck;
+		this.p1Hand = p2Deck;
 		this.isTerminal = isTerminal;
 	}
 	
@@ -77,8 +91,8 @@ public class GameState {
 			
 		}
 		
-		Set<GameObjectType> seen = new HashSet<GameObjectType>();
-		for(GameObjectType card : currentHand()){
+		Set<CardType> seen = new HashSet<CardType>();
+		for(CardType card : currentHand()){
 			if (!seen.contains(card))
 				actions.addAll(possibleActions(card));
 		}
@@ -87,7 +101,7 @@ public class GameState {
 		
 	}
 	
-	private List<Action> possibleActions(GameObjectType card) {
+	private List<Action> possibleActions(CardType card) {
 		
 		List<Action> actions = new ArrayList<Action>();
 		
@@ -98,7 +112,7 @@ public class GameState {
 					if (unit.equipment.contains(card))
 						continue;
 					if (unit.p1Owner == p1Turn && unit.hp != 0){
-						if (card == GameObjectType.RevivePotion && unit.hp == maxHP(unit))
+						if (card == CardType.RevivePotion && unit.hp == maxHP(unit))
 							continue;
 						actions.add(new DropAction(card, pos));
 					}
@@ -216,27 +230,14 @@ public class GameState {
 		
 		return actions;
 	}
-
-	private void setupCrystals(HAMap map) {
-		
-		for(byte x = 0; x < map.width; x++){
-			for(byte y = 0; y < map.height; y++){
-				if(map.squareAt(x, y) == Square.P1CRYSTAL)
-					objects.put(new Position(x,y), new Crystal(true));
-				else if(map.squareAt(x, y) == Square.P2CRYSTAL)
-					objects.put(new Position(x,y), new Crystal(false));
-			}
-		}
-		
-	}
 	
 	private void dealCards() {
 		
-		p1Deck = new ArrayList<GameObjectType>();
-		for (GameObjectType type : Council.deck)
+		p1Deck = new ArrayList<Card>();
+		for (Card type : Council.deck)
 			p1Deck.add(type);
-		p2Deck = new ArrayList<GameObjectType>();
-		for (GameObjectType type : Council.deck)
+		p2Deck = new ArrayList<Card>();
+		for (Card type : Council.deck)
 			p2Deck.add(type);
 		
 		p1Hand = drawHandFrom(p1Deck);
@@ -244,13 +245,13 @@ public class GameState {
 		
 	}
 
-	private List<GameObjectType> drawHandFrom(List<GameObjectType> deck) {
+	private List<Card> drawHandFrom(List<Card> deck) {
 		
-		List<GameObjectType> hand = new ArrayList<GameObjectType>();
+		List<Card> hand = new ArrayList<Card>();
 		
 		while(deck.size() > 0 && hand.size() < 6){
 			int idx = (int) (Math.random() * deck.size());
-			GameObjectType card = deck.get(idx);
+			Card card = deck.get(idx);
 			deck.remove(idx);
 			hand.add(card);
 		}
@@ -258,11 +259,11 @@ public class GameState {
 		return hand;
 	}
 	
-	public void drawCards() {
+	private void drawCards() {
 		
 		while(currentHand().size() < 6 && !currentDeck().isEmpty()){
 			int idx = (int) (Math.random() * currentDeck().size());
-			GameObjectType card = currentDeck().get(idx);
+			Card card = currentDeck().get(idx);
 			currentDeck().remove(idx);
 			currentHand().add(card);
 		}
@@ -279,107 +280,17 @@ public class GameState {
 		return (byte) (x + y);
 	}
 	
-	public boolean isUnit(GameObjectType type) {
-		if (type == GameObjectType.Archer || 
-				type == GameObjectType.Cleric || 
-				type == GameObjectType.Knight || 
-				type == GameObjectType.Ninja || 
-				type == GameObjectType.Wizard){
-			return true;
-		}
-		return false;
-	}
 	
-	public boolean isEquipment(GameObjectType type) {
-		if (type == GameObjectType.Dragonscale || 
-				type == GameObjectType.RevivePotion || 
-				type == GameObjectType.Scroll || 
-				type == GameObjectType.Runemetal || 
-				type == GameObjectType.ShiningHelm){
-			return true;
-		}
-		return false;
-	}
-	
-	public boolean isSpell(GameObjectType type) {
-		if (type == GameObjectType.Inferno){
-			return true;
-		}
-		return false;
-	}
-	
-
-	public int power(Unit unit, Position pos) {
-		
-		// Initial power
-		int power = unit.unitClass.power;
-		
-		// Sword
-		if (unit.equipment.contains(GameObjectType.Runemetal))
-			power += power/2;
-		
-		// Power boost
-		if (map.squareAt(pos.x, pos.y) == Square.POWER_BOOST)
-			power += 100;
-		
-		// SCroll
-		if (unit.equipment.contains(GameObjectType.Scroll))
-			power *= 3;
-		
-		
-		return power;
-	}
-	
-	public int maxHP(Unit unit) {
-		
-		int max = unit.unitClass.maxHP;
-		
-		if (unit.equipment.contains(GameObjectType.Dragonscale))
-			max += unit.unitClass.maxHP/10;
-		if (unit.equipment.contains(GameObjectType.ShiningHelm))
-			max += unit.unitClass.maxHP/10;
-		
-		return max;
-	}
-
-	public List<GameObjectType> currentHand() {
+	public List<Card> currentHand() {
 		if (p1Turn)
 			return p1Hand;
 		return p2Hand;
 	}
 	
-	public List<GameObjectType> currentDeck() {
+	public List<Card> currentDeck() {
 		if (p1Turn)
 			return p1Deck;
 		return p2Deck;
-	}
-
-	public GameState copy() {
-		GameState copy = new GameState(map);
-		copy.APLeft = APLeft;
-		copy.isTerminal = isTerminal;
-		copy.p1Turn = p1Turn;
-		copy.turn = turn;
-		copy.objects = new HashMap<Position, GameObject>();
-		
-		for (Position pos : objects.keySet())
-			copy.objects.put(new Position(pos.x, pos.y), objects.get(pos).copy());
-		
-		copy.p1Deck = new ArrayList<GameObjectType>();
-		for (GameObjectType obj : p1Deck)
-			copy.p1Deck.add(obj);
-		copy.p2Deck = new ArrayList<GameObjectType>();
-		for (GameObjectType obj : p2Deck)
-			copy.p2Deck.add(obj);
-		
-		copy.p1Hand = new ArrayList<GameObjectType>();
-		for (GameObjectType obj : p1Hand)
-			copy.p1Hand.add(obj);
-		copy.p2Hand = new ArrayList<GameObjectType>();
-		for (GameObjectType obj : p2Hand)
-			copy.p2Hand.add(obj);
-		
-		return copy;
 	}
 
 	public void removeDying() {
@@ -392,5 +303,15 @@ public class GameState {
 		for(Position pos : dead)
 			objects.remove(pos);
 	}
+	
+	public GameState copy() {
+		Square[][] sq = new Square[map.width][map.height];
+		List<Card> p1h = new ArrayList<Card>(p1Hand.size());
+		List<Card> p2h = new ArrayList<Card>(p2Hand.size());
+		List<Card> p1d = new ArrayList<Card>(p1Deck.size());
+		List<Card> p2d = new ArrayList<Card>(p2Deck.size());
+		return new GameState(map, p1Turn, turn, APLeft, sq, p1h, p2h, p1d, p2d, isTerminal);
+	}
+
 	
 }

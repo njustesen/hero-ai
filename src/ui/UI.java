@@ -1,11 +1,6 @@
 package ui;
 
 import game.GameState;
-import gameobjects.Crystal;
-import gameobjects.GameObjectType;
-import gameobjects.Position;
-import gameobjects.Square;
-import gameobjects.Unit;
 
 import java.awt.Color;
 import java.awt.Font;
@@ -23,6 +18,9 @@ import javax.swing.JComponent;
 import javax.swing.JFrame;
 
 import lib.ImageLib;
+import model.Position;
+import model.Square;
+import model.Unit;
 
 public class UI extends JComponent {
 	

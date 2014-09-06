@@ -1,8 +1,11 @@
-package gameobjects;
+package lib;
+
+import model.Attack;
+import model.Heal;
 
 public class UnitClass {
 
-	public GameObjectType unitType;
+	public Card card;
 	public short maxHP;
 	public byte speed;
 	public byte physicalResistance;
@@ -12,12 +15,12 @@ public class UnitClass {
 	public Heal heal;
 	public boolean swap;
 	
-	public UnitClass(GameObjectType unitType, short maxHP, byte speed, short power, byte physicalResistance, 
+	public UnitClass(Card card, short maxHP, byte speed, short power, byte physicalResistance, 
 			byte magicalResistance, Attack attack,
 			Heal heal, boolean swap) {
 		super();
 		
-		this.unitType = unitType;
+		this.card = card;
 		this.maxHP = maxHP;
 		this.speed = speed;
 		this.power = power;

@@ -1,6 +1,0 @@
-package gameobjects;
-
-public enum Square {
-
-	EMPTY, P1DEPLOY, P2DEPLOY, ASSAULT_BOOST, POWER_BOOST, DEFENSE_BOOST, P1CRYSTAL, P2CRYSTAL; 
-}

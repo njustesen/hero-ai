@@ -1,6 +1,6 @@
 package action;
 
-import gameobjects.Position;
+import model.Position;
 
 public class UnitAction extends Action  {
 
