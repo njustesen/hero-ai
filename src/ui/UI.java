@@ -83,9 +83,13 @@ public class UI extends JComponent {
 					int yy = squareSize + y * squareSize - 16;
 					g.setColor(new Color(50,50,50));
 					g.fillRect(xx, yy, w, h);
-					g.setColor(new Color(50,255,50));
+					g.setColor(new Color(50,225,50));
 					double p = (hp/maxHP);
 					g.fillRect(xx+1, yy+1, (int) ((w-2)*p), h-2);
+					g.setColor(new Color(20,155,20));
+					g.fillRect(xx+1, yy+4, (int) ((w-2)*p), 1);
+					g.setColor(new Color(150,255,150));
+					g.fillRect(xx+1, yy+1, (int) ((w-2)*p), 1);
 				//}
 				
 			}
@@ -98,23 +102,32 @@ public class UI extends JComponent {
 			for (int y = 0; y < state.map.height; y++){
 				if (state.squares[x][y].unit == null)
 					continue;
-				g.setColor(new Color(50,255,50));
+				
 				g.setFont(new Font("Arial", Font.PLAIN, 11));
 				
+				g.setColor(new Color(50,255,50));
 				g.drawString(state.squares[x][y].unit.hp + "/" + state.squares[x][y].unit.maxHP(), 
 						squareSize + squareSize * x + squareSize/8, 
 						squareSize + squareSize * y - (int)(squareSize/3.75));
-				g.setColor(new Color(255,15,25));
-				g.setFont(new Font("Arial", Font.BOLD, 11));
-				g.drawString(state.squares[x][y].unit.power(state, new Position(x, y)) + "", 
-						squareSize + squareSize * x + squareSize/8, 
-						squareSize + squareSize * y);
-				if (state.squares[x][y].unit.hp <= 0){
-					g.setColor(new Color(255,50,50));
-					g.fillRect(	squareSize + squareSize * x, 
-								squareSize + squareSize * y, 
-								squareSize, squareSize);
+				
+				g.setColor(new Color(50,100,50));
+				g.drawString(state.squares[x][y].unit.hp + "/" + state.squares[x][y].unit.maxHP(), 
+						squareSize + squareSize * x + squareSize/8 - 1, 
+						squareSize + squareSize * y - (int)(squareSize/3.75));
+				
+				if (state.squares[x][y].unit.power(state, new Position(x, y)) > 0){
+					g.setFont(new Font("Arial", Font.BOLD, 11));
+					g.setColor(new Color(50,100,50));
+					g.drawString(state.squares[x][y].unit.power(state, new Position(x, y)) + "", 
+							squareSize + squareSize * x + squareSize/3, 
+							squareSize + squareSize * y - 1);
+					g.setColor(new Color(255,25,25));
+					g.drawString(state.squares[x][y].unit.power(state, new Position(x, y)) + "", 
+							squareSize + squareSize * x + squareSize/3, 
+							squareSize + squareSize * y);
 				}
+				
+				
 			}
 		}
 	}
@@ -179,23 +192,46 @@ public class UI extends JComponent {
 				
 				BufferedImage image = null;
 				
-				if (state.squares[x][y].unit.unitClass.card == Card.CRYSTAL){
-					int p = 1;
-					if (!state.squares[x][y].unit.p1Owner)
-						p+=1;
-					image = ImageLib.lib.get("crystal-" + p + "");
-				} else {
-					int p = 1;
-					if (!state.squares[x][y].unit.p1Owner)
-						p+=1;
-					String name = state.squares[x][y].unit.unitClass.card.name().toString().toLowerCase() + "-" + p;
-					image = ImageLib.lib.get(name);
-				}
+				String red = "";
+				if (state.squares[x][y].unit.hp <= 0)
+					red = "-red";
+				
+				int p = 1;
+				if (!state.squares[x][y].unit.p1Owner)
+					p+=1;
+				String name = state.squares[x][y].unit.unitClass.card.name().toString().toLowerCase() + red + "-" + p;
+				image = ImageLib.lib.get(name);
 				
 				if (image == null)
 					System.out.println(state.squares[x][y].unit.unitClass.card.name());
 				else
 					g.drawImage(image, squareSize + x * squareSize + squareSize/2 - image.getWidth()/2 , squareSize + y * squareSize - 18, null, null);
+
+				image = null;
+				int i = 0;
+				for(Card card : state.squares[x][y].unit.equipment){
+					i++;
+					switch (card) {
+					case DRAGONSCALE: image = ImageLib.lib.get("shield-small"); break;
+					case RUNEMETAL: image = ImageLib.lib.get("sword-small"); break;
+					case SHINING_HELM: image = ImageLib.lib.get("helmet-small-" + p); break;
+					case SCROLL: image = ImageLib.lib.get("scroll-small-" + p); break;
+					default:
+						break;
+					}
+					if (image == null)
+						System.out.println(card.name());
+					else
+						if (p == 1)
+							g.drawImage(image, squareSize + x * squareSize + squareSize - image.getWidth()/4*3, 
+								squareSize + y * squareSize + (image.getHeight()/3*2)*(i-2), null, null);
+						else
+							g.drawImage(image, squareSize + x * squareSize - image.getWidth()/5, 
+								squareSize + y * squareSize + (image.getHeight()/3*2)*(i-2), null, null);
+
+				}
+				
+				
 				
 			}
 		}

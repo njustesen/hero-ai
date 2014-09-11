@@ -49,7 +49,8 @@ public class GameState {
 			for(int y = 0; y < map.height; y++)
 				squares[x][y] = map.squares[x][y].copy();
 		
-		dealCards();
+		dealCards(1);
+		dealCards(2);
 	}
 	
 	public GameState(
@@ -589,18 +590,40 @@ public class GameState {
 		//history.push(state.copy());
 	}
 	
-	private void dealCards() {
-		
-		p1Deck = new ArrayList<Card>();
-		for (Card type : Council.deck)
-			p1Deck.add(type);
-		p2Deck = new ArrayList<Card>();
-		for (Card type : Council.deck)
-			p2Deck.add(type);
-		
-		p1Hand = drawHandFrom(p1Deck);
-		p2Hand = drawHandFrom(p2Deck);
-		
+	private void dealCards(int player) {
+		if (player == 1){
+			p1Deck = new ArrayList<Card>();
+			for (Card type : Council.deck)
+				p1Deck.add(type);
+			
+			p1Hand = drawHandFrom(p1Deck);
+			
+			boolean p1HandGood = false;
+			for(Card card : p1Hand){
+				if (card.type == CardType.UNIT){
+					p1HandGood = true;
+					break;
+				}
+			}
+			if (!p1HandGood)
+				dealCards(1);
+		} else if (player == 2){
+			p2Deck = new ArrayList<Card>();
+			for (Card type : Council.deck)
+				p2Deck.add(type);
+			
+			p2Hand = drawHandFrom(p2Deck);
+			
+			boolean p2HandGood = false;
+			for(Card card : p2Hand){
+				if (card.type == CardType.UNIT){
+					p2HandGood = true;
+					break;
+				}
+			}
+			if (!p2HandGood)
+				dealCards(2);
+		}
 	}
 
 	private List<Card> drawHandFrom(List<Card> deck) {

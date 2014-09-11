@@ -1,4 +1,4 @@
-package ai;
+package action;
 
 public enum UnitActionType {
 	ATTACK, MOVE, HEAL, SWAP;

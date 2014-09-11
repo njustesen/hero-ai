@@ -14,6 +14,7 @@ import action.Action;
 import action.DropAction;
 import action.EndTurnAction;
 import action.UnitAction;
+import action.UnitActionType;
 import game.AI;
 import game.GameState;
 

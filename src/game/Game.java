@@ -50,7 +50,7 @@ public class Game {
 		*/
 		//history.push(this.state.copy());
 		
-		//this.ui = new UI(this.state);
+		this.ui = new UI(this.state);
 		
 		run();
 	}
@@ -61,20 +61,20 @@ public class Game {
 		long ai = 0;
 		long engine = 0;
 		
-		int turnLimit = 5;
+		int turnLimit = 50000;
 		
 		while(!state.isTerminal && state.turn < turnLimit){
-			/*
+			
 			if (ui != null){
 				ui.state = state.copy();
 				ui.repaint();
 				try {
-					Thread.sleep(10);
+					Thread.sleep(100);
 				} catch (InterruptedException e) {
 					e.printStackTrace();
 				}
 			}
-			*/
+			
 			//int ap = state.APLeft;
 			
 			if (state.p1Turn && player1 != null) {

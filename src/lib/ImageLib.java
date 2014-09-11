@@ -1,6 +1,5 @@
 package lib;
 
-import java.awt.Image;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
@@ -54,10 +53,35 @@ public class ImageLib {
 			lib.put("scroll-2", 	ImageIO.read(new File("img/scroll-2.png")));
 			lib.put("helmet-2", 	ImageIO.read(new File("img/helmet-2.png")));
 			
+
+
+			lib.put("knight-red-1", 	ImageIO.read(new File("img/knight-red-1.png")));
+			lib.put("archer-red-1", 	ImageIO.read(new File("img/archer-red-1.png")));
+			lib.put("cleric-red-1", 	ImageIO.read(new File("img/cleric-red-1.png")));
+			lib.put("wizard-red-1", 	ImageIO.read(new File("img/wizard-red-1.png")));
+			lib.put("ninja-red-1", 		ImageIO.read(new File("img/ninja-red-1.png")));
+			
+			lib.put("knight-red-2", 	ImageIO.read(new File("img/knight-red-2.png")));
+			lib.put("archer-red-2", 	ImageIO.read(new File("img/archer-red-2.png")));
+			lib.put("cleric-red-2", 	ImageIO.read(new File("img/cleric-red-2.png")));
+			lib.put("wizard-red-2", 	ImageIO.read(new File("img/wizard-red-2.png")));
+			lib.put("ninja-red-2", 		ImageIO.read(new File("img/ninja-red-2.png")));
+			
+			lib.put("crystal-red-1", 	ImageIO.read(new File("img/crystal-1.png")));
+			lib.put("crystal-red-2", 	ImageIO.read(new File("img/crystal-2.png")));
+			
+			
 			lib.put("sword", 		ImageIO.read(new File("img/sword.png")));
 			lib.put("shield", 		ImageIO.read(new File("img/shield.png")));
 			lib.put("potion", 		ImageIO.read(new File("img/potion.png")));
 			lib.put("inferno", 		ImageIO.read(new File("img/inferno.png")));
+			
+			lib.put("scroll-small-1", 	ImageIO.read(new File("img/scroll-small-1.png")));
+			lib.put("helmet-small-1", 	ImageIO.read(new File("img/helmet-small-1.png")));
+			lib.put("scroll-small-2", 	ImageIO.read(new File("img/scroll-small-2.png")));
+			lib.put("helmet-small-2", 	ImageIO.read(new File("img/helmet-small-2.png")));
+			lib.put("sword-small", 		ImageIO.read(new File("img/sword-small.png")));
+			lib.put("shield-small", 	ImageIO.read(new File("img/shield-small.png")));
 			
 		} catch (IOException e) {
 			e.printStackTrace();
