@@ -54,8 +54,6 @@ public class Unit {
 				hp += (double)hp / 10d;			
 		}
 		hp = (short) Math.min(hp, maxHP());
-		state.currentHand().remove(card);
-		state.APLeft--;
 	}
 	
 	public int power(GameState state, Position pos) {

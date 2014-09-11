@@ -267,20 +267,22 @@ public class GameState {
 			// Equipment
 			if (drop.type.type == CardType.ITEM){
 				
-				// Not a unit square
-				if (squares[drop.to.x][drop.to.y].unit == null)
+				// Not a unit square or crystal
+				if (squares[drop.to.x][drop.to.y].unit == null 
+						|| squares[drop.to.x][drop.to.y].unit.unitClass.card == Card.CRYSTAL)
 					return;
 				
 				if (squares[drop.to.x][drop.to.y].unit.p1Owner != p1Turn)
 					return;
 					
-				if (squares[drop.to.x][drop.to.y].unit.hp == 0)
+				if (squares[drop.to.x][drop.to.y].unit.hp == 0 
+						|| drop.type == Card.REVIVE_POTION)
 					return;
 				
 				if (squares[drop.to.x][drop.to.y].unit.equipment.contains(drop.type))
 					return;
 							
-				squares[drop.to.x][drop.to.y].unit.equip(drop.type, this);
+				equip(drop.type, drop.to);
 				
 			}
 
@@ -381,8 +383,10 @@ public class GameState {
 			defender.hp -= attacker.damage(this, attPos, defender, defPos);
 			if (defender.hp <= 0){
 				defender.hp = 0;
-				if (defender.unitClass.card == Card.CRYSTAL)
+				if (defender.unitClass.card == Card.CRYSTAL){
 					checkWinOnCrystals();
+					squares[defPos.x][defPos.y].unit = null;
+				}
 			} 
 			if (attacker.unitClass.attack.push)
 				push(defender, attPos, defPos);
@@ -453,13 +457,17 @@ public class GameState {
 		boolean p2Alive = false;
 		
 		for(Position pos : map.p1Crystals){
-			if (squares[pos.x][pos.y].unit != null && squares[pos.x][pos.y].unit.hp > 0){
+			if (squares[pos.x][pos.y].unit != null 
+					&& squares[pos.x][pos.y].unit.unitClass.card == Card.CRYSTAL 
+					&& squares[pos.x][pos.y].unit.hp > 0){
 				p1Alive = true;
 				break;
 			}
 		}
 		for(Position pos : map.p2Crystals){
-			if (squares[pos.x][pos.y].unit != null && squares[pos.x][pos.y].unit.hp > 0){
+			if (squares[pos.x][pos.y].unit != null 
+					&& squares[pos.x][pos.y].unit.unitClass.card == Card.CRYSTAL
+					&& squares[pos.x][pos.y].unit.hp > 0){
 				p2Alive = true;
 				break;
 			}
@@ -563,6 +571,12 @@ public class GameState {
 	private void move(Unit unit, Position from, Position to) {
 		squares[from.x][from.y].unit = null;
 		squares[to.x][to.y].unit = unit;
+		APLeft--;
+	}
+	
+	private void equip(Card card, Position pos) {
+		squares[pos.x][pos.y].unit.equip(card, this);
+		currentHand().remove(card);
 		APLeft--;
 	}
 

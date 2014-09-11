@@ -17,8 +17,11 @@ import javax.imageio.ImageIO;
 import javax.swing.JComponent;
 import javax.swing.JFrame;
 
+import action.Action;
+
 import lib.Card;
 import lib.ImageLib;
+import lib.UnitClassLib;
 import model.Position;
 import model.Square;
 import model.SquareType;
@@ -31,7 +34,9 @@ public class UI extends JComponent {
 	public int height;
 	public int squareSize = 64;
 	public GameState state;
-	int bottom;
+	public Action lastAction;
+	
+	private int bottom;
 	
 	public UI(GameState state){
 		frame = new JFrame();
@@ -68,6 +73,48 @@ public class UI extends JComponent {
 
 	private void paintHP(Graphics g) {
 		
+		// Crystal hp bars
+		for (int p = 1; p <= 2; p++){
+			double hp = 0;
+			double maxHP = state.map.p1Crystals.size() * UnitClassLib.lib.get(Card.CRYSTAL).maxHP;
+			if (p == 1){
+				for (Position pos : state.map.p1Crystals){
+					if (state.squares[pos.x][pos.y].unit == null || 
+							state.squares[pos.x][pos.y].unit.unitClass.card != Card.CRYSTAL)
+						continue;
+					hp += state.squares[pos.x][pos.y].unit.hp;
+				}
+				System.out.println("P1: {" + hp + "/" + maxHP + "}");
+			} else if (p == 2){
+				for (Position pos : state.map.p2Crystals){
+					if (state.squares[pos.x][pos.y].unit == null || 
+							state.squares[pos.x][pos.y].unit.unitClass.card != Card.CRYSTAL)
+						continue;
+					hp += state.squares[pos.x][pos.y].unit.hp;
+				}
+				System.out.println("P2: {" + hp + "/" + maxHP + "}");
+			}
+			int w = 158;
+			int h = 15;
+			int xx = 132;
+			int border = 2;
+			double per = (hp/maxHP);
+			if (p == 2)
+				xx = 411 + (int)((w-border*2) - ((w-border*2)*per));
+			int yy = 8;
+			//g.setColor(new Color(10,10,10));
+			//g.fillRect(xx, yy, w, h);
+			g.setColor(new Color(50,225,50));
+			g.fillRect(xx+border, yy+border, (int) ((double)(w-border*2)*per), h-border*2);
+			
+			g.setColor(new Color(150,255,150));
+			g.fillRect(xx+border, yy+border, (int) ((double)(w-border*2)*per), (h-border*2)/4);
+			g.setColor(new Color(20,155,20));
+			g.fillRect(xx+border, yy+h-border*2, (int) ((double)(w-border*2)*per), (h-border*2)/4);
+			
+		}
+		
+		// Units
 		for (int x = 0; x < state.map.width; x++){
 			for (int y = 0; y < state.map.height; y++){
 				if (state.squares[x][y].unit == null)
@@ -173,14 +220,14 @@ public class UI extends JComponent {
 		BufferedImage image = ImageLib.lib.get("header");
 		int x = width / 2 - image.getWidth() / 2;
 		g.drawImage(image, x, 0, null, null);
-		
+		/*
 		BufferedImage bar = ImageLib.lib.get("bar");
 		int toBarA = 102;
 		g.drawImage(bar, x + toBarA, 9, null, null);
 		
 		int toBarB = 382;
 		g.drawImage(bar, x + toBarB, 9, null, null);
-		
+		*/
 	}
 
 	private void paintGameObjects(Graphics g) throws IOException {
@@ -188,6 +235,9 @@ public class UI extends JComponent {
 		for (int x = 0; x < state.squares.length; x++){
 			for (int y = 0; y < state.squares[0].length; y++){
 				if (state.squares[x][y].unit == null)
+					continue;
+				
+				if (state.squares[x][y].unit.hp <= 0 && state.squares[x][y].unit.unitClass.card == Card.CRYSTAL)
 					continue;
 				
 				BufferedImage image = null;
