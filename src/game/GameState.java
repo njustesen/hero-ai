@@ -3,10 +3,8 @@ package game;
 
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 
 import lib.Card;
@@ -22,7 +20,6 @@ import model.Unit;
 import action.Action;
 import action.DropAction;
 import action.EndTurnAction;
-import action.UndoAction;
 import action.UnitAction;
 
 public class GameState {
@@ -105,17 +102,17 @@ public class GameState {
 		
 	}
 	
-	private List<Action> possibleActions(Card card) {
+	public List<Action> possibleActions(Card card) {
 		
 		List<Action> actions = new ArrayList<Action>();
 		
 		if (card.type == CardType.ITEM){
 			for(int x = 0; x < map.width; x++){
 				for(int y = 0; y < map.height; y++){
-					if (squares[x][y].unit != null){
+					if (squares[x][y].unit != null && squares[x][y].unit.unitClass.card != Card.CRYSTAL){
 						if (squares[x][y].unit.equipment.contains(card))
 							continue;
-						if (squares[x][y].unit.p1Owner == p1Turn && squares[x][y].unit.hp != 0){
+						if (squares[x][y].unit.p1Owner == p1Turn && squares[x][y].unit.hp > 0){
 							if (card == Card.REVIVE_POTION && squares[x][y].unit.fullHealth())
 								continue;
 							actions.add(new DropAction(card, new Position(x, y)));
@@ -163,7 +160,7 @@ public class GameState {
 		return actions;
 	}
 
-	private List<Action> possibleActions(Unit unit, Position from) {
+	public List<Action> possibleActions(Unit unit, Position from) {
 		
 		if (unit.unitClass.card == Card.CRYSTAL)
 			return new ArrayList<Action>();
@@ -239,15 +236,11 @@ public class GameState {
 				undo();
 		}
 		*/
-		if (action instanceof EndTurnAction){
-			if (APLeft == 0)
-				endTurn();
-			else 
-				return;
-		}
+		if (action instanceof EndTurnAction)
+			endTurn();
 		
-		if (APLeft == 0)
-			return;
+		if (APLeft <= 0)
+			endTurn();
 		
 		if (action instanceof DropAction){
 			
@@ -289,9 +282,9 @@ public class GameState {
 				squares[drop.to.x][drop.to.y].unit.equip(drop.type, this);
 				
 			}
-			
+
 			// Spell
-			if (drop.type == Card.INFERNO)
+			if (drop.type.type == CardType.SPELL)
 				dropInferno(drop.to);
 			
 			return;
@@ -345,7 +338,8 @@ public class GameState {
 				}
 				
 				// Attack
-				if (distance(ua.from, ua.to) > squares[ua.from.x][ua.from.y].unit.unitClass.attack.range)
+				if (squares[ua.from.x][ua.from.y].unit.unitClass.attack != null 
+						&& distance(ua.from, ua.to) > squares[ua.from.x][ua.from.y].unit.unitClass.attack.range)
 					return;
 				
 				attack(squares[ua.from.x][ua.from.y].unit, ua.from, squares[ua.to.x][ua.to.y].unit, ua.to);
@@ -359,14 +353,14 @@ public class GameState {
 		
 		for(byte x = -1; x <= 1; x++){
 			for(byte y = -1; y <= 1; y++){
-				if (x < 0 || x >= map.width || y < 0 || y >= map.height)
-					continue;
 				Position pos = new Position((byte)(to.x + x), (byte)(to.y + y));
-				if (squares[x][y].unit != null){
+				if (pos.x < 0 || pos.x >= map.width || pos.y < 0 || pos.y >= map.height)
+					continue;
+				if (squares[pos.x][pos.y].unit != null){
 					double dam = 300;
-					double resistance = squares[x][y].unit.resistance(this, pos, AttackType.Magical);
+					double resistance = squares[pos.x][pos.y].unit.resistance(this, pos, AttackType.Magical);
 					dam = dam * ((100d - resistance)/100d);
-					squares[x][y].unit.hp -= Math.min(dam, squares[x][y].unit.hp);
+					squares[pos.x][pos.y].unit.hp -= Math.min(dam, squares[pos.x][pos.y].unit.hp);
 				}
 			}
 		}
@@ -380,10 +374,11 @@ public class GameState {
 		if (defender.hp == 0){
 			squares[defPos.x][defPos.y].unit = null;
 			move(attacker, attPos, defPos);
+			// TODO: CANNOT MOVE MORE THAN SPEED
 			checkWinOnUnits();
 		} else {
 			defender.hp -= attacker.damage(this, attPos, defender, defPos);
-			if (defender.hp < 0){
+			if (defender.hp <= 0){
 				defender.hp = 0;
 				if (defender.unitClass.card == Card.CRYSTAL)
 					checkWinOnCrystals();
@@ -412,12 +407,7 @@ public class GameState {
 			}
 		}
 		
-		if (p1Alive && !p2Alive){
-			isTerminal = true;
-			return;
-		}
-		
-		if (!p1Alive && p2Alive){
+		if (!p1Alive || !p2Alive){
 			isTerminal = true;
 			return;
 		}
@@ -428,10 +418,12 @@ public class GameState {
 				break;
 			}
 		}
-		for(Card type : p1Hand){
-			if (type.type == CardType.UNIT){
-				p1Alive = true;
-				break;
+		if (p1Alive){
+			for(Card type : p1Hand){
+				if (type.type == CardType.UNIT){
+					p1Alive = true;
+					break;
+				}
 			}
 		}
 		for(Card type : p2Deck){
@@ -440,10 +432,12 @@ public class GameState {
 				break;
 			}
 		}
-		for(Card type : p2Hand){
-			if (type.type == CardType.UNIT){
-				p2Alive = true;
-				break;
+		if (p2Alive){
+			for(Card type : p2Hand){
+				if (type.type == CardType.UNIT){
+					p2Alive = true;
+					break;
+				}
 			}
 		}
 		
@@ -458,14 +452,58 @@ public class GameState {
 		boolean p2Alive = false;
 		
 		for(Position pos : map.p1Crystals){
-			if (squares[pos.x][pos.y].unit != null && squares[pos.x][pos.y].unit.hp > 0)
+			if (squares[pos.x][pos.y].unit != null && squares[pos.x][pos.y].unit.hp > 0){
+				p1Alive = true;
+				break;
+			}
+		}
+		for(Position pos : map.p2Crystals){
+			if (squares[pos.x][pos.y].unit != null && squares[pos.x][pos.y].unit.hp > 0){
 				p2Alive = true;
+				break;
+			}
 		}
 		
 		if (!p1Alive || !p2Alive)
 			isTerminal = true;
 		
 	}
+	
+
+	public int getWinner() {
+		
+		if (!isTerminal)
+			return 0;
+		
+		boolean p1Alive = false;
+		
+		for(Position pos : map.p1Crystals){
+			if (squares[pos.x][pos.y].unit != null && squares[pos.x][pos.y].unit.hp > 0){
+				p1Alive = true;
+				break;
+			}
+		}
+		
+		for(Card type : p1Deck){
+			if (type.type == CardType.UNIT){
+				p1Alive = true;
+				break;
+			}
+		}
+		if (p1Alive){
+			for(Card type : p1Hand){
+				if (type.type == CardType.UNIT){
+					p1Alive = true;
+					break;
+				}
+			}
+		}
+		
+		if (!p1Alive)
+			return 2;
+		else 
+			return 1;
+	}	
 
 	private void push(Unit defender, Position attPos, Position defPos) {
 		
@@ -542,6 +580,7 @@ public class GameState {
 */
 	private void endTurn() {
 		removeDying();
+		checkWinOnUnits();
 		drawCards();
 		p1Turn = !p1Turn;
 		APLeft = 5;
@@ -612,7 +651,6 @@ public class GameState {
 	}
 
 	public void removeDying() {
-		List<Position> dead = new ArrayList<Position>();
 		for(int x = 0; x < map.width; x++)
 			for(int y = 0; y < map.height; y++)
 				if(squares[x][y].unit != null && squares[x][y].unit.hp == 0)
@@ -639,5 +677,6 @@ public class GameState {
 		for(Card card : p2Deck)
 			p2d.add(card);
 		return new GameState(map, p1Turn, turn, APLeft, sq, p1h, p2h, p1d, p2d, isTerminal);
-	}	
+	}
+
 }

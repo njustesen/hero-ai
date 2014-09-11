@@ -12,6 +12,7 @@ public class Council {
 		deck = new ArrayList<Card>();
 		
 		deck.add(Card.KNIGHT);
+		
 		deck.add(Card.KNIGHT);
 		deck.add(Card.KNIGHT);
 		

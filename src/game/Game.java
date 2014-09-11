@@ -1,21 +1,13 @@
 package game;
 
 
-import java.util.List;
 import java.util.Stack;
 
-import model.AttackType;
 import model.HAMap;
-import model.Position;
-import model.Square;
-import model.Unit;
 
 import action.Action;
-import action.DropAction;
-import action.EndTurnAction;
-import action.UndoAction;
-import action.UnitAction;
 import ai.RandomAI;
+import ai.RandomMemAI;
 import ui.UI;
 
 public class Game {
@@ -25,12 +17,11 @@ public class Game {
 	public UI ui;
 	public AI player1;
 	public AI player2;
-	private boolean p1Winner;
 	private Stack<GameState> history;
 	
 	public static void main(String [ ] args)
 	{
-		Game game = new Game(null, true, new RandomAI(), new RandomAI());
+		Game game = new Game(null, true, new RandomMemAI(true), new RandomMemAI(false));
 	}
 	
 	public Game(GameState state, boolean ui, AI player1, AI player2){
@@ -42,7 +33,6 @@ public class Game {
 		else 
 			this.state = new GameState(HAMap.getMap());
 		
-		p1Winner = false;
 		/*
 		// Add units
 		this.state.objects.put(new Position((byte)0,(byte)0), new Unit(GameObjectType.Knight, true));
@@ -71,18 +61,20 @@ public class Game {
 		long ai = 0;
 		long engine = 0;
 		
-		while(!state.isTerminal){
-			
+		int turnLimit = 5;
+		
+		while(!state.isTerminal && state.turn < turnLimit){
+			/*
 			if (ui != null){
 				ui.state = state.copy();
 				ui.repaint();
 				try {
-					Thread.sleep(150);
+					Thread.sleep(10);
 				} catch (InterruptedException e) {
 					e.printStackTrace();
 				}
 			}
-			
+			*/
 			//int ap = state.APLeft;
 			
 			if (state.p1Turn && player1 != null) {
@@ -104,12 +96,14 @@ public class Game {
 				ai += aiEnd - aiStart;
 				engine += engineEnd - engineStart;
 			} else {
+				/*
 				try {
 					// Wait for human input
 					Thread.sleep(100);
 				} catch (InterruptedException e) {
 					e.printStackTrace();
 				}
+				*/
 			}
 			/*
 			if (state.APLeft < ap)
@@ -126,7 +120,7 @@ public class Game {
 			ui.state = state.copy();
 			ui.repaint();
 		}
-		System.out.println("Player " + (p1Winner ? 1 : 2) + " won the game!");
+		System.out.println("Player " + state.getWinner() + " won the game!");
 		
 	}
 
