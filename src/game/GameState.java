@@ -3,6 +3,7 @@ package game;
 
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -21,6 +22,7 @@ import action.Action;
 import action.DropAction;
 import action.EndTurnAction;
 import action.UnitAction;
+import action.UnitActionType;
 
 public class GameState {
 
@@ -194,32 +196,35 @@ public class GameState {
 					if (squares[to.x][to.y].unit.hp == 0){
 						
 						if ((squares[to.x][to.y].type == SquareType.DEPLOY_1 && !p1Turn) || (squares[to.x][to.y].type == SquareType.DEPLOY_2 && p1Turn)){
-							if (unit.p1Owner != squares[to.x][to.y].unit.p1Owner && distance(from, to) <= unit.unitClass.attack.range)
-								actions.add(new UnitAction(from, to));
-							else if (unit.p1Owner == squares[to.x][to.y].unit.p1Owner && (unit.unitClass.heal != null || unit.unitClass.swap) && 
-									distance(from, to) <= unit.unitClass.attack.range)
-								actions.add(new UnitAction(from, to));
+							if (unit.p1Owner != squares[to.x][to.y].unit.p1Owner && distance(from, to) <= unit.unitClass.attack.range){
+								actions.add(new UnitAction(from, to, UnitActionType.ATTACK));
+							}else if (unit.p1Owner == squares[to.x][to.y].unit.p1Owner){
+								if (unit.unitClass.heal != null)
+									actions.add(new UnitAction(from, to, UnitActionType.ATTACK));
+								if (unit.unitClass.swap)
+									actions.add(new UnitAction(from, to, UnitActionType.SWAP));
+							}
 						} else {
 							if (distance(from, to) <= unit.unitClass.speed)
-								actions.add(new UnitAction(from, to));
+								actions.add(new UnitAction(from, to, UnitActionType.MOVE));
 							else if (unit.p1Owner == squares[to.x][to.y].unit.p1Owner && unit.unitClass.swap)
-								actions.add(new UnitAction(from, to));
+								actions.add(new UnitAction(from, to, UnitActionType.SWAP));
 						}
 						
 					} else {
 						
 						if (unit.p1Owner != squares[to.x][to.y].unit.p1Owner && distance(from, to) <= unit.unitClass.attack.range)
-							actions.add(new UnitAction(from, to));
+							actions.add(new UnitAction(from, to, UnitActionType.ATTACK));
 						else if (unit.p1Owner == squares[to.x][to.y].unit.p1Owner && unit.unitClass.heal != null && distance(from, to) <= unit.unitClass.heal.range && squares[to.x][to.y].unit.fullHealth())
-							actions.add(new UnitAction(from, to));
+							actions.add(new UnitAction(from, to, UnitActionType.HEAL));
 						else if (unit.p1Owner == squares[to.x][to.y].unit.p1Owner && unit.unitClass.swap)
-							actions.add(new UnitAction(from, to));
+							actions.add(new UnitAction(from, to, UnitActionType.SWAP));
 					}
 					
 				} else {
 					
 					if (distance(from, to) <= unit.unitClass.speed)
-						actions.add(new UnitAction(from, to));
+						actions.add(new UnitAction(from, to, UnitActionType.MOVE));
 					
 				}
 			}
@@ -696,8 +701,8 @@ public class GameState {
 	
 	public GameState copy() {
 		Square[][] sq = new Square[map.width][map.height];
-		for(int x = 0; x < sq.length; x++){
-			for(int y = 0; y < sq[0].length; y++){
+		for(int x = 0; x < map.width; x++){
+			for(int y = 0; y < map.height; y++){
 				sq[x][y] = squares[x][y].copy();
 			}
 		}
@@ -716,4 +721,68 @@ public class GameState {
 		return new GameState(map, p1Turn, turn, APLeft, sq, p1h, p2h, p1d, p2d, isTerminal);
 	}
 
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + APLeft;
+		result = prime * result + (isTerminal ? 1231 : 1237);
+		result = prime * result + ((map == null) ? 0 : map.hashCode());
+		result = prime * result + ((p1Deck == null) ? 0 : p1Deck.hashCode());
+		result = prime * result + ((p1Hand == null) ? 0 : p1Hand.hashCode());
+		result = prime * result + (p1Turn ? 1231 : 1237);
+		result = prime * result + ((p2Deck == null) ? 0 : p2Deck.hashCode());
+		result = prime * result + ((p2Hand == null) ? 0 : p2Hand.hashCode());
+		result = prime * result + Arrays.hashCode(squares);
+		result = prime * result + turn;
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		GameState other = (GameState) obj;
+		if (APLeft != other.APLeft)
+			return false;
+		if (isTerminal != other.isTerminal)
+			return false;
+		if (map == null) {
+			if (other.map != null)
+				return false;
+		} else if (!map.equals(other.map))
+			return false;
+		if (p1Deck == null) {
+			if (other.p1Deck != null)
+				return false;
+		} else if (!p1Deck.equals(other.p1Deck))
+			return false;
+		if (p1Hand == null) {
+			if (other.p1Hand != null)
+				return false;
+		} else if (!p1Hand.equals(other.p1Hand))
+			return false;
+		if (p1Turn != other.p1Turn)
+			return false;
+		if (p2Deck == null) {
+			if (other.p2Deck != null)
+				return false;
+		} else if (!p2Deck.equals(other.p2Deck))
+			return false;
+		if (p2Hand == null) {
+			if (other.p2Hand != null)
+				return false;
+		} else if (!p2Hand.equals(other.p2Hand))
+			return false;
+		if (!Arrays.deepEquals(squares, other.squares))
+			return false;
+		if (turn != other.turn)
+			return false;
+		return true;
+	}
+	
 }

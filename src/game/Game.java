@@ -6,6 +6,7 @@ import java.util.Stack;
 import model.HAMap;
 
 import action.Action;
+import ai.EvaAI;
 import ai.RandomMemAI;
 import ui.UI;
 
@@ -20,7 +21,7 @@ public class Game {
 	
 	public static void main(String [ ] args)
 	{
-		Game game = new Game(null, true, new RandomMemAI(true), new RandomMemAI(false));
+		Game game = new Game(null, true, new EvaAI(true), new RandomMemAI(false));
 	}
 	
 	public Game(GameState state, boolean ui, AI player1, AI player2){
@@ -60,8 +61,6 @@ public class Game {
 		long ai = 0;
 		long engine = 0;
 		
-		Action lastAction = null;
-		
 		int turnLimit = 50000;
 		
 		while(!state.isTerminal && state.turn < turnLimit){
@@ -70,7 +69,7 @@ public class Game {
 				ui.state = state.copy();
 				ui.repaint();
 				try {
-					Thread.sleep(10);
+					Thread.sleep(1000);
 				} catch (InterruptedException e) {
 					e.printStackTrace();
 				}
@@ -86,7 +85,8 @@ public class Game {
 				long engineEnd = System.nanoTime();
 				ai += aiEnd - aiStart;
 				engine += engineEnd - engineStart;
-				lastAction = action;
+				ui.lastAction = action;
+				System.out.println("P1: " + action);
 			} else if (!state.p1Turn && player2 != null){
 				long aiStart = System.nanoTime();
 				Action action = player2.act(state, TIME_LIMIT);
@@ -96,7 +96,8 @@ public class Game {
 				long engineEnd = System.nanoTime();
 				ai += aiEnd - aiStart;
 				engine += engineEnd - engineStart;
-				lastAction = action;
+				ui.lastAction = action;
+				System.out.println("P2: " + action);
 			} else {
 				/*
 				try {

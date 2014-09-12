@@ -78,16 +78,16 @@ public class Unit {
 	
 	public int damage( GameState state, Position attPos, Unit defender, Position defPos) {
 		
-		int dam = power(state, attPos);
+		double dam = power(state, attPos);
 		
 		if (state.distance(attPos, defPos) == 1)
 			dam *= unitClass.attack.meleeMultiplier;
 		else
 			dam *= unitClass.attack.rangeMultiplier;
 		
-		int resistance = defender.resistance(state, defPos, unitClass.attack.attackType);
+		double resistance = defender.resistance(state, defPos, unitClass.attack.attackType);
 		
-		return dam * ((100 - resistance)/100);
+		return (int) (dam * ((100d - resistance)/100d));
 	}
 	
 	public short maxHP() {

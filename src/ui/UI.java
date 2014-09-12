@@ -2,6 +2,7 @@ package ui;
 
 import game.GameState;
 
+import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.Graphics;
@@ -18,6 +19,9 @@ import javax.swing.JComponent;
 import javax.swing.JFrame;
 
 import action.Action;
+import action.EndTurnAction;
+import action.UnitAction;
+import action.UnitActionType;
 
 import lib.Card;
 import lib.ImageLib;
@@ -58,6 +62,7 @@ public class UI extends JComponent {
         try {
 			paintBoard(g);
 			paintHeader(g);
+			paintLastAction(g);
 			paintGameObjects(g);
 			paintHP(g);
 			paintInfo(g);
@@ -70,6 +75,40 @@ public class UI extends JComponent {
 		}
         
     }
+
+	private void paintLastAction(Graphics g) {
+		
+		if (lastAction == null || lastAction instanceof EndTurnAction)
+			return;
+		
+		if (lastAction instanceof UnitAction){
+			Position from = ((UnitAction) lastAction).from;
+			Position to = ((UnitAction) lastAction).to;
+			int ovalW = 48;
+			int ovalH = 48;
+			int rectW = 48;
+			int rectH = 48;
+			if (((UnitAction) lastAction).type == UnitActionType.HEAL)
+				g.setColor(new Color(0,255,0,100));
+			if (((UnitAction) lastAction).type == UnitActionType.ATTACK)
+				g.setColor(new Color(255,0,0,100));
+			if (((UnitAction) lastAction).type == UnitActionType.MOVE)
+				g.setColor(new Color(0,0,255,100));
+			if (((UnitAction) lastAction).type == UnitActionType.SWAP)
+				g.setColor(new Color(255,0,255,100));
+			((Graphics2D) g).setStroke(new BasicStroke(4));
+			g.drawLine(squareSize + squareSize*from.x + squareSize/2,
+					squareSize + squareSize*from.y + squareSize/2,
+					squareSize + squareSize*to.x + squareSize/2,
+					squareSize + squareSize*to.y + squareSize/2);
+			g.fillOval(squareSize + squareSize*from.x + squareSize/2 - ovalW/2, 
+					squareSize + squareSize*from.y + squareSize/2 - ovalH/2, 
+					ovalW, ovalH);
+			g.fillRect(squareSize + squareSize*to.x + squareSize/2 - rectW/2, 
+					squareSize + squareSize*to.y + squareSize/2 - rectH/2, 
+					rectW, rectH);
+		}
+	}
 
 	private void paintHP(Graphics g) {
 		
@@ -84,7 +123,6 @@ public class UI extends JComponent {
 						continue;
 					hp += state.squares[pos.x][pos.y].unit.hp;
 				}
-				System.out.println("P1: {" + hp + "/" + maxHP + "}");
 			} else if (p == 2){
 				for (Position pos : state.map.p2Crystals){
 					if (state.squares[pos.x][pos.y].unit == null || 
@@ -92,7 +130,6 @@ public class UI extends JComponent {
 						continue;
 					hp += state.squares[pos.x][pos.y].unit.hp;
 				}
-				System.out.println("P2: {" + hp + "/" + maxHP + "}");
 			}
 			int w = 158;
 			int h = 15;

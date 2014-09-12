@@ -147,7 +147,7 @@ public class RandomAI implements AI {
 								continue;
 							if (other.p1Owner == state.p1Turn)
 								continue;
-							return new UnitAction(pos, to);
+							return new UnitAction(pos, to, UnitActionType.ATTACK);
 						}
 					}
 				}
@@ -163,7 +163,7 @@ public class RandomAI implements AI {
 							Unit other = state.squares[to.x][to.y].unit;
 							if (other.p1Owner != state.p1Turn)
 								continue;
-							return new UnitAction(pos, to);
+							return new UnitAction(pos, to, UnitActionType.HEAL);
 						}
 					}
 				}
@@ -178,7 +178,7 @@ public class RandomAI implements AI {
 						if (state.squares[to.x][to.y].unit != null && state.squares[to.x][to.y].unit.hp != 0)
 							continue;
 						
-						return new UnitAction(pos, to);
+						return new UnitAction(pos, to, UnitActionType.MOVE);
 					}
 				}
 				
@@ -190,7 +190,7 @@ public class RandomAI implements AI {
 						if (to.x >= state.map.width || to.x < 0 || to.y >= state.map.height || to.y < 0)
 							continue;
 						if (state.squares[to.x][to.y].unit != null && state.squares[to.x][to.y].unit.hp != 0 && state.squares[to.x][to.y].unit.p1Owner == state.p1Turn)
-							return new UnitAction(pos, to);
+							return new UnitAction(pos, to, UnitActionType.SWAP);
 					}
 				}
 			}

@@ -132,7 +132,7 @@ public class RandomMemAI implements AI {
 			if (other.equals(pos) || state.squares[other.x][other.y].unit.hp <= 0)
 				continue;
 			
-			return new UnitAction(pos, other);
+			return new UnitAction(pos, other, UnitActionType.SWAP);
 			
 		}
 		
@@ -152,7 +152,7 @@ public class RandomMemAI implements AI {
 			if (state.distance(pos, other) > state.squares[pos.x][pos.y].unit.unitClass.heal.range)
 				continue;
 			
-			return new UnitAction(pos, other);
+			return new UnitAction(pos, other, UnitActionType.HEAL);
 			
 		}
 		
@@ -174,7 +174,7 @@ public class RandomMemAI implements AI {
 					&& state.distance(pos, other) > state.squares[pos.x][pos.y].unit.unitClass.attack.range)
 				continue;
 			
-			return new UnitAction(pos, other);
+			return new UnitAction(pos, other, UnitActionType.ATTACK);
 			
 		}
 		
@@ -194,7 +194,7 @@ public class RandomMemAI implements AI {
 			if (state.squares[pos.x][pos.y].unit.p1Owner && state.squares[empty.x][empty.y].type == SquareType.DEPLOY_2)
 				continue;
 				
-			return new UnitAction(pos, empty);
+			return new UnitAction(pos, empty, UnitActionType.MOVE);
 			
 		}
 		
