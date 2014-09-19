@@ -599,9 +599,9 @@ public class GameState {
 	}
 */
 	private void endTurn() {
-		removeDying();
 		checkWinOnUnits();
 		drawCards();
+		removeDying(p1Turn);
 		p1Turn = !p1Turn;
 		APLeft = 5;
 		turn++;
@@ -692,11 +692,11 @@ public class GameState {
 		return p2Deck;
 	}
 
-	public void removeDying() {
+	public void removeDying(boolean p1) {
 		for(int x = 0; x < map.width; x++)
 			for(int y = 0; y < map.height; y++)
-				if(squares[x][y].unit != null && squares[x][y].unit.hp == 0)
-					squares[x][y].unit = null;
+				if(squares[x][y].unit != null && squares[x][y].unit.p1Owner == p1 && squares[x][y].unit.hp == 0)
+						squares[x][y].unit = null;
 	}
 	
 	public GameState copy() {

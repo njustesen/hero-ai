@@ -1,7 +1,6 @@
-/lib/
-/gameobjects/
-/ui/
 /action/
-/game/
-/model/
 /ai/
+/game/
+/lib/
+/model/
+/ui/
