@@ -22,14 +22,13 @@ import action.Action;
 import action.EndTurnAction;
 import action.UnitAction;
 import action.UnitActionType;
+import action.SwapCardAction;
 
 import lib.Card;
 import lib.ImageLib;
 import lib.UnitClassLib;
 import model.Position;
-import model.Square;
 import model.SquareType;
-import model.Unit;
 
 public class UI extends JComponent {
 	
@@ -41,6 +40,7 @@ public class UI extends JComponent {
 	public Action lastAction;
 	
 	private int bottom;
+	private boolean swapped;
 	
 	public UI(GameState state){
 		frame = new JFrame();
@@ -58,6 +58,8 @@ public class UI extends JComponent {
 	@Override
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
+        
+        swapped = false;
         
         try {
 			paintBoard(g);
@@ -108,8 +110,16 @@ public class UI extends JComponent {
 					squareSize + squareSize*to.y + squareSize/2 - rectH/2, 
 					rectW, rectH);
 		}
+	
+		if (lastAction instanceof SwapCardAction){
+			
+			swapped = true;
+			
+		}
+	
 	}
-
+	
+	
 	private void paintHP(Graphics g) {
 		
 		// Crystal hp bars
@@ -229,6 +239,36 @@ public class UI extends JComponent {
 		
 		image = ImageLib.lib.get("door-2");
 		g.drawImage(image, (int) (width - image.getWidth() - squareSize / 8), squareSize, null, null);
+		
+		if (swapped){
+			g.setColor(Color.GREEN);
+			g.setFont(new Font("Arial", Font.BOLD, 20));
+			int p = 1;
+			if (!state.p1Turn)
+				p+=1;
+			
+			BufferedImage imageUnit = null;
+			switch (((SwapCardAction)lastAction).card) {
+			case ARCHER: imageUnit = ImageLib.lib.get("archer-" + p);break;
+			case CLERIC: imageUnit = ImageLib.lib.get("cleric-" + p);break;
+			case DRAGONSCALE: imageUnit = ImageLib.lib.get("shield");break;
+			case INFERNO: imageUnit = ImageLib.lib.get("inferno");break;
+			case KNIGHT: imageUnit = ImageLib.lib.get("knight-" + p);break;
+			case NINJA: imageUnit = ImageLib.lib.get("ninja-" + p);break;
+			case REVIVE_POTION: imageUnit = ImageLib.lib.get("potion");break;
+			case RUNEMETAL: imageUnit = ImageLib.lib.get("sword");break;
+			case SCROLL: imageUnit = ImageLib.lib.get("scroll-" + p);break;
+			case SHINING_HELM: imageUnit = ImageLib.lib.get("helmet-" + p);break;
+			case WIZARD: imageUnit = ImageLib.lib.get("wizard-" + p);break;
+			default:
+				break;
+			}
+			
+			if (imageUnit == null)
+				System.out.println("could not find image " + ((SwapCardAction)lastAction).card.name());
+			else
+				g.drawImage(imageUnit, (int) (width - imageUnit.getWidth() - squareSize / 8), squareSize, null, null);
+		}
 		g.drawString("" + state.p2Deck.size(), width - image.getWidth() + squareSize / 8, squareSize + image.getHeight() - 6);
 		
 	}

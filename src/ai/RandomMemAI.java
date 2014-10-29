@@ -16,6 +16,7 @@ import model.Unit;
 import action.Action;
 import action.DropAction;
 import action.EndTurnAction;
+import action.SwapCardAction;
 import action.UnitAction;
 import action.UnitActionType;
 import game.AI;
@@ -211,13 +212,16 @@ public class RandomMemAI implements AI {
 				continue;
 			Card card = state.currentHand().get(i);
 			
-			if (card.type == CardType.ITEM)
-				action = dropItemAction(state, card);
-			if (card.type == CardType.UNIT)
-				action = dropUnitAction(state, card);
-			if (card.type == CardType.SPELL)
-				action = dropSpellAction(state, card);
-			
+			if (!state.currentDeck().isEmpty() && Math.random() > 0.1){
+				action = new SwapCardAction(card);
+			} else { 
+				if (card.type == CardType.ITEM)
+					action = dropItemAction(state, card);
+				if (card.type == CardType.UNIT)
+					action = dropUnitAction(state, card);
+				if (card.type == CardType.SPELL)
+					action = dropSpellAction(state, card);
+			}
 			if (action != null)
 				return action;
 		}
