@@ -91,6 +91,32 @@ public class UI extends JComponent {
 				}
 			}
 			
+		} else {
+			
+			BufferedImage image = null;
+			int p = 1;
+			if (!state.p1Turn)
+				p = 2;
+			
+			switch (da.type) {
+			case DRAGONSCALE: image = ImageLib.lib.get("shield");break;
+			case REVIVE_POTION: image = ImageLib.lib.get("potion");break;
+			case RUNEMETAL: image = ImageLib.lib.get("sword");break;
+			case SCROLL: image = ImageLib.lib.get("scroll-" + p);break;
+			case SHINING_HELM: image = ImageLib.lib.get("helmet-" + p);break;
+			default:
+				break;
+			}
+			
+			if (image != null){
+				g.drawImage(image, 
+						squareSize + da.to.x * squareSize + squareSize/2 - image.getWidth()/2, 
+						squareSize + da.to.y * squareSize - 18, 
+						null, null);
+			}else{
+				System.out.println("Could not find " + da.type.name());
+			}
+			
 		}
 		
 	}
