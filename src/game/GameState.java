@@ -23,6 +23,7 @@ import action.DropAction;
 import action.EndTurnAction;
 import action.UnitAction;
 import action.UnitActionType;
+import action.SwapCardAction;
 
 public class GameState {
 
@@ -159,6 +160,9 @@ public class GameState {
 				}
 			}
 		}
+		
+		if (!currentDeck().isEmpty())
+			actions.add(new SwapCardAction(card));
 		
 		return actions;
 	}
@@ -355,6 +359,21 @@ public class GameState {
 				
 			}
 		}
+		
+		if (action instanceof SwapCardAction){
+			
+			SwapCardAction sa = (SwapCardAction) action;
+			
+			if (currentHand().contains(sa.card)){
+				
+				currentDeck().add(sa.card);
+				currentHand().remove(sa.card);
+				APLeft--;
+				
+			}
+			
+		}
+		
 	}
 
 	private void dropInferno(Position to) {
