@@ -7,14 +7,11 @@ import java.awt.Color;
 import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
-import java.awt.Image;
 import java.awt.RenderingHints;
 import java.awt.image.BufferedImage;
-import java.io.File;
 import java.io.IOException;
 import java.util.List;
 
-import javax.imageio.ImageIO;
 import javax.swing.JComponent;
 import javax.swing.JFrame;
 
@@ -23,6 +20,7 @@ import action.EndTurnAction;
 import action.UnitAction;
 import action.UnitActionType;
 import action.SwapCardAction;
+import action.DropAction;
 
 import lib.Card;
 import lib.ImageLib;
@@ -40,7 +38,6 @@ public class UI extends JComponent {
 	public Action lastAction;
 	
 	private int bottom;
-	private boolean swapped;
 	
 	public UI(GameState state){
 		frame = new JFrame();
@@ -59,12 +56,10 @@ public class UI extends JComponent {
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
         
-        swapped = false;
-        
         try {
 			paintBoard(g);
 			paintHeader(g);
-			paintLastAction(g);
+			paintLastUnitAction(g);
 			paintGameObjects(g);
 			paintHP(g);
 			paintInfo(g);
@@ -72,13 +67,82 @@ public class UI extends JComponent {
 			paintAP(g);
 			paintGo(g);
 			paintDoors(g);
+			paintLastSwapCardAction(g);
+			paintLastDropAction(g);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
         
     }
 
-	private void paintLastAction(Graphics g) {
+	private void paintLastDropAction(Graphics g) {
+		
+		if (!(lastAction instanceof DropAction))
+			return;
+		
+		DropAction da = ((DropAction)lastAction);
+		
+		if (da.type == Card.INFERNO){
+			
+			for(int y = -1; y <= 1; y++){
+				for(int x = -1; x <= 1; x++){
+					paintInferno(g, da.to.x + x, da.to.y + y);
+					
+				}
+			}
+			
+		}
+		
+	}
+
+	private void paintInferno(Graphics g, int x, int y) {
+		
+		BufferedImage image = ImageLib.lib.get("inferno");
+		
+		g.drawImage(image, 
+				squareSize + x * squareSize + squareSize/2 - image.getWidth()/2, 
+				squareSize + y * squareSize - 18, 
+				null, null);
+
+		
+	}
+
+	private void paintLastSwapCardAction(Graphics g) {
+		
+		if (!(lastAction instanceof SwapCardAction))	
+			return;
+		
+		g.setColor(Color.GREEN);
+		g.setFont(new Font("Arial", Font.BOLD, 20));
+		int p = 1;
+		if (!state.p1Turn)
+			p+=1;
+		
+		BufferedImage imageUnit = null;
+		switch (((SwapCardAction)lastAction).card) {
+		case ARCHER: imageUnit = ImageLib.lib.get("archer-" + p);break;
+		case CLERIC: imageUnit = ImageLib.lib.get("cleric-" + p);break;
+		case DRAGONSCALE: imageUnit = ImageLib.lib.get("shield");break;
+		case INFERNO: imageUnit = ImageLib.lib.get("inferno");break;
+		case KNIGHT: imageUnit = ImageLib.lib.get("knight-" + p);break;
+		case NINJA: imageUnit = ImageLib.lib.get("ninja-" + p);break;
+		case REVIVE_POTION: imageUnit = ImageLib.lib.get("potion");break;
+		case RUNEMETAL: imageUnit = ImageLib.lib.get("sword");break;
+		case SCROLL: imageUnit = ImageLib.lib.get("scroll-" + p);break;
+		case SHINING_HELM: imageUnit = ImageLib.lib.get("helmet-" + p);break;
+		case WIZARD: imageUnit = ImageLib.lib.get("wizard-" + p);break;
+		default:
+			break;
+		}
+		
+		if (imageUnit == null)
+			System.out.println("could not find image " + ((SwapCardAction)lastAction).card.name());
+		else
+			g.drawImage(imageUnit, (int) (width - imageUnit.getWidth() - squareSize / 8), squareSize, null, null);
+		
+	}
+
+	private void paintLastUnitAction(Graphics g) {
 		
 		if (lastAction == null || lastAction instanceof EndTurnAction)
 			return;
@@ -109,12 +173,6 @@ public class UI extends JComponent {
 			g.fillRect(squareSize + squareSize*to.x + squareSize/2 - rectW/2, 
 					squareSize + squareSize*to.y + squareSize/2 - rectH/2, 
 					rectW, rectH);
-		}
-	
-		if (lastAction instanceof SwapCardAction){
-			
-			swapped = true;
-			
 		}
 	
 	}
@@ -240,35 +298,6 @@ public class UI extends JComponent {
 		image = ImageLib.lib.get("door-2");
 		g.drawImage(image, (int) (width - image.getWidth() - squareSize / 8), squareSize, null, null);
 		
-		if (swapped){
-			g.setColor(Color.GREEN);
-			g.setFont(new Font("Arial", Font.BOLD, 20));
-			int p = 1;
-			if (!state.p1Turn)
-				p+=1;
-			
-			BufferedImage imageUnit = null;
-			switch (((SwapCardAction)lastAction).card) {
-			case ARCHER: imageUnit = ImageLib.lib.get("archer-" + p);break;
-			case CLERIC: imageUnit = ImageLib.lib.get("cleric-" + p);break;
-			case DRAGONSCALE: imageUnit = ImageLib.lib.get("shield");break;
-			case INFERNO: imageUnit = ImageLib.lib.get("inferno");break;
-			case KNIGHT: imageUnit = ImageLib.lib.get("knight-" + p);break;
-			case NINJA: imageUnit = ImageLib.lib.get("ninja-" + p);break;
-			case REVIVE_POTION: imageUnit = ImageLib.lib.get("potion");break;
-			case RUNEMETAL: imageUnit = ImageLib.lib.get("sword");break;
-			case SCROLL: imageUnit = ImageLib.lib.get("scroll-" + p);break;
-			case SHINING_HELM: imageUnit = ImageLib.lib.get("helmet-" + p);break;
-			case WIZARD: imageUnit = ImageLib.lib.get("wizard-" + p);break;
-			default:
-				break;
-			}
-			
-			if (imageUnit == null)
-				System.out.println("could not find image " + ((SwapCardAction)lastAction).card.name());
-			else
-				g.drawImage(imageUnit, (int) (width - imageUnit.getWidth() - squareSize / 8), squareSize, null, null);
-		}
 		g.drawString("" + state.p2Deck.size(), width - image.getWidth() + squareSize / 8, squareSize + image.getHeight() - 6);
 		
 	}
@@ -357,9 +386,6 @@ public class UI extends JComponent {
 								squareSize + y * squareSize + (image.getHeight()/3*2)*(i-2), null, null);
 
 				}
-				
-				
-				
 			}
 		}
 	}

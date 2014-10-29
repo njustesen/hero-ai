@@ -25,7 +25,7 @@ import game.GameState;
 public class RandomMemAI implements AI {
 	
 	private static final double PROP_HAND = 0.25;
-	private static final double SWAP_PROP = 0.20;
+	private static final double SWAP_PROP = 0.05;
 	private static final double HEAL_PROP = 0.60;
 	public boolean p1;
 	private List<Position> myUnits;
@@ -212,7 +212,7 @@ public class RandomMemAI implements AI {
 				continue;
 			Card card = state.currentHand().get(i);
 			
-			if (!state.currentDeck().isEmpty() && Math.random() > 0.1){
+			if (!state.currentDeck().isEmpty() && Math.random() <= SWAP_PROP){
 				action = new SwapCardAction(card);
 			} else { 
 				if (card.type == CardType.ITEM)
