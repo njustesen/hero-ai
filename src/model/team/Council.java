@@ -10,8 +10,8 @@ public class Council {
 	public static List<Card> deck;
 	static {
 		deck = new ArrayList<Card>();
-		
-		deck.add(Card.KNIGHT);
+		for(int i = 0; i < 100; i++)
+			deck.add(Card.KNIGHT);
 		
 		deck.add(Card.KNIGHT);
 		deck.add(Card.KNIGHT);

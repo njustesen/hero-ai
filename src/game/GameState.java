@@ -630,9 +630,9 @@ public class GameState {
 		if (attPos.x < defPos.x)
 			x = 1;
 		if (attPos.y > defPos.y)
-			x = -1;
+			y = -1;
 		if (attPos.y < defPos.y)
-			x = 1;
+			y = 1;
 		
 		Position newPos = new Position((byte)(defPos.x + x), (byte)(defPos.y + y));
 		if (newPos.x >= map.width || newPos.x < 0 || newPos.y >= map.height || newPos.y < 0)
