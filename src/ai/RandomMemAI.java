@@ -167,12 +167,17 @@ public class RandomMemAI implements AI {
 		
 		for(Position other : enemyUnits){
 			
+			int distance = state.distance(pos, other);
+			
 			if (state.squares[other.x][other.y].unit.hp <= 0 
-					&& state.distance(pos, other) > state.squares[pos.x][pos.y].unit.unitClass.speed)
+					&& distance > state.squares[pos.x][pos.y].unit.unitClass.speed)
 				continue;
 			
 			if (state.squares[other.x][other.y].unit.hp > 0 
-					&& state.distance(pos, other) > state.squares[pos.x][pos.y].unit.unitClass.attack.range)
+					&& distance > state.squares[pos.x][pos.y].unit.unitClass.attack.range)
+				continue;
+			
+			if (distance > 1 && state.losBlocked(p1, pos, other))
 				continue;
 			
 			return new UnitAction(pos, other, UnitActionType.ATTACK);

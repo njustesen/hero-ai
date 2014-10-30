@@ -10,6 +10,12 @@ public class Position {
 		this.x = (byte) x;
 		this.y = (byte) y;
 	}
+	
+	public Position() {
+		super();
+		this.x = 0;
+		this.y = 0;
+	}
 
 	@Override
 	public int hashCode() {

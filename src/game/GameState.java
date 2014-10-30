@@ -1,12 +1,12 @@
 package game;
 
-
-
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+
+import util.LineIterators;
 
 import lib.Card;
 import lib.CardType;
@@ -216,10 +216,11 @@ public class GameState {
 						}
 						
 					} else {
-						
-						if (unit.p1Owner != squares[to.x][to.y].unit.p1Owner && distance(from, to) <= unit.unitClass.attack.range)
-							actions.add(new UnitAction(from, to, UnitActionType.ATTACK));
-						else if (unit.p1Owner == squares[to.x][to.y].unit.p1Owner && unit.unitClass.heal != null && distance(from, to) <= unit.unitClass.heal.range && squares[to.x][to.y].unit.fullHealth())
+						int distance = distance(from, to);
+						if (unit.p1Owner != squares[to.x][to.y].unit.p1Owner && distance <= unit.unitClass.attack.range){
+							if (!(distance > 1 && losBlocked(p1Turn, from, to)))
+								actions.add(new UnitAction(from, to, UnitActionType.ATTACK));
+						}else if (unit.p1Owner == squares[to.x][to.y].unit.p1Owner && unit.unitClass.heal != null && distance(from, to) <= unit.unitClass.heal.range && squares[to.x][to.y].unit.fullHealth())
 							actions.add(new UnitAction(from, to, UnitActionType.HEAL));
 						else if (unit.p1Owner == squares[to.x][to.y].unit.p1Owner && unit.unitClass.swap)
 							actions.add(new UnitAction(from, to, UnitActionType.SWAP));
@@ -350,10 +351,14 @@ public class GameState {
 				}
 				
 				// Attack
+				int distance = distance(ua.from, ua.to);
 				if (squares[ua.from.x][ua.from.y].unit.unitClass.attack != null 
-						&& distance(ua.from, ua.to) > squares[ua.from.x][ua.from.y].unit.unitClass.attack.range)
+						&& distance > squares[ua.from.x][ua.from.y].unit.unitClass.attack.range)
 					return;
 				
+				if (distance > 1 && losBlocked(p1Turn, ua.from, ua.to))
+					return;
+					
 				attack(squares[ua.from.x][ua.from.y].unit, ua.from, squares[ua.to.x][ua.to.y].unit, ua.to);
 				return;
 				
@@ -375,6 +380,33 @@ public class GameState {
 		}
 		
 	}
+
+	/**
+	 * Using the Bresenham-based supercover line algorithm
+	 * @param from
+	 * @param to
+	 * @return
+	 */
+	public boolean losBlocked(boolean p1, Position from, Position to) {
+		
+		List<Position> los = LineIterators.supercoverAsList(from, to);
+		
+		for(Position pos : los){
+			if (pos.equals(from) || pos.equals(to))
+				continue;
+			
+			if (squares[pos.x][pos.y].unit != null && 
+					squares[pos.x][pos.y].unit.p1Owner != p1){
+				
+				return true;
+			}
+		}
+		
+		return false;
+		
+	}
+	
+	
 
 	private void dropInferno(Position to) {
 		
