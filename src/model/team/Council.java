@@ -10,21 +10,22 @@ public class Council {
 	public static List<Card> deck;
 	static {
 		deck = new ArrayList<Card>();
+		
+		deck.add(Card.KNIGHT);
+		
+		deck.add(Card.KNIGHT);
+		deck.add(Card.KNIGHT);
+		
+		deck.add(Card.ARCHER);
+		deck.add(Card.ARCHER);
+		deck.add(Card.ARCHER);
+		
+		deck.add(Card.CLERIC);
+		deck.add(Card.CLERIC);
+		deck.add(Card.CLERIC);
+		
 		for(int i = 0; i < 100; i++)
-			deck.add(Card.KNIGHT);
-		
-		deck.add(Card.KNIGHT);
-		deck.add(Card.KNIGHT);
-		
-		deck.add(Card.ARCHER);
-		deck.add(Card.ARCHER);
-		deck.add(Card.ARCHER);
-		
-		deck.add(Card.CLERIC);
-		deck.add(Card.CLERIC);
-		deck.add(Card.CLERIC);
-		
-		deck.add(Card.WIZARD);
+			deck.add(Card.WIZARD);
 		deck.add(Card.WIZARD);
 		deck.add(Card.WIZARD);
 		

@@ -23,10 +23,12 @@ import action.SwapCardAction;
 import action.DropAction;
 
 import lib.Card;
+import lib.CardType;
 import lib.ImageLib;
 import lib.UnitClassLib;
 import model.Position;
 import model.SquareType;
+import model.Unit;
 
 public class UI extends JComponent {
 	
@@ -92,6 +94,9 @@ public class UI extends JComponent {
 			
 		} else {
 			
+			if (da.type.type == CardType.UNIT)
+				return;
+			
 			BufferedImage image = null;
 			int p = 1;
 			if (!state.p1Turn)
@@ -113,7 +118,7 @@ public class UI extends JComponent {
 						squareSize + da.to.y * squareSize - 18, 
 						null, null);
 			}else{
-				System.out.println("Could not find " + da.type.name());
+				System.out.println("DROP: Could not find " + da.type.name());
 			}
 			
 		}
@@ -164,7 +169,7 @@ public class UI extends JComponent {
 		}
 		
 		if (imageUnit == null)
-			System.out.println("could not find image " + ((SwapCardAction)lastAction).card.name());
+			System.out.println("SWAP: could not find image " + ((SwapCardAction)lastAction).card.name());
 		else
 			g.drawImage(imageUnit, (int) (width - imageUnit.getWidth() - squareSize / 8), squareSize, null, null);
 		
@@ -201,6 +206,19 @@ public class UI extends JComponent {
 			g.fillRect(squareSize + squareSize*to.x + squareSize/2 - rectW/2, 
 					squareSize + squareSize*to.y + squareSize/2 - rectH/2, 
 					rectW, rectH);
+			
+			Position lastPos = to;
+			for(Position pos : state.chainTargets){
+				g.drawLine(squareSize + squareSize*lastPos.x + squareSize/2,
+						squareSize + squareSize*lastPos.y + squareSize/2,
+						squareSize + squareSize*pos.x + squareSize/2,
+						squareSize + squareSize*pos.y + squareSize/2);
+				g.fillRect(squareSize + squareSize*pos.x + squareSize/2 - rectW/2, 
+						squareSize + squareSize*pos.y + squareSize/2 - rectH/2, 
+						rectW, rectH);
+				lastPos = pos;
+			}
+			
 		}
 	
 	}
@@ -465,7 +483,7 @@ public class UI extends JComponent {
 			if (image != null){
 				g.drawImage(image, x + squareSize/2 - image.getWidth()/2, bottom, null, null);
 			}else{
-				System.out.println("Could not find " + hand.get(i).toString());
+				System.out.println("HAND: Could not find " + hand.get(i).toString());
 			}
 			
 		}

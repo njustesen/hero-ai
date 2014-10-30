@@ -10,11 +10,17 @@ public class Position {
 		this.x = (byte) x;
 		this.y = (byte) y;
 	}
-	
+
 	public Position() {
 		super();
 		this.x = 0;
 		this.y = 0;
+	}
+	
+	public Direction getDirection(Position pos) {
+		if (pos == null)
+			return null;
+		return new Direction(pos.x - x, pos.y - y);
 	}
 
 	@Override
@@ -46,5 +52,5 @@ public class Position {
 			return false;
 		return true;
 	}
-	
+
 }

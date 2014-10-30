@@ -11,6 +11,7 @@ import util.LineIterators;
 import lib.Card;
 import lib.CardType;
 import model.AttackType;
+import model.Direction;
 import model.HAMap;
 import model.Position;
 import model.Square;
@@ -41,6 +42,8 @@ public class GameState {
 	public List<Card> p1Hand;
 	public List<Card> p2Hand;
 	public boolean isTerminal;
+
+	public List<Position> chainTargets;
 	
 	public GameState(HAMap map) {
 		super();
@@ -48,9 +51,10 @@ public class GameState {
 		this.map = map;
 		this.p1Turn = true;
 		this.turn = 1;
-		APLeft = 5;
-		p1Hand = new ArrayList<Card>(6);
-		p2Hand = new ArrayList<Card>(6);
+		this.APLeft = 5;
+		this.p1Hand = new ArrayList<Card>(6);
+		this.p2Hand = new ArrayList<Card>(6);
+		this.chainTargets = new ArrayList<Position>();
 		this.squares = new Square[map.width][map.height];
 		for(int x = 0; x < map.width; x++)
 			for(int y = 0; y < map.height; y++)
@@ -70,6 +74,7 @@ public class GameState {
 			List<Card> p2Hand, 
 			List<Card> p1Deck,
 			List<Card> p2Deck, 
+			List<Position> chainTargets, 
 			boolean isTerminal) {
 		super();
 		this.map = map;
@@ -81,6 +86,7 @@ public class GameState {
 		this.p2Hand = p2Hand;
 		this.p1Deck = p1Deck;
 		this.p2Deck = p2Deck;
+		this.chainTargets = chainTargets;
 		this.isTerminal = isTerminal;
 	}
 	
@@ -251,6 +257,8 @@ public class GameState {
 				undo();
 		}
 		*/
+		chainTargets.clear();
+		
 		if (action instanceof EndTurnAction)
 			endTurn();
 		
@@ -460,7 +468,6 @@ public class GameState {
 		if (defender.hp == 0){
 			squares[defPos.x][defPos.y].unit = null;
 			move(attacker, attPos, defPos);
-			// TODO: CANNOT MOVE MORE THAN SPEED
 			checkWinOnUnits();
 		} else {
 			int damage = attacker.damage(this, attPos, defender, defPos);
@@ -482,11 +489,110 @@ public class GameState {
 			if (attacker.unitClass.attack.push)
 				push(defender, attPos, defPos);
 			if (attacker.unitClass.attack.chain){
-				// TODO
+				int dirX = defPos.x - attPos.x;
+				int dirY = defPos.y - attPos.y;
+				Direction dir = new Direction(dirX, dirY);
+				chain(attacker, attPos, defPos, dir, 1);
 			}
 		}
 		attacker.equipment.remove(Card.SCROLL);
 		APLeft--;
+	}
+
+	private void chain(Unit attacker, Position attPos, Position from, Direction dir, int jump) {
+		
+		if (jump >= 3)
+			return;
+		
+		Position bestPos = nextJump(from, dir);
+		Direction bestDir = from.getDirection(bestPos);
+		
+		// Attack
+		if (bestPos != null){
+			Unit defender = squares[bestPos.x][bestPos.y].unit;
+			chainTargets.add(bestPos);
+			int damage = attacker.damage(this, attPos, defender, bestPos);
+			if (jump == 1)
+				damage = (int) (damage * 0.75);
+			else if (jump == 2)
+				damage = (int) (damage * 0.56);
+			else 
+				System.out.println("Illegal number of jumps!");
+			
+			if (defender.unitClass.card == Card.CRYSTAL){
+				int bonus = assaultBonus();
+				damage += bonus;
+			}
+			defender.hp -= damage;
+			if (defender.hp <= 0){
+				defender.hp = 0;
+				if (defender.unitClass.card == Card.CRYSTAL){
+					checkWinOnCrystals();
+					defender = null;
+				} else {
+					defender.hp = 0;
+					checkWinOnUnits();
+				}
+			} 
+			chain(attacker, attPos, bestPos, bestDir, jump+1);
+		}
+		
+	}
+
+	private Position nextJump(Position from, Direction dir) {
+		
+		int bestValue = 0;
+		Position bestPos = null;
+		
+		// Find best target
+		for(int newDirX = -1; newDirX <= 1; newDirX++){
+			for(int newDirY = -1; newDirY <= 1; newDirY++){
+				if (newDirX == 0 && newDirY == 0)
+					continue;
+				
+				Position newPos = new Position(from.x + newDirX, from.y + newDirY);
+				if (newPos.x < 0 || newPos.x >= map.width || newPos.y < 0 || newPos.y >= map.height)
+					continue;
+				if (squares[newPos.x][newPos.y].unit != null 
+						&& squares[newPos.x][newPos.y].unit.p1Owner != p1Turn
+						&& squares[newPos.x][newPos.y].unit.hp > 0){
+					
+					Direction newDir = new Direction(newDirX, newDirY);
+					
+					if (newDir.opposite(dir))
+						continue;
+					
+					int chainValue = chainValue(dir, newDir);
+					
+					if (chainValue > bestValue){
+						bestPos = newPos;
+						bestValue = chainValue;
+					}
+				}
+			}
+		}
+		
+		return bestPos;
+	}
+
+	private int chainValue(Direction dir, Direction newDir) {
+		
+		if (dir.equals(newDir))
+			return 10;
+		
+		int value = 0;
+		
+		if (!newDir.isDiagonal())
+			value+=4;
+		
+		if (newDir.isNorth())
+			value+=2;
+		
+		if (newDir.isEast())
+			value+=1;
+		
+		return value;
+		
 	}
 
 	private int assaultBonus() {
@@ -820,7 +926,7 @@ public class GameState {
 		List<Card> p2d = new ArrayList<Card>(p2Deck.size());
 		for(Card card : p2Deck)
 			p2d.add(card);
-		return new GameState(map, p1Turn, turn, APLeft, sq, p1h, p2h, p1d, p2d, isTerminal);
+		return new GameState(map, p1Turn, turn, APLeft, sq, p1h, p2h, p1d, p2d, chainTargets, isTerminal);
 	}
 
 	@Override
