@@ -30,7 +30,7 @@ public class GameState {
 
 	private static final int ASSAULT_BONUS = 300;
 
-	private static final double INFERNO_DAMAGE = 300;
+	private static final double INFERNO_DAMAGE = 350;
 	
 	public HAMap map;
 	public boolean p1Turn;
@@ -438,20 +438,21 @@ public class GameState {
 				if (pos.x < 0 || pos.x >= map.width || pos.y < 0 || pos.y >= map.height)
 					continue;
 				if (squares[pos.x][pos.y].unit != null){
+					Unit unit = squares[pos.x][pos.y].unit;
 					double damage = INFERNO_DAMAGE;
-					if (squares[pos.x][pos.y].unit.unitClass.card == Card.CRYSTAL){
+					if (unit.unitClass.card == Card.CRYSTAL){
 						int bonus = assaultBonus();
 						damage += bonus;
 					}
-					double resistance = squares[pos.x][pos.y].unit.resistance(this, pos, AttackType.Magical);
+					double resistance = unit.resistance(this, pos, AttackType.Magical);
 					damage = damage * ((100d - resistance)/100d);
-					squares[pos.x][pos.y].unit.hp -= damage;
-					if (squares[pos.x][pos.y].unit.hp <= 0){
-						if (squares[pos.x][pos.y].unit.unitClass.card == Card.CRYSTAL){
+					unit.hp -= damage;
+					if (unit.hp <= 0){
+						if (unit.unitClass.card == Card.CRYSTAL){
 							checkWinOnCrystals();
-							squares[pos.x][pos.y].unit = null;
+							unit = null;
 						} else {
-							squares[pos.x][pos.y].unit.hp = 0;
+							unit.hp = 0;
 							checkWinOnUnits();
 						}
 					}
