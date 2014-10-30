@@ -11,12 +11,12 @@ import util.LineIterators;
 import lib.Card;
 import lib.CardType;
 import model.AttackType;
-import model.Council;
 import model.HAMap;
 import model.Position;
 import model.Square;
 import model.SquareType;
 import model.Unit;
+import model.team.Council;
 
 import action.Action;
 import action.DropAction;
@@ -285,9 +285,12 @@ public class GameState {
 				if (squares[drop.to.x][drop.to.y].unit.p1Owner != p1Turn)
 					return;
 					
-				if (squares[drop.to.x][drop.to.y].unit.hp == 0 
-						|| drop.type == Card.REVIVE_POTION)
+				if (drop.type == Card.REVIVE_POTION && 
+						(squares[drop.to.x][drop.to.y].unit.unitClass.card == Card.CRYSTAL 
+						|| squares[drop.to.x][drop.to.y].unit.fullHealth()))
 					return;
+				
+				
 				
 				if (squares[drop.to.x][drop.to.y].unit.equipment.contains(drop.type))
 					return;
@@ -382,7 +385,7 @@ public class GameState {
 	}
 
 	/**
-	 * Using the Bresenham-based supercover line algorithm
+	 * Using the Bresenham-based super-cover line algorithm
 	 * @param from
 	 * @param to
 	 * @return
@@ -607,11 +610,7 @@ public class GameState {
 		else
 			power *= healer.unitClass.heal.heal;
 		
-		unitTo.hp += power;
-		
-		int maxHP = unitTo.maxHP();
-		if (unitTo.hp > maxHP)
-			unitTo.hp = (short) maxHP;
+		unitTo.heal(power);
 			
 		healer.equipment.remove(Card.SCROLL);
 		APLeft--;
@@ -631,7 +630,15 @@ public class GameState {
 	}
 	
 	private void equip(Card card, Position pos) {
-		squares[pos.x][pos.y].unit.equip(card, this);
+		if (card == Card.REVIVE_POTION){
+			if (squares[pos.x][pos.y].unit.hp == 0){
+				squares[pos.x][pos.y].unit.hp += 100;
+			} else {
+				squares[pos.x][pos.y].unit.heal(1000);
+			}
+		} else {
+			squares[pos.x][pos.y].unit.equip(card, this);
+		}
 		currentHand().remove(card);
 		APLeft--;
 	}

@@ -128,6 +128,12 @@ public class Unit {
 			return true;
 		return false;
 	}
+	
+	public void heal(int health) {
+		
+		hp = (short) Math.min(hp + health, this.maxHP());
+		
+	}
 
 	public Unit copy() {
 		Set<Card> eq = new HashSet<Card>();
