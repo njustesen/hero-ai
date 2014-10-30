@@ -27,6 +27,10 @@ import action.SwapCardAction;
 
 public class GameState {
 
+	private static final int ASSAULT_BONUS = 300;
+
+	private static final double INFERNO_DAMAGE = 300;
+	
 	public HAMap map;
 	public boolean p1Turn;
 	public short turn;
@@ -314,10 +318,12 @@ public class GameState {
 			if (squares[ua.from.x][ua.from.y].unit == null)
 				return;
 			
-			if (squares[ua.from.x][ua.from.y].unit.p1Owner != p1Turn)
+			Unit unit = squares[ua.from.x][ua.from.y].unit;
+			
+			if (unit.p1Owner != p1Turn)
 				return;
 			
-			if (squares[ua.from.x][ua.from.y].unit.hp == 0)
+			if (unit.hp == 0)
 				return;
 			
 			// Move
@@ -326,43 +332,48 @@ public class GameState {
 				if (distance(ua.from, ua.to) > squares[ua.from.x][ua.from.y].unit.unitClass.speed)
 					return;
 				
-				if (squares[ua.to.x][ua.to.y].type == SquareType.DEPLOY_1 && !squares[ua.from.x][ua.from.y].unit.p1Owner)
+				if (squares[ua.to.x][ua.to.y].type == SquareType.DEPLOY_1 && !unit.p1Owner)
 					return;
 				
-				if (squares[ua.to.x][ua.to.y].type == SquareType.DEPLOY_2 && squares[ua.from.x][ua.from.y].unit.p1Owner)
+				if (squares[ua.to.x][ua.to.y].type == SquareType.DEPLOY_2 && unit.p1Owner)
 					return;
 				
-				move(squares[ua.from.x][ua.from.y].unit, ua.from, ua.to);
+				move(unit, ua.from, ua.to);
 				return;
 				
 			} else {
 			
+				Unit other = squares[ua.to.x][ua.to.y].unit;
+				
 				// Swap and heal
-				if (squares[ua.from.x][ua.from.y].unit.p1Owner == squares[ua.to.x][ua.to.y].unit.p1Owner){
-					if (squares[ua.from.x][ua.from.y].unit.unitClass.swap){
-						swap(squares[ua.from.x][ua.from.y].unit, ua.from, squares[ua.to.x][ua.to.y].unit, ua.to);
+				if (unit.p1Owner == other.p1Owner){
+					if (unit.unitClass.swap){
+						swap(unit, ua.from, other, ua.to);
 						return;
 					}
-					if(squares[ua.from.x][ua.from.y].unit.unitClass.heal == null)
+					if(unit.unitClass.heal == null)
 						return;
-					if(distance(ua.from,ua.to) > squares[ua.from.x][ua.from.y].unit.unitClass.heal.range)
+					if(distance(ua.from,ua.to) > unit.unitClass.heal.range)
 						return;
-					if(squares[ua.to.x][ua.to.y].unit.fullHealth())
+					if(unit.fullHealth())
 						return;
-					heal(squares[ua.from.x][ua.from.y].unit, ua.from, squares[ua.to.x][ua.to.y].unit);
+					heal(unit, ua.from, other);
 					return;
 				}
 				
 				// Attack
 				int distance = distance(ua.from, ua.to);
-				if (squares[ua.from.x][ua.from.y].unit.unitClass.attack != null 
-						&& distance > squares[ua.from.x][ua.from.y].unit.unitClass.attack.range)
+				if (unit.unitClass.attack != null 
+						&& distance > unit.unitClass.attack.range)
 					return;
 				
 				if (distance > 1 && losBlocked(p1Turn, ua.from, ua.to))
 					return;
+				
+				if (other.hp == 0 && distance > unit.unitClass.speed)
+					return;
 					
-				attack(squares[ua.from.x][ua.from.y].unit, ua.from, squares[ua.to.x][ua.to.y].unit, ua.to);
+				attack(unit, ua.from, other, ua.to);
 				return;
 				
 			}
@@ -419,10 +430,23 @@ public class GameState {
 				if (pos.x < 0 || pos.x >= map.width || pos.y < 0 || pos.y >= map.height)
 					continue;
 				if (squares[pos.x][pos.y].unit != null){
-					double dam = 300;
+					double damage = INFERNO_DAMAGE;
+					if (squares[pos.x][pos.y].unit.unitClass.card == Card.CRYSTAL){
+						int bonus = assaultBonus();
+						damage += bonus;
+					}
 					double resistance = squares[pos.x][pos.y].unit.resistance(this, pos, AttackType.Magical);
-					dam = dam * ((100d - resistance)/100d);
-					squares[pos.x][pos.y].unit.hp -= Math.min(dam, squares[pos.x][pos.y].unit.hp);
+					damage = damage * ((100d - resistance)/100d);
+					squares[pos.x][pos.y].unit.hp -= damage;
+					if (squares[pos.x][pos.y].unit.hp <= 0){
+						if (squares[pos.x][pos.y].unit.unitClass.card == Card.CRYSTAL){
+							checkWinOnCrystals();
+							squares[pos.x][pos.y].unit = null;
+						} else {
+							squares[pos.x][pos.y].unit.hp = 0;
+							checkWinOnUnits();
+						}
+					}
 				}
 			}
 		}
@@ -439,12 +463,20 @@ public class GameState {
 			// TODO: CANNOT MOVE MORE THAN SPEED
 			checkWinOnUnits();
 		} else {
-			defender.hp -= attacker.damage(this, attPos, defender, defPos);
+			int damage = attacker.damage(this, attPos, defender, defPos);
+			if (defender.unitClass.card == Card.CRYSTAL){
+				int bonus = assaultBonus();
+				damage += bonus;
+			}
+			defender.hp -= damage;
 			if (defender.hp <= 0){
 				defender.hp = 0;
 				if (defender.unitClass.card == Card.CRYSTAL){
 					checkWinOnCrystals();
 					squares[defPos.x][defPos.y].unit = null;
+				} else {
+					squares[defPos.x][defPos.y].unit.hp = 0;
+					checkWinOnUnits();
 				}
 			} 
 			if (attacker.unitClass.attack.push)
@@ -455,6 +487,18 @@ public class GameState {
 		}
 		attacker.equipment.remove(Card.SCROLL);
 		APLeft--;
+	}
+
+	private int assaultBonus() {
+		int bonus = 0;
+		for(Position pos : map.assaultSquares){
+			if (squares[pos.x][pos.y].unit != null 
+					&& squares[pos.x][pos.y].unit.p1Owner == p1Turn
+					&& squares[pos.x][pos.y].unit.hp != 0){
+				bonus += ASSAULT_BONUS;
+			}
+		}
+		return bonus;
 	}
 
 	private void checkWinOnUnits() {

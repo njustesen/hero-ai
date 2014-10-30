@@ -31,14 +31,14 @@ public class HAMap {
 		grid[7][3] = new Square(SquareType.NONE, new Unit(Card.CRYSTAL, false));
 		
 		// Assault boost squares
-		grid[2][2] = new Square(SquareType.ASSAULT, null);
-		grid[6][2] = new Square(SquareType.ASSAULT, null);
+		grid[2][2] = new Square(SquareType.POWER, null);
+		grid[6][2] = new Square(SquareType.POWER, null);
 		
 		// Defense boost squares
 		grid[4][0] = new Square(SquareType.DEFENSE, null);
 		
 		// Power boost squares
-		grid[4][4] = new Square(SquareType.POWER, null);
+		grid[4][4] = new Square(SquareType.ASSAULT, null);
 		
 		HAMap map = new HAMap((byte)grid.length, (byte)grid[0].length, grid);
 		
@@ -49,6 +49,7 @@ public class HAMap {
 	public byte width;
 	public byte height;
 	public Square[][] squares;
+	public List<Position> assaultSquares;
 	public List<Position> p1DeploySquares;
 	public List<Position> p2DeploySquares;
 	public List<Position> p1Crystals;
@@ -59,6 +60,7 @@ public class HAMap {
 		this.width = width;
 		this.height = height;
 		this.squares = squares;
+		this.assaultSquares = new ArrayList<Position>();
 		this.p1DeploySquares = new ArrayList<Position>();
 		this.p2DeploySquares = new ArrayList<Position>();
 		this.p1Crystals = new ArrayList<Position>();
@@ -69,6 +71,8 @@ public class HAMap {
 					p1DeploySquares.add(new Position(x,y));
 				if (squares[x][y].type == SquareType.DEPLOY_2)
 					p2DeploySquares.add(new Position(x,y));
+				if (squares[x][y].type == SquareType.ASSAULT)
+					assaultSquares.add(new Position(x,y));
 				if (squares[x][y].unit != null && squares[x][y].unit.unitClass.card == Card.CRYSTAL){
 					if (squares[x][y].unit.p1Owner){
 						p1Crystals.add(new Position(x,y));
