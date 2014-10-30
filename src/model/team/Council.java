@@ -34,7 +34,7 @@ public class Council {
 		deck.add(Card.INFERNO);
 
 		//for(int i = 0; i < 10; i++)
-		deck.add(Card.INFERNO);
+			deck.add(Card.INFERNO);
 
 		deck.add(Card.RUNEMETAL);
 		deck.add(Card.RUNEMETAL);

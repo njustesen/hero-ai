@@ -87,7 +87,6 @@ public class UI extends JComponent {
 			for(int y = -1; y <= 1; y++){
 				for(int x = -1; x <= 1; x++){
 					paintInferno(g, da.to.x + x, da.to.y + y);
-					
 				}
 			}
 			
@@ -122,6 +121,9 @@ public class UI extends JComponent {
 	}
 
 	private void paintInferno(Graphics g, int x, int y) {
+		
+		if (x < 0 || x >= state.map.width || y < 0 || y >= state.map.height)
+			return;
 		
 		BufferedImage image = ImageLib.lib.get("inferno");
 		
