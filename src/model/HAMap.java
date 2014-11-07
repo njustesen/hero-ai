@@ -89,5 +89,9 @@ public class HAMap {
 		return squares[x][y];
 		
 	}
+
+	public Square squareAt(Position position) {
+		return squareAt(position.x, position.y);
+	}
 	
 }

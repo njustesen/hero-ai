@@ -993,5 +993,9 @@ public class GameState {
 			return false;
 		return true;
 	}
+
+	public Square squareAt(Position pos) {
+		return squares[pos.x][pos.y];
+	}
 	
 }

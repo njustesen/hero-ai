@@ -24,7 +24,7 @@ public class Council {
 		deck.add(Card.CLERIC);
 		deck.add(Card.CLERIC);
 		
-		for(int i = 0; i < 100; i++)
+		//for(int i = 0; i < 100; i++)
 			deck.add(Card.WIZARD);
 		deck.add(Card.WIZARD);
 		deck.add(Card.WIZARD);

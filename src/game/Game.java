@@ -21,7 +21,7 @@ public class Game {
 	
 	public static void main(String [ ] args)
 	{
-		Game game = new Game(null, true, new RandomMemAI(true), new RandomMemAI(false));
+		Game game = new Game(null, true, new RandomMemAI(true), null);
 	}
 	
 	public Game(GameState state, boolean ui, AI player1, AI player2){
@@ -50,7 +50,7 @@ public class Game {
 		*/
 		//history.push(this.state.copy());
 		
-		this.ui = new UI(this.state);
+		this.ui = new UI(this.state, (this.player1==null), (this.player2==null));
 		
 		run();
 	}
@@ -99,14 +99,22 @@ public class Game {
 				ui.lastAction = action;
 				System.out.println("P2: " + action);
 			} else {
-				/*
-				try {
-					// Wait for human input
-					Thread.sleep(100);
-				} catch (InterruptedException e) {
-					e.printStackTrace();
+				
+				if (ui.action != null){
+					
+					long engineStart = System.nanoTime();
+					state.update(ui.action);
+					long engineEnd = System.nanoTime();
+					engine += engineEnd - engineStart;
+					ui.lastAction = ui.action;
+					int p = 1;
+					if (!state.p1Turn)
+						p = 2;
+					System.out.println("P" + p + ": " + ui.action);
+					ui.resetActions();
+					
 				}
-				*/
+				
 			}
 			/*
 			if (state.APLeft < ap)

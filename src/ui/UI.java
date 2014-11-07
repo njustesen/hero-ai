@@ -8,6 +8,8 @@ import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.RenderingHints;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.util.List;
@@ -38,10 +40,11 @@ public class UI extends JComponent {
 	public int squareSize = 64;
 	public GameState state;
 	public Action lastAction;
-	
 	private int bottom;
+	private InputController inputController;
+	public Action action;
 	
-	public UI(GameState state){
+	public UI(GameState state, boolean humanP1, boolean humanP2){
 		frame = new JFrame();
 		width = state.map.width * squareSize + squareSize*2;
 		height = state.map.height * squareSize + squareSize*2 + squareSize / 2;
@@ -50,13 +53,31 @@ public class UI extends JComponent {
 		frame.setDefaultCloseOperation (JFrame.EXIT_ON_CLOSE);
 		frame.getContentPane().add(this);    
 		frame.setVisible(true);
+		inputController = new InputController(humanP1, humanP2, squareSize, squareSize, squareSize);
+		frame.addMouseListener(inputController);
         this.state = state;
         this.bottom = squareSize + state.map.height * squareSize + squareSize / 4;
+	}
+	
+
+	public void resetActions() {
+		inputController.reset();
+		action = null;
 	}
 	
 	@Override
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
+        
+        if (state == null){
+        	System.out.println("State is NULL");
+        	return;
+        }
+        
+        if (inputController != null){
+            inputController.state = state.copy();
+            action = inputController.action;
+        }
         
         try {
 			paintBoard(g);
@@ -481,7 +502,10 @@ public class UI extends JComponent {
 			}
 			
 			if (image != null){
-				g.drawImage(image, x + squareSize/2 - image.getWidth()/2, bottom, null, null);
+				int b = bottom;
+				if (inputController.activeCardIdx == i)
+					b -= squareSize / 4;
+				g.drawImage(image, x + squareSize/2 - image.getWidth()/2, b, null, null);
 			}else{
 				System.out.println("HAND: Could not find " + hand.get(i).toString());
 			}
@@ -497,7 +521,45 @@ public class UI extends JComponent {
         for(byte x = 0; x < state.map.width; x++){
         	for(byte y = 0; y < state.map.height; y++){
         		
-        		g.setColor(new Color(194, 197, 153));
+        		Position pos = new Position(x, y);
+        		
+        		if (inputController.activeSquare != null && inputController.activeSquare.equals(pos))
+        			g.setColor(new Color(215, 215, 215));
+        		else {
+        			boolean found = false;
+        			for(Action action : inputController.possibleActions){
+        				if (action instanceof UnitAction){
+        					if (((UnitAction)action).to.equals(pos)){
+        						if (((UnitAction)action).type == UnitActionType.ATTACK){
+        							g.setColor(new Color(255, 50, 50));
+        						} else if (((UnitAction)action).type == UnitActionType.HEAL){
+        							g.setColor(new Color(50, 255, 50));
+        						} else if (((UnitAction)action).type == UnitActionType.MOVE){
+        							g.setColor(new Color(50, 50, 255));
+        						} else if (((UnitAction)action).type == UnitActionType.SWAP){
+        							g.setColor(new Color(100, 100, 100));
+        						}
+        						found = true;
+        						break;
+        					}
+        				} else if (action instanceof DropAction){
+        					if (((DropAction)action).to.equals(pos)){
+        						if (((DropAction)action).type.type == CardType.UNIT){
+        							g.setColor(new Color(50, 50, 255));
+        						} else if (((DropAction)action).type.type == CardType.SPELL){
+        							g.setColor(new Color(255, 50, 50));
+        						} else if (((DropAction)action).type.type == CardType.ITEM){
+        							g.setColor(new Color(50, 255, 50));
+        						}
+        						found = true;
+        						break;
+        					}
+        				}
+        			}
+        			if (!found)
+        				g.setColor(new Color(194, 197, 153));
+        		}
+        		
         		if ((x+y)%2==1)
         			g.setColor(new Color(182, 187, 147));
         		g.fillRect(squareSize + x * squareSize, squareSize + y * squareSize, squareSize, squareSize);
@@ -528,5 +590,6 @@ public class UI extends JComponent {
             }	
         }
 	}
-	
+
+
 }
