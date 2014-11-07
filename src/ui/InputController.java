@@ -11,6 +11,8 @@ import java.util.List;
 
 import action.Action;
 import action.DropAction;
+import action.EndTurnAction;
+import action.SwapCardAction;
 import action.UnitAction;
 
 import model.Position;
@@ -87,6 +89,36 @@ public class InputController implements MouseListener, KeyListener {
 					
 					cardClicked(i);
 					return;
+				}
+			}
+			
+			// End turn
+			int buttonWidth = 90;
+			int buttonStart = squareSize * state.map.width - 24;
+			int buttonHeight = 64;
+			if (arg0.getX() >= buttonStart
+					&& arg0.getX() <= buttonStart + buttonWidth
+					&& arg0.getY() >= bottom
+					&& arg0.getY() <= bottom + buttonHeight){
+				if (state.APLeft == 0){
+					action = new EndTurnAction();
+				}
+			}
+			
+			// Door
+			int doorWidth = 30;
+			int doorStart = 20;
+			if (!state.p1Turn)
+				doorStart = squareSize + squareSize * state.map.width + 20;
+			int doorHeight = 60;
+			if (arg0.getX() >= doorStart
+					&& arg0.getX() <= doorStart + doorWidth
+					&& arg0.getY() >= squareSize
+					&& arg0.getY() <= squareSize + doorHeight){
+				if (state.APLeft > 0){
+					if (activeCardIdx >= 0){
+						action = new SwapCardAction(state.currentHand().get(activeCardIdx));
+					}
 				}
 			}
 			

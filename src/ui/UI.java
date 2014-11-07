@@ -58,7 +58,6 @@ public class UI extends JComponent {
         this.state = state;
         this.bottom = squareSize + state.map.height * squareSize + squareSize / 4;
 	}
-	
 
 	public void resetActions() {
 		inputController.reset();
