@@ -199,10 +199,13 @@ public class GameState {
 			d = unit.unitClass.heal.range;
 		if (unit.unitClass.attack != null && unit.unitClass.attack.range > d)
 			d = unit.unitClass.attack.range;
-		for(int x = d*-1; x <= d; x++){
-			for(int y = d*-1; y <= d; y++){
+		for(int x = d*(-1); x <= d; x++){
+			for(int y = d*(-1); y <= d; y++){
 				Position to = new Position(from.x + x, from.y + y);
 				if (to.x >= map.width || to.x < 0 || to.y >= map.height || to.y < 0)
+					continue;
+				
+				if (to.equals(from))
 					continue;
 				
 				if (squares[to.x][to.y].unit != null){
@@ -882,10 +885,10 @@ public class GameState {
 	public byte distance(Position from, Position to) {
 		int x = from.x - to.x;
 		if (x < 0)
-			x = x * -1;
+			x = x * (-1);
 		int y = from.y - to.y;
 		if (y < 0)
-			y = y * -1;
+			y = y * (-1);
 		return (byte) (x + y);
 	}
 	

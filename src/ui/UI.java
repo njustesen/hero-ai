@@ -556,12 +556,15 @@ public class UI extends JComponent {
         					}
         				}
         			}
-        			if (!found)
-        				g.setColor(new Color(194, 197, 153));
+        			if (!found){
+        				if ((x+y)%2==1)
+                			g.setColor(new Color(182, 187, 147));
+        				else
+        					g.setColor(new Color(194, 197, 153));
+        			}
         		}
         		
-        		if ((x+y)%2==1)
-        			g.setColor(new Color(182, 187, 147));
+        		
         		g.fillRect(squareSize + x * squareSize, squareSize + y * squareSize, squareSize, squareSize);
         		
         		BufferedImage image = null;

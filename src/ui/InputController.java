@@ -101,6 +101,11 @@ public class InputController implements MouseListener, KeyListener {
 
 	private void cardClicked(int i) {
 		
+		if (activeCardIdx == i){
+			reset();
+			return;
+		}
+		
 		activeSquare = null;
 		activeCardIdx = i;
 		possibleActions = state.possibleActions(state.currentHand().get(i));
@@ -110,6 +115,10 @@ public class InputController implements MouseListener, KeyListener {
 	private void squareClicked(Position position) {
 		
 		if (activeSquare != null){
+			if (activeSquare.equals(position)){
+				reset();
+				return;
+			}
 			for(Action a : possibleActions){
 				if (a instanceof UnitAction){
 					if (((UnitAction)a).from.equals(activeSquare) && ((UnitAction)a).to.equals(position)){
