@@ -54,7 +54,7 @@ public class UI extends JComponent {
 		frame.getContentPane().add(this);    
 		frame.setVisible(true);
 		inputController = new InputController(humanP1, humanP2, squareSize, squareSize, squareSize);
-		frame.addMouseListener(inputController);
+		this.addMouseListener(inputController);
         this.state = state;
         this.bottom = squareSize + state.map.height * squareSize + squareSize / 4;
 	}

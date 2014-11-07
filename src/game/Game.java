@@ -21,7 +21,7 @@ public class Game {
 	
 	public static void main(String [ ] args)
 	{
-		Game game = new Game(null, true, new RandomMemAI(true), null);
+		Game game = new Game(null, true, new EvaAI(true), null);
 	}
 	
 	public Game(GameState state, boolean ui, AI player1, AI player2){
@@ -69,7 +69,7 @@ public class Game {
 				ui.state = state.copy();
 				ui.repaint();
 				try {
-					Thread.sleep(1000);
+					Thread.sleep(100);
 				} catch (InterruptedException e) {
 					e.printStackTrace();
 				}

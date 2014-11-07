@@ -120,6 +120,10 @@ public class GameState {
 		
 		List<Action> actions = new ArrayList<Action>();
 		
+		if (APLeft == 0){
+			return actions;
+		}
+		
 		if (card.type == CardType.ITEM){
 			for(int x = 0; x < map.width; x++){
 				for(int y = 0; y < map.height; y++){
@@ -184,6 +188,10 @@ public class GameState {
 			
 		List<Action> actions = new ArrayList<Action>();
 		
+		if (APLeft == 0){
+			return actions;
+		}
+		
 		if (unit.hp == 0)
 			return actions;
 		
@@ -226,17 +234,21 @@ public class GameState {
 								actions.add(new UnitAction(from, to, UnitActionType.MOVE));
 							else if (unit.p1Owner == squares[to.x][to.y].unit.p1Owner && unit.unitClass.swap)
 								actions.add(new UnitAction(from, to, UnitActionType.SWAP));
-						}
-						
+						}					
 					} else {
 						int distance = distance(from, to);
 						if (unit.p1Owner != squares[to.x][to.y].unit.p1Owner && distance <= unit.unitClass.attack.range){
 							if (!(distance > 1 && losBlocked(p1Turn, from, to)))
 								actions.add(new UnitAction(from, to, UnitActionType.ATTACK));
-						}else if (unit.p1Owner == squares[to.x][to.y].unit.p1Owner && unit.unitClass.heal != null && distance(from, to) <= unit.unitClass.heal.range && squares[to.x][to.y].unit.fullHealth())
+						} else if (unit.p1Owner == squares[to.x][to.y].unit.p1Owner 
+								&& unit.unitClass.heal != null 
+								&& distance(from, to) <= unit.unitClass.heal.range 
+								&& !squares[to.x][to.y].unit.fullHealth()
+								&& squares[to.x][to.y].unit.unitClass.card != Card.CRYSTAL ){
 							actions.add(new UnitAction(from, to, UnitActionType.HEAL));
-						else if (unit.p1Owner == squares[to.x][to.y].unit.p1Owner && unit.unitClass.swap)
+						} else if (unit.p1Owner == squares[to.x][to.y].unit.p1Owner && unit.unitClass.swap){
 							actions.add(new UnitAction(from, to, UnitActionType.SWAP));
+						}
 					}
 					
 				} else {
@@ -366,7 +378,7 @@ public class GameState {
 						return;
 					if(distance(ua.from,ua.to) > unit.unitClass.heal.range)
 						return;
-					if(unit.fullHealth())
+					if(other.fullHealth())
 						return;
 					heal(unit, ua.from, other);
 					return;
@@ -766,6 +778,7 @@ public class GameState {
 		
 		unitTo.heal(power);
 			
+		// TODO: SCROLL EFFECTS HEAL?!
 		healer.equipment.remove(Card.SCROLL);
 		APLeft--;
 		
