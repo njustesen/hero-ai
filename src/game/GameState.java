@@ -130,8 +130,10 @@ public class GameState {
 					if (squares[x][y].unit != null && squares[x][y].unit.unitClass.card != Card.CRYSTAL){
 						if (squares[x][y].unit.equipment.contains(card))
 							continue;
-						if (squares[x][y].unit.p1Owner == p1Turn && squares[x][y].unit.hp > 0){
+						if (squares[x][y].unit.p1Owner == p1Turn){
 							if (card == Card.REVIVE_POTION && squares[x][y].unit.fullHealth())
+								continue;
+							if (card != Card.REVIVE_POTION && squares[x][y].unit.hp == 0)
 								continue;
 							actions.add(new DropAction(card, new Position(x, y)));
 						}
@@ -188,9 +190,8 @@ public class GameState {
 			
 		List<Action> actions = new ArrayList<Action>();
 		
-		if (APLeft == 0){
+		if (APLeft == 0)
 			return actions;
-		}
 		
 		if (unit.hp == 0)
 			return actions;
@@ -230,7 +231,9 @@ public class GameState {
 									actions.add(new UnitAction(from, to, UnitActionType.SWAP));
 							}
 						} else {
-							if (from.distance(to) <= unit.unitClass.speed)
+							if (unit.unitClass.heal != null && from.distance(to) <= unit.unitClass.heal.range)
+								actions.add(new UnitAction(from, to, UnitActionType.HEAL));
+							else if (from.distance(to) <= unit.unitClass.speed)
 								actions.add(new UnitAction(from, to, UnitActionType.MOVE));
 							else if (unit.p1Owner == squares[to.x][to.y].unit.p1Owner && unit.unitClass.swap)
 								actions.add(new UnitAction(from, to, UnitActionType.SWAP));
@@ -317,8 +320,6 @@ public class GameState {
 						|| squares[drop.to.x][drop.to.y].unit.fullHealth()))
 					return;
 				
-				
-				
 				if (squares[drop.to.x][drop.to.y].unit.equipment.contains(drop.type))
 					return;
 							
@@ -351,7 +352,7 @@ public class GameState {
 			
 			// Move
 			if (squares[ua.to.x][ua.to.y].unit == null || 
-					(unit.p1Owner == squares[ua.to.x][ua.to.y].unit.p1Owner && squares[ua.to.x][ua.to.y].unit.hp == 0)){
+					(unit.p1Owner == squares[ua.to.x][ua.to.y].unit.p1Owner && squares[ua.to.x][ua.to.y].unit.hp == 0 && unit.unitClass.heal == null)){
 				
 				if (ua.from.distance(ua.to) > squares[ua.from.x][ua.from.y].unit.unitClass.speed)
 					return;
@@ -459,6 +460,10 @@ public class GameState {
 					continue;
 				if (squares[pos.x][pos.y].unit != null){
 					Unit unit = squares[pos.x][pos.y].unit;
+					if (unit.hp == 0){
+						squares[pos.x][pos.y] = null;
+						continue;
+					}
 					double damage = INFERNO_DAMAGE;
 					if (unit.unitClass.card == Card.CRYSTAL){
 						int bonus = assaultBonus();
@@ -804,7 +809,7 @@ public class GameState {
 	private void equip(Card card, Position pos) {
 		if (card == Card.REVIVE_POTION){
 			if (squares[pos.x][pos.y].unit.hp == 0){
-				squares[pos.x][pos.y].unit.hp += 100;
+				squares[pos.x][pos.y].unit.heal(100);
 			} else {
 				squares[pos.x][pos.y].unit.heal(1000);
 			}
