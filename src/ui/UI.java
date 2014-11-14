@@ -536,7 +536,7 @@ public class UI extends JComponent {
         						} else if (((UnitAction)action).type == UnitActionType.MOVE){
         							g.setColor(new Color(50, 50, 255));
         						} else if (((UnitAction)action).type == UnitActionType.SWAP){
-        							g.setColor(new Color(100, 100, 100));
+        							g.setColor(new Color(240, 240, 240));
         						}
         						found = true;
         						break;

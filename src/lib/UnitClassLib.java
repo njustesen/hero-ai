@@ -32,6 +32,7 @@ public class UnitClassLib {
 		
 		// Add heal
 		lib.get(Card.CLERIC).heal = new Heal((byte)2, (short)3, (short)2);
+		lib.get(Card.NINJA).swap = true;
 		
 	}
 	

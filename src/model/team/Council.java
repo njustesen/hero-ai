@@ -28,7 +28,7 @@ public class Council {
 			deck.add(Card.WIZARD);
 		deck.add(Card.WIZARD);
 		deck.add(Card.WIZARD);
-		
+		//for(int i = 0; i < 10; i++)
 		deck.add(Card.NINJA);
 		
 		deck.add(Card.INFERNO);

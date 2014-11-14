@@ -208,6 +208,8 @@ public class GameState {
 			d = unit.unitClass.heal.range;
 		if (unit.unitClass.attack != null && unit.unitClass.attack.range > d)
 			d = unit.unitClass.attack.range;
+		if (unit.unitClass.swap)
+			d = Math.max(map.width, map.height);
 		for(int x = d*(-1); x <= d; x++){
 			for(int y = d*(-1); y <= d; y++){
 				Position to = new Position(from.x + x, from.y + y);
@@ -235,8 +237,6 @@ public class GameState {
 								actions.add(new UnitAction(from, to, UnitActionType.HEAL));
 							else if (from.distance(to) <= unit.unitClass.speed)
 								actions.add(new UnitAction(from, to, UnitActionType.MOVE));
-							else if (unit.p1Owner == squares[to.x][to.y].unit.p1Owner && unit.unitClass.swap)
-								actions.add(new UnitAction(from, to, UnitActionType.SWAP));
 						}					
 					} else {
 						int distance = from.distance(to);
@@ -249,7 +249,7 @@ public class GameState {
 								&& !squares[to.x][to.y].unit.fullHealth()
 								&& squares[to.x][to.y].unit.unitClass.card != Card.CRYSTAL ){
 							actions.add(new UnitAction(from, to, UnitActionType.HEAL));
-						} else if (unit.p1Owner == squares[to.x][to.y].unit.p1Owner && unit.unitClass.swap){
+						} else if (unit.p1Owner == squares[to.x][to.y].unit.p1Owner && unit.unitClass.swap && squares[to.x][to.y].unit.unitClass.card != Card.CRYSTAL){
 							actions.add(new UnitAction(from, to, UnitActionType.SWAP));
 						}
 					}
@@ -351,8 +351,9 @@ public class GameState {
 				return;
 			
 			// Move
-			if (squares[ua.to.x][ua.to.y].unit == null || 
-					(unit.p1Owner == squares[ua.to.x][ua.to.y].unit.p1Owner && squares[ua.to.x][ua.to.y].unit.hp == 0 && unit.unitClass.heal == null)){
+			if (squares[ua.to.x][ua.to.y].unit == null 
+					|| (unit.p1Owner == squares[ua.to.x][ua.to.y].unit.p1Owner && squares[ua.to.x][ua.to.y].unit.hp == 0 && unit.unitClass.heal == null)
+					|| (unit.p1Owner != squares[ua.to.x][ua.to.y].unit.p1Owner && squares[ua.to.x][ua.to.y].unit.hp == 0)){
 				
 				if (ua.from.distance(ua.to) > squares[ua.from.x][ua.from.y].unit.unitClass.speed)
 					return;
@@ -372,7 +373,9 @@ public class GameState {
 				
 				// Swap and heal
 				if (unit.p1Owner == other.p1Owner){
-					if (unit.unitClass.swap){
+					if (unit.unitClass.swap 
+							&& squares[ua.to.x][ua.to.y].unit.unitClass.card != Card.CRYSTAL
+							&& squares[ua.to.x][ua.to.y].unit.hp != 0){
 						swap(unit, ua.from, other, ua.to);
 						return;
 					}
@@ -395,9 +398,6 @@ public class GameState {
 				if (distance > 1 && losBlocked(p1Turn, ua.from, ua.to))
 					return;
 				
-				if (other.hp == 0 && distance > unit.unitClass.speed)
-					return;
-					
 				attack(unit, ua.from, other, ua.to);
 				return;
 				
@@ -458,10 +458,10 @@ public class GameState {
 				Position pos = new Position((byte)(to.x + x), (byte)(to.y + y));
 				if (pos.x < 0 || pos.x >= map.width || pos.y < 0 || pos.y >= map.height)
 					continue;
-				if (squares[pos.x][pos.y].unit != null){
+				if (squares[pos.x][pos.y].unit != null && squares[pos.x][pos.y].unit.p1Owner != p1Turn){
 					Unit unit = squares[pos.x][pos.y].unit;
 					if (unit.hp == 0){
-						squares[pos.x][pos.y] = null;
+						squares[pos.x][pos.y].unit = null;
 						continue;
 					}
 					double damage = INFERNO_DAMAGE;

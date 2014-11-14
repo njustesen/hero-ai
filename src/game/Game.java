@@ -168,7 +168,7 @@ public class Game {
 		
 		history.pop();
 		
-		state = history.peek();
+		state = history.peek().copy();
 		
 	}
 
