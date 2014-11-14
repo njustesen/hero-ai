@@ -1,7 +1,3 @@
-/util/
-/model/
 /game/
-/LineIterators/
-/ai/
-/team/
 /ui/
+/ai/

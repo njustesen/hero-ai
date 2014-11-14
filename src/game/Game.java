@@ -1,11 +1,14 @@
 package game;
 
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Stack;
 
 import model.HAMap;
 
 import action.Action;
+import action.UndoAction;
 import ai.EvaAI;
 import ai.RandomMemAI;
 import ui.UI;
@@ -18,6 +21,7 @@ public class Game {
 	public AI player1;
 	public AI player2;
 	private Stack<GameState> history;
+	private int lastTurn;
 	
 	public static void main(String [ ] args)
 	{
@@ -52,6 +56,8 @@ public class Game {
 		
 		this.ui = new UI(this.state, (this.player1==null), (this.player2==null));
 		
+		history = new Stack<GameState>();
+		
 		run();
 	}
 	
@@ -62,6 +68,9 @@ public class Game {
 		long engine = 0;
 		
 		int turnLimit = 50000;
+		
+		history.add(state.copy());
+		lastTurn = 5;
 		
 		while(!state.isTerminal && state.turn < turnLimit){
 			
@@ -103,7 +112,11 @@ public class Game {
 				if (ui.action != null){
 					
 					long engineStart = System.nanoTime();
-					state.update(ui.action);
+					if (ui.action instanceof UndoAction){
+						undoAction();
+					} else {
+						state.update(ui.action);
+					}
 					long engineEnd = System.nanoTime();
 					engine += engineEnd - engineStart;
 					ui.lastAction = ui.action;
@@ -116,10 +129,19 @@ public class Game {
 				}
 				
 			}
-			/*
-			if (state.APLeft < ap)
-				history.push(state.copy());
-				*/
+			
+			if (state.APLeft != lastTurn){
+				if (state.APLeft < lastTurn){
+					history.add(state.copy());
+				}
+				lastTurn = state.APLeft;
+			}
+			
+			if (state.APLeft == 5){
+				history.clear();
+				history.add(state.copy());
+				lastTurn = 5;
+			}
 			
 		}
 		long end = System.nanoTime();
@@ -133,6 +155,20 @@ public class Game {
 			ui.repaint();
 		}
 		System.out.println("Player " + state.getWinner() + " won the game!");
+		
+	}
+
+	private void undoAction() {
+		
+		if (state.APLeft == 5)
+			return;
+		
+		if (state.isTerminal)
+			return;
+		
+		history.pop();
+		
+		state = history.peek();
 		
 	}
 

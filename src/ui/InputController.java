@@ -13,6 +13,7 @@ import action.Action;
 import action.DropAction;
 import action.EndTurnAction;
 import action.SwapCardAction;
+import action.UndoAction;
 import action.UnitAction;
 
 import model.Position;
@@ -102,6 +103,19 @@ public class InputController implements MouseListener, KeyListener {
 					&& arg0.getY() <= bottom + buttonHeight){
 				if (state.APLeft == 0){
 					action = new EndTurnAction();
+				}
+			}
+			
+			// Undo turn
+			int undoWidth = 90 - 24;
+			int undoStart = squareSize + 24;
+			int undoHeight = 64;
+			if (arg0.getX() >= undoStart
+					&& arg0.getX() <= undoStart + undoWidth
+					&& arg0.getY() >= bottom
+					&& arg0.getY() <= bottom + undoHeight){
+				if (state.APLeft != 5){
+					action = new UndoAction();
 				}
 			}
 			
