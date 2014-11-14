@@ -221,7 +221,7 @@ public class GameState {
 					if (squares[to.x][to.y].unit.hp == 0){
 						
 						if ((squares[to.x][to.y].type == SquareType.DEPLOY_1 && !p1Turn) || (squares[to.x][to.y].type == SquareType.DEPLOY_2 && p1Turn)){
-							if (unit.p1Owner != squares[to.x][to.y].unit.p1Owner && distance(from, to) <= unit.unitClass.attack.range){
+							if (unit.p1Owner != squares[to.x][to.y].unit.p1Owner && from.distance(to) <= unit.unitClass.attack.range){
 								actions.add(new UnitAction(from, to, UnitActionType.ATTACK));
 							}else if (unit.p1Owner == squares[to.x][to.y].unit.p1Owner){
 								if (unit.unitClass.heal != null)
@@ -230,19 +230,19 @@ public class GameState {
 									actions.add(new UnitAction(from, to, UnitActionType.SWAP));
 							}
 						} else {
-							if (distance(from, to) <= unit.unitClass.speed)
+							if (from.distance(to) <= unit.unitClass.speed)
 								actions.add(new UnitAction(from, to, UnitActionType.MOVE));
 							else if (unit.p1Owner == squares[to.x][to.y].unit.p1Owner && unit.unitClass.swap)
 								actions.add(new UnitAction(from, to, UnitActionType.SWAP));
 						}					
 					} else {
-						int distance = distance(from, to);
+						int distance = from.distance(to);
 						if (unit.p1Owner != squares[to.x][to.y].unit.p1Owner && distance <= unit.unitClass.attack.range){
 							if (!(distance > 1 && losBlocked(p1Turn, from, to)))
 								actions.add(new UnitAction(from, to, UnitActionType.ATTACK));
 						} else if (unit.p1Owner == squares[to.x][to.y].unit.p1Owner 
 								&& unit.unitClass.heal != null 
-								&& distance(from, to) <= unit.unitClass.heal.range 
+								&& from.distance(to) <= unit.unitClass.heal.range 
 								&& !squares[to.x][to.y].unit.fullHealth()
 								&& squares[to.x][to.y].unit.unitClass.card != Card.CRYSTAL ){
 							actions.add(new UnitAction(from, to, UnitActionType.HEAL));
@@ -253,7 +253,7 @@ public class GameState {
 					
 				} else {
 					
-					if (distance(from, to) <= unit.unitClass.speed)
+					if (from.distance(to) <= unit.unitClass.speed)
 						actions.add(new UnitAction(from, to, UnitActionType.MOVE));
 					
 				}
@@ -350,9 +350,10 @@ public class GameState {
 				return;
 			
 			// Move
-			if (squares[ua.to.x][ua.to.y].unit == null){
+			if (squares[ua.to.x][ua.to.y].unit == null || 
+					(unit.p1Owner == squares[ua.to.x][ua.to.y].unit.p1Owner && squares[ua.to.x][ua.to.y].unit.hp == 0)){
 				
-				if (distance(ua.from, ua.to) > squares[ua.from.x][ua.from.y].unit.unitClass.speed)
+				if (ua.from.distance(ua.to) > squares[ua.from.x][ua.from.y].unit.unitClass.speed)
 					return;
 				
 				if (squares[ua.to.x][ua.to.y].type == SquareType.DEPLOY_1 && !unit.p1Owner)
@@ -376,7 +377,7 @@ public class GameState {
 					}
 					if(unit.unitClass.heal == null)
 						return;
-					if(distance(ua.from,ua.to) > unit.unitClass.heal.range)
+					if(ua.from.distance(ua.to) > unit.unitClass.heal.range)
 						return;
 					if(other.fullHealth())
 						return;
@@ -385,7 +386,7 @@ public class GameState {
 				}
 				
 				// Attack
-				int distance = distance(ua.from, ua.to);
+				int distance = ua.from.distance(ua.to);
 				if (unit.unitClass.attack != null 
 						&& distance > unit.unitClass.attack.range)
 					return;
@@ -426,14 +427,18 @@ public class GameState {
 	 */
 	public boolean losBlocked(boolean p1, Position from, Position to) {
 		
+		if (from.distance(to) == 1 || (from.getDirection(to).isDiagonal() && from.distance(to) == 2))
+			return false;
+		
 		List<Position> los = LineIterators.supercoverAsList(from, to);
 		
 		for(Position pos : los){
 			if (pos.equals(from) || pos.equals(to))
 				continue;
 			
-			if (squares[pos.x][pos.y].unit != null && 
-					squares[pos.x][pos.y].unit.p1Owner != p1){
+			if (squares[pos.x][pos.y].unit != null 
+					&& squares[pos.x][pos.y].unit.p1Owner != p1
+					&& squares[pos.x][pos.y].unit.hp != 0){
 				
 				return true;
 			}
@@ -893,16 +898,6 @@ public class GameState {
 			currentHand().add(card);
 		}
 		
-	}
-
-	public byte distance(Position from, Position to) {
-		int x = from.x - to.x;
-		if (x < 0)
-			x = x * (-1);
-		int y = from.y - to.y;
-		if (y < 0)
-			y = y * (-1);
-		return (byte) (x + y);
 	}
 	
 	public List<Card> currentHand() {

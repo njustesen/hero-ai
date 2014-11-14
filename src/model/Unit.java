@@ -80,7 +80,7 @@ public class Unit {
 		
 		double dam = power(state, attPos);
 		
-		if (state.distance(attPos, defPos) == 1)
+		if (attPos.distance(defPos) == 1)
 			dam *= unitClass.attack.meleeMultiplier;
 		else
 			dam *= unitClass.attack.rangeMultiplier;

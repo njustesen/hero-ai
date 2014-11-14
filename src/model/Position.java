@@ -52,5 +52,16 @@ public class Position {
 			return false;
 		return true;
 	}
+	
+	public byte distance(Position to) {
+		int xx = x - to.x;
+		if (xx < 0)
+			xx = xx * (-1);
+		int yy = y - to.y;
+		if (yy < 0)
+			yy = yy * (-1);
+		return (byte) (xx + yy);
+	}
+
 
 }

@@ -150,7 +150,7 @@ public class RandomMemAI implements AI {
 			if (state.squares[other.x][other.y].unit.unitClass.card == Card.CRYSTAL)
 				continue;
 			
-			if (state.distance(pos, other) > state.squares[pos.x][pos.y].unit.unitClass.heal.range)
+			if (pos.distance(other) > state.squares[pos.x][pos.y].unit.unitClass.heal.range)
 				continue;
 			
 			return new UnitAction(pos, other, UnitActionType.HEAL);
@@ -167,7 +167,7 @@ public class RandomMemAI implements AI {
 		
 		for(Position other : enemyUnits){
 			
-			int distance = state.distance(pos, other);
+			int distance = pos.distance(other);
 			
 			if (state.squares[other.x][other.y].unit.hp <= 0 
 					&& distance > state.squares[pos.x][pos.y].unit.unitClass.speed)
@@ -191,7 +191,7 @@ public class RandomMemAI implements AI {
 		
 		for(Position empty : emptySpaces){
 			
-			if (state.distance(pos, empty) > state.squares[pos.x][pos.y].unit.unitClass.speed)
+			if (pos.distance(empty) > state.squares[pos.x][pos.y].unit.unitClass.speed)
 				continue;
 			
 			if (!state.squares[pos.x][pos.y].unit.p1Owner && state.squares[empty.x][empty.y].type == SquareType.DEPLOY_1)
