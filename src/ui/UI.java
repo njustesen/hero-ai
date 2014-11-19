@@ -28,6 +28,7 @@ import lib.Card;
 import lib.CardType;
 import lib.ImageLib;
 import lib.UnitClassLib;
+import model.AttackType;
 import model.Position;
 import model.SquareType;
 import model.Unit;
@@ -92,11 +93,89 @@ public class UI extends JComponent {
 			paintLastSwapCardAction(g);
 			paintLastDropAction(g);
 			paintWinScreen(g);
+			paintUnitDetails(g);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
         
     }
+
+	private void paintUnitDetails(Graphics g) {
+	
+		if (inputController.activeSquare != null
+				&& state.squareAt(inputController.activeSquare).unit != null){
+			
+			
+			
+			Position pos = inputController.activeSquare;
+			Unit selected = state.squareAt(pos).unit;
+			
+			int startX = 2;
+			int startY = 154;
+			int stepY = 13;
+			
+			if (!selected.p1Owner)
+				startX += (state.map.width + 1) * squareSize;
+			
+			g.setColor(new Color(0, 0, 0, 60));
+			g.fillRect(startX, startY, 60, 230);
+			
+			startX += 2;
+			startY += 2 + stepY;
+			
+			g.setFont(new Font("Arial", Font.BOLD, 12));
+			
+			g.setColor(Color.black);
+			g.drawString("HP", startX, startY);
+			startY += stepY;
+			
+			g.setColor(Color.green);
+			g.drawString(selected.hp + "/" + selected.maxHP(), startX, startY);
+			startY += stepY*2;
+			
+			g.setColor(Color.black);
+			g.drawString("Phy. res.", startX, startY);
+			startY += stepY;
+			
+			g.setColor(Color.white);
+			g.drawString(""+selected.resistance(state, pos, AttackType.Physical), startX, startY);
+			startY += stepY*2;
+			
+			g.setColor(Color.black);
+			g.drawString("Mag. res.", startX, startY);
+			startY += stepY;
+			
+			g.setColor(Color.pink);
+			g.drawString(""+selected.resistance(state, pos, AttackType.Magical), startX, startY);
+			startY += stepY*2;
+			
+			g.setColor(Color.black);
+			g.drawString("Power", startX, startY);
+			startY += stepY;
+			
+			g.setColor(Color.red);
+			g.drawString(""+selected.power(state, pos), startX, startY);
+			startY += stepY*2;
+			
+			g.setColor(Color.black);
+			g.drawString("Speed", startX, startY);
+			startY += stepY;
+			
+			g.setColor(Color.blue);
+			g.drawString(""+selected.unitClass.speed, startX, startY);
+			startY += stepY*2;
+			
+			g.setColor(Color.black);
+			g.drawString("Range", startX, startY);
+			startY += stepY;
+			
+			g.setColor(Color.yellow);
+			g.drawString(""+selected.unitClass.attack.range, startX, startY);
+			startY += stepY*2;
+			
+		}
+		
+	}
 
 	private void paintWinScreen(Graphics g) {
 		
@@ -205,9 +284,10 @@ public class UI extends JComponent {
 		
 		if (imageUnit == null)
 			System.out.println("SWAP: could not find image " + ((SwapCardAction)lastAction).card.name());
-		else
+		else if (p==2)
 			g.drawImage(imageUnit, (int) (width - imageUnit.getWidth() - squareSize / 8), squareSize, null, null);
-		
+		else
+			g.drawImage(imageUnit, (int) (squareSize / 8), squareSize, null, null);
 	}
 
 	private void paintLastUnitAction(Graphics g) {

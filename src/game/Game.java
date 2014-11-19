@@ -14,7 +14,8 @@ import ui.UI;
 public class Game {
 
 	private static final long TIME_LIMIT = 3000;
-	private static final int SLEEP = 500;
+	private static final int SLEEP = 20;
+	private static final long ANIMATION = 1000;
 	public GameState state;
 	public UI ui;
 	public AI player1;
@@ -25,7 +26,7 @@ public class Game {
 	public static void main(String [ ] args)
 	{
 		//Game game = new Game(null, true, new EvaAI(true), null);
-		Game game = new Game(null, true, new RandomAI(true), new RandomAI(false));
+		Game game = new Game(null, true, new RandomAI(true), null);
 		
 		game.run();
 		
@@ -134,6 +135,13 @@ public class Game {
 				engine += engineEnd - engineStart;
 				if (ui != null)
 					ui.lastAction = action;
+				if (player2 == null){
+					try {
+						Thread.sleep(ANIMATION);
+					} catch (InterruptedException e) {
+						e.printStackTrace();
+					}
+				}
 				//System.out.println("P1: " + action);
 			} else if (!state.p1Turn && player2 != null){
 				long aiStart = System.nanoTime();
@@ -146,7 +154,13 @@ public class Game {
 				engine += engineEnd - engineStart;
 				if (ui != null)
 					ui.lastAction = action;
-				//System.out.println("P2: " + action);
+				if (player1 == null){
+					try {
+						Thread.sleep(ANIMATION);
+					} catch (InterruptedException e) {
+						e.printStackTrace();
+					}
+				}
 			} else {
 				
 				if (ui.action != null){
