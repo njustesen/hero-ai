@@ -26,7 +26,7 @@ public class Game {
 	public static void main(String [ ] args)
 	{
 		//Game game = new Game(null, true, new EvaAI(true), null);
-		Game game = new Game(null, true, new RandomAI(true), null);
+		Game game = new Game(null, true, new EvaAI(true), null);
 		
 		game.run();
 		

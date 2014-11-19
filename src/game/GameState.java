@@ -879,6 +879,7 @@ public class GameState {
 		return hand;
 	}
 	
+	
 	private void drawCards() {
 		
 		while(currentHand().size() < 6 && !currentDeck().isEmpty()){

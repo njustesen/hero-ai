@@ -28,7 +28,7 @@ public class UnitClassLib {
 		lib.get(Card.ARCHER).attack = new Attack((byte)3,AttackType.Physical,(short)300,0.5,1,false,false);
 		lib.get(Card.CLERIC).attack = new Attack((byte)2,AttackType.Magical,(short)200,1,1,false,false);
 		lib.get(Card.WIZARD).attack = new Attack((byte)2,AttackType.Magical,(short)200,1,1,true,false);
-		lib.get(Card.NINJA).attack = new Attack((byte)1,AttackType.Physical,(short)200,2,1,false,false);
+		lib.get(Card.NINJA).attack = new Attack((byte)2,AttackType.Physical,(short)200,2,1,false,false);
 		
 		// Add heal
 		lib.get(Card.CLERIC).heal = new Heal((byte)2, (short)3, (short)2);

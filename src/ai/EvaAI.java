@@ -22,8 +22,8 @@ import game.GameState;
 
 public class EvaAI implements AI {
 	
-	private static final int SOLUTIONS = 100;
-	private static final int TESTS = 2000;
+	private static final int SOLUTIONS = 400;
+	private static final int TESTS = 10000;
 	public boolean p1;
 	private AI p1Ai;
 	private AI p2Ai;
@@ -54,6 +54,7 @@ public class EvaAI implements AI {
 		
 		for(int i = 0; i < SOLUTIONS; i++){
 			GameState clone = state.copy();
+			randomizeHand(clone, !p1);
 			List<Action> actions = new ArrayList<Action>();
 			while(true){
 				Action action = p1Ai.act(clone, 0);
@@ -77,6 +78,34 @@ public class EvaAI implements AI {
 		foundActions.remove(0);
 		
 		return action;
+	}
+
+	private void randomizeHand(GameState clone, boolean player1) {
+		
+		if (player1){
+			for(Card card : clone.p1Hand){
+				clone.p1Deck.add(card);
+			}
+			clone.p1Hand.clear();
+			drawCards(clone.p1Hand, clone.p1Deck);
+		} else {
+			for(Card card : clone.p2Hand){
+				clone.p2Deck.add(card);
+			}
+			clone.p2Hand.clear();
+			drawCards(clone.p2Hand, clone.p2Deck);
+		}
+	}
+	
+	private void drawCards(List<Card> hand, List<Card> deck) {
+		
+		while(hand.size() < 6 && !deck.isEmpty()){
+			int idx = (int) (Math.random() * deck.size());
+			Card card = deck.get(idx);
+			deck.remove(idx);
+			hand.add(card);
+		}
+		
 	}
 
 	private List<Action> findBest(List<GameState> states, List<List<Action>> moves) {
