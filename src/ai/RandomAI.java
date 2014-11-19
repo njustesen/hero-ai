@@ -263,7 +263,7 @@ public class RandomAI implements AI {
 			}
 		}
 		
-		return null;
+		return new EndTurnAction();
 	}
 
 	private Map<Unit, Position> getUnits() {

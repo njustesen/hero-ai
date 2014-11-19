@@ -29,8 +29,9 @@ import action.SwapCardAction;
 public class GameState {
 
 	private static final int ASSAULT_BONUS = 300;
-
 	private static final double INFERNO_DAMAGE = 350;
+	private static final byte STARTING_AP = 3;
+	private static final int REQUIRED_UNITS = 3;
 	
 	public HAMap map;
 	public boolean p1Turn;
@@ -51,7 +52,7 @@ public class GameState {
 		this.map = map;
 		this.p1Turn = true;
 		this.turn = 1;
-		this.APLeft = 5;
+		this.APLeft = STARTING_AP;
 		this.p1Hand = new ArrayList<Card>(6);
 		this.p2Hand = new ArrayList<Card>(6);
 		this.chainTargets = new ArrayList<Position>();
@@ -60,10 +61,15 @@ public class GameState {
 			for(int y = 0; y < map.height; y++)
 				squares[x][y] = map.squares[x][y].copy();
 		
-		dealCards(1);
-		dealCards(2);
+		while(!legalStartingHand(p1Hand))
+			dealCards(1);
+		
+		while(!legalStartingHand(p2Hand))
+			dealCards(2);
+		
 	}
 	
+
 	public GameState(
 			HAMap map, 
 			boolean p1Turn, 
@@ -474,11 +480,11 @@ public class GameState {
 					unit.hp -= damage;
 					if (unit.hp <= 0){
 						if (unit.unitClass.card == Card.CRYSTAL){
-							checkWinOnCrystals();
+							checkWinOnCrystals(p1Turn ? 2 : 1);
 							unit = null;
 						} else {
 							unit.hp = 0;
-							checkWinOnUnits();
+							checkWinOnUnits(p1Turn ? 2 : 1);
 						}
 					}
 				}
@@ -494,7 +500,7 @@ public class GameState {
 		if (defender.hp == 0){
 			squares[defPos.x][defPos.y].unit = null;
 			move(attacker, attPos, defPos);
-			checkWinOnUnits();
+			checkWinOnUnits(p1Turn ? 2 : 1);
 		} else {
 			int damage = attacker.damage(this, attPos, defender, defPos);
 			if (defender.unitClass.card == Card.CRYSTAL){
@@ -505,11 +511,11 @@ public class GameState {
 			if (defender.hp <= 0){
 				defender.hp = 0;
 				if (defender.unitClass.card == Card.CRYSTAL){
-					checkWinOnCrystals();
+					checkWinOnCrystals(p1Turn ? 2 : 1);
 					squares[defPos.x][defPos.y].unit = null;
 				} else {
 					squares[defPos.x][defPos.y].unit.hp = 0;
-					checkWinOnUnits();
+					checkWinOnUnits(p1Turn ? 2 : 1);
 				}
 			} 
 			if (attacker.unitClass.attack.push)
@@ -553,11 +559,11 @@ public class GameState {
 			if (defender.hp <= 0){
 				defender.hp = 0;
 				if (defender.unitClass.card == Card.CRYSTAL){
-					checkWinOnCrystals();
+					checkWinOnCrystals(p1Turn ? 2 : 1);
 					defender = null;
 				} else {
 					defender.hp = 0;
-					checkWinOnUnits();
+					checkWinOnUnits(p1Turn ? 2 : 1);
 				}
 			} 
 			chain(attacker, attPos, bestPos, bestDir, jump+1);
@@ -633,82 +639,18 @@ public class GameState {
 		return bonus;
 	}
 
-	private void checkWinOnUnits() {
+	private void checkWinOnUnits(int p) {
 		
-		boolean p1Alive = false;
-		boolean p2Alive = false;
-		
-		for(int x = 0; x < map.width; x++){
-			for(int y = 0; y < map.height; y++){
-				if (squares[x][y].unit != null && squares[x][y].unit.p1Owner)
-					p1Alive = true;
-				else if (squares[x][y].unit != null && !squares[x][y].unit.p1Owner)
-					p2Alive = true;
-			}
-		}
-		
-		if (!p1Alive || !p2Alive){
+		if (!aliveOnUnits(p))
 			isTerminal = true;
-			return;
-		}
-		
-		for(Card type : p1Deck){
-			if (type.type == CardType.UNIT){
-				p1Alive = true;
-				break;
-			}
-		}
-		if (p1Alive){
-			for(Card type : p1Hand){
-				if (type.type == CardType.UNIT){
-					p1Alive = true;
-					break;
-				}
-			}
-		}
-		for(Card type : p2Deck){
-			if (type.type == CardType.UNIT){
-				p2Alive = true;
-				break;
-			}
-		}
-		if (p2Alive){
-			for(Card type : p2Hand){
-				if (type.type == CardType.UNIT){
-					p2Alive = true;
-					break;
-				}
-			}
-		}
-		
-		if (!p1Alive || !p2Alive)
-			isTerminal = true;
+		aliveOnUnits(p);
 		
 	}
 	
 
-	private void checkWinOnCrystals() {
-		boolean p1Alive = false;
-		boolean p2Alive = false;
-		
-		for(Position pos : map.p1Crystals){
-			if (squares[pos.x][pos.y].unit != null 
-					&& squares[pos.x][pos.y].unit.unitClass.card == Card.CRYSTAL 
-					&& squares[pos.x][pos.y].unit.hp > 0){
-				p1Alive = true;
-				break;
-			}
-		}
-		for(Position pos : map.p2Crystals){
-			if (squares[pos.x][pos.y].unit != null 
-					&& squares[pos.x][pos.y].unit.unitClass.card == Card.CRYSTAL
-					&& squares[pos.x][pos.y].unit.hp > 0){
-				p2Alive = true;
-				break;
-			}
-		}
-		
-		if (!p1Alive || !p2Alive)
+	private void checkWinOnCrystals(int p) {
+	
+		if (!aliveOnCrystals(p))
 			isTerminal = true;
 		
 	}
@@ -716,38 +658,77 @@ public class GameState {
 
 	public int getWinner() {
 		
-		if (!isTerminal)
+		boolean p1Alive = true;
+		boolean p2Alive = true;
+		
+		if (!aliveOnCrystals(1) || !aliveOnUnits(1))
+			p1Alive = false;
+		
+		if (!aliveOnCrystals(2) || !aliveOnUnits(2))
+			p2Alive = false;
+		
+		if (p1Alive == p2Alive)
 			return 0;
 		
-		boolean p1Alive = false;
+		if (p1Alive)
+			return 1;
 		
-		for(Position pos : map.p1Crystals){
+		if (p2Alive)
+			return 2;
+		
+		return 0;
+		
+	}	
+	
+	private boolean aliveOnCrystals(int player){
+		
+		List<Position> crystals = map.p1Crystals;
+		if (player == 2)
+			crystals = map.p2Crystals;
+		
+		for(Position pos : crystals){
 			if (squares[pos.x][pos.y].unit != null && squares[pos.x][pos.y].unit.hp > 0){
-				p1Alive = true;
-				break;
+				return true;
 			}
 		}
 		
-		for(Card type : p1Deck){
+		return false;
+		
+	}
+	
+	private boolean aliveOnUnits(int player){
+		
+		boolean p1 = (player == 1);
+		
+		List<Card> deck = p1Deck;
+		if (player == 2){
+			deck = p2Deck;
+		}
+		
+		for(Card type : deck){
 			if (type.type == CardType.UNIT){
-				p1Alive = true;
-				break;
+				return true;
 			}
 		}
-		if (p1Alive){
-			for(Card type : p1Hand){
-				if (type.type == CardType.UNIT){
-					p1Alive = true;
-					break;
+		for(Card type : deck){
+			if (type.type == CardType.UNIT){
+				return true;
+			}
+		}
+		
+		for(int x = 0; x < map.width; x++){
+			for(int y = 0; y < map.height; y++){
+				if (squares[x][y].unit != null 
+						&& squares[x][y].unit.p1Owner == p1
+						&& squares[x][y].unit.unitClass.card != Card.CRYSTAL){
+					return true;
 				}
 			}
 		}
 		
-		if (!p1Alive)
-			return 2;
-		else 
-			return 1;
-	}	
+		return false;
+		
+	}
 
 	private void push(Unit defender, Position attPos, Position defPos) {
 		
@@ -834,9 +815,11 @@ public class GameState {
 	}
 */
 	private void endTurn() {
-		checkWinOnUnits();
-		drawCards();
 		removeDying(p1Turn);
+		checkWinOnUnits(1);
+		checkWinOnUnits(2);
+		checkWinOnCrystals(p1Turn ? 2 : 1);
+		drawCards();
 		p1Turn = !p1Turn;
 		APLeft = 5;
 		turn++;
@@ -852,15 +835,6 @@ public class GameState {
 			
 			p1Hand = drawHandFrom(p1Deck);
 			
-			boolean p1HandGood = false;
-			for(Card card : p1Hand){
-				if (card.type == CardType.UNIT){
-					p1HandGood = true;
-					break;
-				}
-			}
-			if (!p1HandGood)
-				dealCards(1);
 		} else if (player == 2){
 			p2Deck = new ArrayList<Card>();
 			for (Card type : Council.deck)
@@ -868,16 +842,27 @@ public class GameState {
 			
 			p2Hand = drawHandFrom(p2Deck);
 			
-			boolean p2HandGood = false;
-			for(Card card : p2Hand){
-				if (card.type == CardType.UNIT){
-					p2HandGood = true;
-					break;
-				}
-			}
-			if (!p2HandGood)
-				dealCards(2);
 		}
+		
+	}
+	
+	private boolean legalStartingHand(List<Card> hand) {
+		if (hand.size() != 6)
+			return false;
+		
+		int units = 0;
+		for(Card card : hand){
+			if (card.type == CardType.UNIT){
+				units++;
+			}
+		}
+		
+		if (units == REQUIRED_UNITS){
+			return true;
+		}
+		
+		return false;
+		
 	}
 
 	private List<Card> drawHandFrom(List<Card> deck) {

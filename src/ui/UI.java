@@ -91,11 +91,26 @@ public class UI extends JComponent {
 			paintDoors(g);
 			paintLastSwapCardAction(g);
 			paintLastDropAction(g);
+			paintWinScreen(g);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
         
     }
+
+	private void paintWinScreen(Graphics g) {
+		
+		if (state.isTerminal){
+			if (state.getWinner() == 1){
+				g.setColor(Color.red);
+			} else {
+				g.setColor(Color.blue);
+			}
+			g.setFont(new Font("Arial", Font.BOLD, 50));
+			g.drawString("PLAYER " + state.getWinner() + " WON!", 155, 200);
+		}
+		
+	}
 
 	private void paintLastDropAction(Graphics g) {
 		
@@ -328,10 +343,16 @@ public class UI extends JComponent {
 						squareSize + squareSize * x + squareSize/8, 
 						squareSize + squareSize * y - (int)(squareSize/3.75));
 				
+				if (state.squares[x][y].unit == null)
+					continue;
+				
 				g.setColor(new Color(50,100,50));
 				g.drawString(state.squares[x][y].unit.hp + "/" + state.squares[x][y].unit.maxHP(), 
 						squareSize + squareSize * x + squareSize/8 - 1, 
 						squareSize + squareSize * y - (int)(squareSize/3.75));
+				
+				if (state.squares[x][y].unit == null)
+					continue;
 				
 				if (state.squares[x][y].unit.power(state, new Position(x, y)) > 0){
 					g.setFont(new Font("Arial", Font.BOLD, 11));
