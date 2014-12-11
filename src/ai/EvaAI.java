@@ -22,8 +22,8 @@ import game.GameState;
 
 public class EvaAI implements AI {
 	
-	private static final int SOLUTIONS = 400;
-	private static final int TESTS = 10000;
+	private static final int SOLUTIONS = 40;
+	private static final int TESTS = 100;
 	public boolean p1;
 	private AI p1Ai;
 	private AI p2Ai;

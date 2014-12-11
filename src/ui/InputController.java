@@ -6,6 +6,7 @@ import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.awt.event.MouseMotionListener;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -19,7 +20,7 @@ import action.UnitAction;
 import model.Position;
 import model.Unit;
 
-public class InputController implements MouseListener, KeyListener {
+public class InputController implements MouseListener, KeyListener, MouseMotionListener {
 	
 	private boolean humanP1;
 	private boolean humanP2;
@@ -31,6 +32,8 @@ public class InputController implements MouseListener, KeyListener {
 	public List<Action> possibleActions;
 	public Action action;
 	public int activeCardIdx;
+	public int mouseX;
+	public int mouseY;
 	
 	public InputController(boolean humanP1, boolean humanP2, int gridX, int gridY, int squareSize) {
 		this.humanP1 = humanP1;
@@ -214,7 +217,6 @@ public class InputController implements MouseListener, KeyListener {
 		
 	}
 
-
 	@Override
 	public void mouseEntered(MouseEvent arg0) {
 		// TODO Auto-generated method stub
@@ -254,6 +256,20 @@ public class InputController implements MouseListener, KeyListener {
 	@Override
 	public void keyTyped(KeyEvent arg0) {
 		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void mouseDragged(MouseEvent arg0) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void mouseMoved(MouseEvent arg0) {
+		
+		mouseX = arg0.getPoint().x;
+		mouseY = arg0.getPoint().y;
 		
 	}
 

@@ -12,6 +12,8 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import javax.swing.JComponent;
@@ -56,6 +58,7 @@ public class UI extends JComponent {
 		frame.setVisible(true);
 		inputController = new InputController(humanP1, humanP2, squareSize, squareSize, squareSize);
 		this.addMouseListener(inputController);
+		this.addMouseMotionListener(inputController);
         this.state = state;
         this.bottom = squareSize + state.map.height * squareSize + squareSize / 4;
 	}
@@ -94,11 +97,90 @@ public class UI extends JComponent {
 			paintLastDropAction(g);
 			paintWinScreen(g);
 			paintUnitDetails(g);
+			paintDeck(g);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
         
     }
+
+	private void paintDeck(Graphics g) {
+		
+		// Player 1
+		if (inputController.mouseX >= (squareSize / 8)
+				&& inputController.mouseX <= (squareSize / 8) + 45
+				&& inputController.mouseY >= (squareSize)
+				&& inputController.mouseY <= (squareSize) + 60){
+			
+			g.setColor(new Color(0,0,0,150));
+			int yyy=0;
+			if (state.cardsLeft(1) > 21)
+				yyy=1;
+			if (state.cardsLeft(1) <= 14)
+				yyy=-1;
+			if (state.cardsLeft(1) <= 7)
+				yyy=-2;
+			if (state.cardsLeft(1) > 0)
+				g.fillRect(squareSize + squareSize/2, squareSize + squareSize/2 - squareSize*yyy/2, (int)(width-squareSize*3), (int)(height-squareSize*3.5+squareSize*yyy));
+			
+			showDeckAndHand(g, 1, yyy);
+			
+		}
+		
+		// Player 2
+		if (inputController.mouseX >= (width - squareSize + (squareSize / 8))
+				&& inputController.mouseX <= (width - squareSize + (squareSize / 8)) + 45
+				&& inputController.mouseY >= (squareSize)
+				&& inputController.mouseY <= (squareSize) + 60){
+			
+			g.setColor(new Color(0,0,0,150));
+			int yyy=0;
+			if (state.cardsLeft(2) > 21)
+				yyy=1;
+			if (state.cardsLeft(2) <= 14)
+				yyy=-1;
+			if (state.cardsLeft(2) <= 7)
+				yyy=-2;
+			if (state.cardsLeft(2) > 0)
+				g.fillRect(squareSize + squareSize/2, squareSize + squareSize/2 - squareSize*yyy/2, (int)(width-squareSize*3), (int)(height-squareSize*3.5+squareSize*yyy));
+			
+			showDeckAndHand(g, 2, yyy);
+			
+		}
+				
+	}
+
+	private void showDeckAndHand(Graphics g, int p, int yless) {
+		int x = squareSize*2;
+		int y = squareSize*2 - yless*squareSize/2;	
+		int space = squareSize;
+		int col = 0;
+		int row = 0;
+		List<Card> cards = new ArrayList<Card>();
+		if (p == 1){
+			cards.addAll(state.p1Deck);
+			cards.addAll(state.p1Hand);
+		} else if (p == 2){
+			cards.addAll(state.p2Deck);
+			cards.addAll(state.p2Hand);
+		} else {
+			return;
+		}
+		Collections.sort(cards);
+		for (Card card : cards){
+			BufferedImage image = getImage(card, p);
+			int xx = x + (space*col);
+			int yy = y + (space*row);
+			if (xx > (width-x)-space){
+				row++;
+				col=0;
+				xx = x + (space*col);
+				yy = y + (space*row);
+			}
+			g.drawImage(image, xx, yy, null);
+			col++;
+		}
+	}
 
 	private void paintUnitDetails(Graphics g) {
 	
@@ -460,12 +542,12 @@ public class UI extends JComponent {
 		        RenderingHints.KEY_TEXT_ANTIALIASING,
 		        RenderingHints.VALUE_TEXT_ANTIALIAS_GASP);
 		g.drawImage(image, squareSize / 8 , squareSize, null, null);
-		g.drawString("" + state.p1Deck.size(), (int) (squareSize / 2.75), squareSize + image.getHeight() - 6);
+		g.drawString("" + state.cardsLeft(1), (int) (squareSize / 2.75), squareSize + image.getHeight() - 6);
 		
 		image = ImageLib.lib.get("door-2");
 		g.drawImage(image, (int) (width - image.getWidth() - squareSize / 8), squareSize, null, null);
 		
-		g.drawString("" + state.p2Deck.size(), width - image.getWidth() + squareSize / 8, squareSize + image.getHeight() - 6);
+		g.drawString("" + state.cardsLeft(2), width - image.getWidth() + squareSize / 8, squareSize + image.getHeight() - 6);
 		
 	}
 
@@ -584,22 +666,7 @@ public class UI extends JComponent {
 			
 			int x = from + i * squareSize;
 			
-			BufferedImage image = null;
-			switch (hand.get(i)) {
-			case ARCHER: image = ImageLib.lib.get("archer-" + p);break;
-			case CLERIC: image = ImageLib.lib.get("cleric-" + p);break;
-			case DRAGONSCALE: image = ImageLib.lib.get("shield");break;
-			case INFERNO: image = ImageLib.lib.get("inferno");break;
-			case KNIGHT: image = ImageLib.lib.get("knight-" + p);break;
-			case NINJA: image = ImageLib.lib.get("ninja-" + p);break;
-			case REVIVE_POTION: image = ImageLib.lib.get("potion");break;
-			case RUNEMETAL: image = ImageLib.lib.get("sword");break;
-			case SCROLL: image = ImageLib.lib.get("scroll-" + p);break;
-			case SHINING_HELM: image = ImageLib.lib.get("helmet-" + p);break;
-			case WIZARD: image = ImageLib.lib.get("wizard-" + p);break;
-			default:
-				break;
-			}
+			BufferedImage image = getImage(hand.get(i), p);
 			
 			if (image != null){
 				int b = bottom;
@@ -612,6 +679,27 @@ public class UI extends JComponent {
 			
 		}
 		
+	}
+
+	private BufferedImage getImage(Card card, int p) {
+		
+		switch (card) {
+		case ARCHER: return ImageLib.lib.get("archer-" + p);
+		case CLERIC: return ImageLib.lib.get("cleric-" + p);
+		case DRAGONSCALE: return ImageLib.lib.get("shield");
+		case INFERNO: return ImageLib.lib.get("inferno");
+		case KNIGHT: return ImageLib.lib.get("knight-" + p);
+		case NINJA: return ImageLib.lib.get("ninja-" + p);
+		case REVIVE_POTION: return ImageLib.lib.get("potion");
+		case RUNEMETAL: return ImageLib.lib.get("sword");
+		case SCROLL: return ImageLib.lib.get("scroll-" + p);
+		case SHINING_HELM: return ImageLib.lib.get("helmet-" + p);
+		case WIZARD: return ImageLib.lib.get("wizard-" + p);
+		default:
+			break;
+		}
+		
+		return null;
 	}
 
 	private void paintBoard(Graphics g) throws IOException {

@@ -999,5 +999,14 @@ public class GameState {
 	public Square squareAt(Position pos) {
 		return squares[pos.x][pos.y];
 	}
+
+
+	public int cardsLeft(int p) {
+		if (p==1)
+			return p1Deck.size() + p1Hand.size();
+		else if (p==2)
+			return p2Deck.size() + p2Hand.size();
+		return -1;
+	}
 	
 }
