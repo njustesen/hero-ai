@@ -52,7 +52,6 @@ public class NmSearchAI implements AI {
 		
 		for(int i = 0; i < n; i++){
 			GameState clone = state.copy();
-			randomizeHand(clone, !p1);
 			List<Action> actions = new ArrayList<Action>();
 			while(true){
 				Action action = p1Ai.act(clone, 0);
@@ -113,11 +112,11 @@ public class NmSearchAI implements AI {
 			values.add(value);
 		}
 		
-		double highest = -1000000;
+		double oppWorstVal = 1000000;
 		int best = -1;
 		for(int i = 0; i < states.size(); i++){
-			if (values.get(i) > highest){
-				highest = values.get(i);
+			if (values.get(i) < oppWorstVal){
+				oppWorstVal = values.get(i);
 				best = i;
 			}
 		}
@@ -130,7 +129,7 @@ public class NmSearchAI implements AI {
 
 	private double evaluate(GameState state, int runs) {
 		
-		double worst = 1000000;
+		double oppBest = -1000000;
 		for(int r = 0; r < runs; r++){
 			
 			GameState clone = state.copy();
@@ -142,13 +141,13 @@ public class NmSearchAI implements AI {
 					break;
 			}
 			
-			double value = value(state, p1);
-			if (value < worst)
-				worst = value;
+			double value = value(state, !p1);
+			if (value > oppBest)
+				oppBest = value;
 			
 		}
 		
-		return worst;
+		return oppBest;
 	}
 
 	private double value(GameState state, boolean p1) {
@@ -205,8 +204,9 @@ public class NmSearchAI implements AI {
 			}
 		}
 		
-		return p1Units - p2Units;
-		
+		if (p1)
+			return p1Units - p2Units;
+		return p2Units - p1Units;
 	}
 
 }

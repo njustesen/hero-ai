@@ -265,10 +265,5 @@ public class RandomAI implements AI {
 		
 		return new EndTurnAction();
 	}
-
-	private Map<Unit, Position> getUnits() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
+	
 }
