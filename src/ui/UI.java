@@ -46,6 +46,8 @@ public class UI extends JComponent {
 	private int bottom;
 	private InputController inputController;
 	public Action action;
+	private boolean humanP1; 
+	private boolean humanP2;
 	
 	public UI(GameState state, boolean humanP1, boolean humanP2){
 		frame = new JFrame();
@@ -56,6 +58,8 @@ public class UI extends JComponent {
 		frame.setDefaultCloseOperation (JFrame.EXIT_ON_CLOSE);
 		frame.getContentPane().add(this);    
 		frame.setVisible(true);
+		this.humanP1 = humanP1;
+		this.humanP2 = humanP2;
 		inputController = new InputController(humanP1, humanP2, squareSize, squareSize, squareSize);
 		this.addMouseListener(inputController);
 		this.addMouseMotionListener(inputController);
@@ -653,9 +657,9 @@ public class UI extends JComponent {
 			g.drawRect(start + x * squareSize, bottom, squareSize, squareSize);
 		}
 		*/
-		if (state.p1Turn)
+		if (state.p1Turn && (humanP1 || (!humanP1 && !humanP2)))
 			paintHand(g, start, state.p1Hand, 1);
-		else
+		else if (!state.p1Turn && (humanP2 || (!humanP1 && !humanP2)))
 			paintHand(g, start, state.p2Hand, 2);
 		
 	}
