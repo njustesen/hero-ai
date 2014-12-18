@@ -56,16 +56,16 @@ public class InputController implements MouseListener, KeyListener, MouseMotionL
 	@Override
 	public void mouseClicked(MouseEvent arg0) {
 		
-		System.out.println("clicked on x:" + arg0.getX() + ", y:" + arg0.getY());
+		//System.out.println("clicked on x:" + arg0.getX() + ", y:" + arg0.getY());
 		
 		if (arg0.getX() < gridX || arg0.getY() < gridY){
-			System.out.println("Clicked out of bounds");
+			//System.out.println("Clicked out of bounds");
 			return;
 		}
 		
 		int squareX = (arg0.getX() - gridX) / squareSize;
 		int squareY = (arg0.getY() - gridY) / squareSize;
-		System.out.println("clicked on square x:" + squareX + ", y:" + squareY);
+		//System.out.println("clicked on square x:" + squareX + ", y:" + squareY);
 		
 		if (state == null){
 			System.out.println("Gamestate is null");
@@ -73,7 +73,7 @@ public class InputController implements MouseListener, KeyListener, MouseMotionL
 		}
 		
 		if (squareX >= state.map.width || squareY >= state.map.height){
-			System.out.println("Out of grid");
+			//System.out.println("Out of grid");
 			
 			// Hand
 			int width = state.map.width * squareSize + squareSize*2;
@@ -142,7 +142,7 @@ public class InputController implements MouseListener, KeyListener, MouseMotionL
 			return;
 		}
 		
-		System.out.println("click registered");
+		//System.out.println("click registered");
 		
 		squareClicked(new Position(squareX, squareY));
 		
@@ -172,7 +172,7 @@ public class InputController implements MouseListener, KeyListener, MouseMotionL
 				if (a instanceof UnitAction){
 					if (((UnitAction)a).from.equals(activeSquare) && ((UnitAction)a).to.equals(position)){
 						action = a;
-						System.out.println("Returning " + a);
+						//System.out.println("Returning " + a);
 						return;
 					}
 				}
@@ -183,7 +183,7 @@ public class InputController implements MouseListener, KeyListener, MouseMotionL
 				if (a instanceof DropAction){
 					if (((DropAction)a).to.equals(position)){
 						action = a;
-						System.out.println("Returning " + a);
+						//System.out.println("Returning " + a);
 						return;
 					}
 				}

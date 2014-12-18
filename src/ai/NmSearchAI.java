@@ -133,7 +133,7 @@ public class NmSearchAI implements AI {
 		for(int r = 0; r < runs; r++){
 			
 			GameState clone = state.copy();
-			
+			randomizeHand(clone, !p1);
 			while(true){
 				Action action = p2Ai.act(clone, 0);
 				clone.update(action);

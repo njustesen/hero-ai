@@ -754,7 +754,13 @@ public class GameState {
 		if (newPos.x >= map.width || newPos.x < 0 || newPos.y >= map.height || newPos.y < 0)
 			return;
 		
-		if (squares[newPos.x][newPos.y].unit != null)
+		if (squares[newPos.x][newPos.y].unit != null && squares[newPos.x][newPos.y].unit.hp > 0)
+			return;
+		
+		if (map.squareAt(newPos).type == SquareType.DEPLOY_1 && !defender.p1Owner)
+			return;
+		
+		if (map.squareAt(newPos).type == SquareType.DEPLOY_2 && defender.p1Owner)
 			return;
 		
 		squares[defPos.x][defPos.y].unit = null;
