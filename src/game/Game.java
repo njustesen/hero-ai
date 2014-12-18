@@ -2,11 +2,12 @@ package game;
 
 import java.util.Stack;
 
+import lib.ImageLib;
 import model.HAMap;
 
 import action.Action;
 import action.UndoAction;
-import ai.EvaAI;
+import ai.NmSearchAI;
 import ai.RandomAI;
 import ai.RandomMemAI;
 import ui.UI;
@@ -14,8 +15,9 @@ import ui.UI;
 public class Game {
 
 	private static final long TIME_LIMIT = 3000;
-	private static final int SLEEP = 20;
 	private static final long ANIMATION = 1000;
+	private static int SLEEP = 20;
+	private static boolean GFX = true;
 	public GameState state;
 	public UI ui;
 	public AI player1;
@@ -25,12 +27,47 @@ public class Game {
 	
 	public static void main(String [ ] args)
 	{
-		//Game game = new Game(null, true, new EvaAI(true), null);
-		Game game = new Game(null, true, new EvaAI(true), null);
+		AI[] players = new AI[2];
+		int p = -1;
+		for(int a = 0; a < args.length; a++){
+			if (args[a].toLowerCase().equals("p1")){
+				p = 0;
+				continue;
+			} else if (args[a].toLowerCase().equals("p2")){
+				p = 1;
+				continue;
+			}
+			if (p == 0 || p==1){
+				if (args[a].toLowerCase().equals("human")){
+					players[p] = null;
+				} else if (args[a].toLowerCase().equals("random")){
+					players[p] = new RandomAI((p==0));
+				} else if (args[a].toLowerCase().equals("nmsearch")){
+					a++;
+					int n = Integer.parseInt(args[a]);
+					a++;
+					int m = Integer.parseInt(args[a]);
+					players[p] = new NmSearchAI((p==0), n, m);
+				}
+				p = -1;
+			} else if (args[a].toLowerCase().equals("sleep")){
+				a++;
+				SLEEP = Integer.parseInt(args[a]);
+				continue;
+			} else if (args[a].toLowerCase().equals("gfx")){
+				a++;
+				GFX = Boolean.parseBoolean(args[a]);
+				continue;
+			}
+		}
+		
+		Game game = new Game(null, GFX, players[0], players[1]);
+		//Game game = new Game(null, true, new EvaAI(true,1000,1000), null);
 		
 		game.run();
 		
 		//experiment(game, 10000);
+		//System.out.println(ImageLib.lib.get("crystal-1").getHeight());
 		
 	}
 	
@@ -102,10 +139,6 @@ public class Game {
 	
 	public void run(){
 		
-		long start = System.nanoTime();
-		long ai = 0;
-		long engine = 0;
-		
 		int turnLimit = 50000;
 		
 		history.add(state.copy());
@@ -123,16 +156,9 @@ public class Game {
 				}
 			}
 			
-			//int ap = state.APLeft;
 			if (state.p1Turn && player1 != null) {
-				long aiStart = System.nanoTime();
 				Action action = player1.act(state, TIME_LIMIT);
-				long aiEnd = System.nanoTime();
-				long engineStart = System.nanoTime();
 				state.update(action);
-				long engineEnd = System.nanoTime();
-				ai += aiEnd - aiStart;
-				engine += engineEnd - engineStart;
 				if (ui != null)
 					ui.lastAction = action;
 				if (player2 == null){
@@ -142,16 +168,9 @@ public class Game {
 						e.printStackTrace();
 					}
 				}
-				//System.out.println("P1: " + action);
 			} else if (!state.p1Turn && player2 != null){
-				long aiStart = System.nanoTime();
 				Action action = player2.act(state, TIME_LIMIT);
-				long aiEnd = System.nanoTime();
-				long engineStart = System.nanoTime();
 				state.update(action);
-				long engineEnd = System.nanoTime();
-				ai += aiEnd - aiStart;
-				engine += engineEnd - engineStart;
 				if (ui != null)
 					ui.lastAction = action;
 				if (player1 == null){
@@ -165,19 +184,12 @@ public class Game {
 				
 				if (ui.action != null){
 					
-					long engineStart = System.nanoTime();
 					if (ui.action instanceof UndoAction){
 						undoAction();
 					} else {
 						state.update(ui.action);
 					}
-					long engineEnd = System.nanoTime();
-					engine += engineEnd - engineStart;
 					ui.lastAction = ui.action;
-					int p = 1;
-					if (!state.p1Turn)
-						p = 2;
-					//System.out.println("P" + p + ": " + ui.action);
 					ui.resetActions();
 					
 				}
@@ -198,7 +210,6 @@ public class Game {
 			}
 			
 		}
-		long end = System.nanoTime();
 		//System.out.println("Game took " + ((end - start)/1000000d) + " ms. (" + ((end - start)/1000000d)/(double)state.turn + " per turn.");
 		//System.out.println("Game had " + state.turn + " turns.");
 		//System.out.println("AI spend " + (ai/1000000d) + " ms. (" + (ai/1000000d)/(double)state.turn + " per turn." );
@@ -208,7 +219,8 @@ public class Game {
 			ui.state = state.copy();
 			ui.repaint();
 		}
-		//System.out.println("Player " + state.getWinner() + " won the game!");
+		System.out.println("Player " + state.getWinner() + " won the game!");
+		System.out.println("Turn: " + state.turn);
 		
 	}
 

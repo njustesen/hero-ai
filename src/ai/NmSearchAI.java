@@ -20,22 +20,22 @@ import action.UnitActionType;
 import game.AI;
 import game.GameState;
 
-public class EvaAI implements AI {
+public class NmSearchAI implements AI {
 	
-	private static final int SOLUTIONS = 40;
-	private static final int TESTS = 100;
 	public boolean p1;
 	private AI p1Ai;
 	private AI p2Ai;
 	private List<Action> foundActions;
-	private int rolls;
+	private int n;
+	private int m;
 
-	public EvaAI(boolean p1){
+	public NmSearchAI(boolean p1, int n, int m){
 		this.p1 = p1;
 		this.p1Ai = new RandomMemAI(p1);
 		this.p2Ai = new RandomMemAI(!p1);
 		this.foundActions = new ArrayList<Action>();
-		this.rolls = 0;
+		this.n = n;
+		this.m = m;
 	}
 	
 	@Override
@@ -47,12 +47,10 @@ public class EvaAI implements AI {
 			return action;
 		}
 		
-		this.rolls = 0;
-
 		List<GameState> states = new ArrayList<GameState>();
 		List<List<Action>> moves = new ArrayList<List<Action>>();
 		
-		for(int i = 0; i < SOLUTIONS; i++){
+		for(int i = 0; i < n; i++){
 			GameState clone = state.copy();
 			randomizeHand(clone, !p1);
 			List<Action> actions = new ArrayList<Action>();
@@ -60,20 +58,18 @@ public class EvaAI implements AI {
 				Action action = p1Ai.act(clone, 0);
 				actions.add(action);
 				clone.update(action);
-				//System.out.println(action);
 				if (action instanceof EndTurnAction)
 					break;
 			}
-			//System.out.println("------------");
 			states.add(clone);
 			moves.add(actions);
 		}
 		
 		foundActions = findBest(states, moves);
-		System.out.println("--- Best --- Rolls: " + rolls);
-		for(Action action : foundActions)
-			System.out.println(action);
-		System.out.println("------------");
+		//System.out.println("--- Best --- {n: " + n + "; m: " + m + "}");
+		//for(Action action : foundActions)
+		//	System.out.println(action);
+		//System.out.println("------------");
 		Action action = foundActions.get(0);
 		foundActions.remove(0);
 		
@@ -113,7 +109,7 @@ public class EvaAI implements AI {
 		List<Double> values = new ArrayList<Double>();
 		
 		for(GameState state : states){
-			double value = evaluate(state, TESTS);
+			double value = evaluate(state, m);
 			values.add(value);
 		}
 		
@@ -126,7 +122,7 @@ public class EvaAI implements AI {
 			}
 		}
 		
-		System.out.println(highest);
+		//System.out.println(highest);
 		
 		return moves.get(best);
 
@@ -135,7 +131,6 @@ public class EvaAI implements AI {
 	private double evaluate(GameState state, int runs) {
 		
 		double worst = 1000000;
-		long ns = System.nanoTime();
 		for(int r = 0; r < runs; r++){
 			
 			GameState clone = state.copy();
@@ -151,9 +146,7 @@ public class EvaAI implements AI {
 			if (value < worst)
 				worst = value;
 			
-			rolls++;
 		}
-		//System.out.println(System.nanoTime() - ns);
 		
 		return worst;
 	}

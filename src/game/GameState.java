@@ -612,7 +612,7 @@ public class GameState {
 		if (dir.equals(newDir))
 			return 10;
 		
-		int value = 0;
+		int value = 1;
 		
 		if (!newDir.isDiagonal())
 			value+=4;
@@ -643,7 +643,6 @@ public class GameState {
 		
 		if (!aliveOnUnits(p))
 			isTerminal = true;
-		aliveOnUnits(p);
 		
 	}
 	
@@ -704,13 +703,17 @@ public class GameState {
 		if (player == 2){
 			deck = p2Deck;
 		}
+		List<Card> hand = p1Hand;
+		if (player == 2){
+			hand = p2Hand;
+		}
 		
 		for(Card type : deck){
 			if (type.type == CardType.UNIT){
 				return true;
 			}
 		}
-		for(Card type : deck){
+		for(Card type : hand){
 			if (type.type == CardType.UNIT){
 				return true;
 			}
