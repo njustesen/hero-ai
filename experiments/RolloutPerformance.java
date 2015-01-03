@@ -55,10 +55,12 @@ public class RolloutPerformance {
 			turns += game.state.turn;
 		}
 		System.out.println("// Run Game //");
-		System.out.println("Time (ns): " + ns + ", " + (ns/n) + " pr. game, " + (ns/n/turns) + " pr. turn");
+		System.out.println("Time (ns) avg. per game: " + (ns/n));
+		System.out.println("Time (ns) avg. per turn: " + (ns/n/(turns/n)));
 		double ms = ns/1000000.0;
-		System.out.println("Time (ms): " + ms + ", " + (ms/n) + " pr. game, " + (ms/n/turns) + " pr. turn");
-		System.out.println("Turns: " + turns + ", pr. game " + turns/n);
+		System.out.println("Time (ms) per game: " + (ms/n));
+		System.out.println("Time (ms) per turn: " + (ms/n/(turns/n)));
+		System.out.println("Turns avg. per game " + (turns/n));
 		System.out.println();
 	}
 	
@@ -80,10 +82,12 @@ public class RolloutPerformance {
 			turns += game.state.turn;
 		}
 		System.out.println("// Simulate Game //");
-		System.out.println("Time (ns): " + ns + ", " + (ns/n) + " pr. game, " + (ns/n/turns) + " pr. turn");
+		System.out.println("Time (ns) avg. per game: " + (ns/n));
+		System.out.println("Time (ns) avg. per turn: " + (ns/n/(turns/n)));
 		double ms = ns/1000000.0;
-		System.out.println("Time (ms): " + ms + ", " + (ms/n) + " pr. game, " + (ms/n/turns) + " pr. turn");
-		System.out.println("Turns: " + turns + ", pr. game " + turns/n);
+		System.out.println("Time (ms) per game: " + (ms/n));
+		System.out.println("Time (ms) per turn: " + (ms/n/(turns/n)));
+		System.out.println("Turns avg. per game " + (turns/n));
 		System.out.println();
 	}
 	
