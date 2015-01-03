@@ -31,8 +31,8 @@ public class NmSearchAI implements AI {
 
 	public NmSearchAI(boolean p1, int n, int m){
 		this.p1 = p1;
-		this.p1Ai = new RandomMemAI(p1);
-		this.p2Ai = new RandomMemAI(!p1);
+		this.p1Ai = new RandomAI(p1, RAND_METHOD.TREE);
+		this.p2Ai = new RandomAI(!p1, RAND_METHOD.TREE);
 		this.foundActions = new ArrayList<Action>();
 		this.n = n;
 		this.m = m;
@@ -144,7 +144,6 @@ public class NmSearchAI implements AI {
 			double value = value(state, !p1);
 			if (value > oppBest)
 				oppBest = value;
-			
 		}
 		
 		return oppBest;

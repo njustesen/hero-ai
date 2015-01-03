@@ -6,10 +6,12 @@ import lib.ImageLib;
 import model.HAMap;
 
 import action.Action;
+import action.EndTurnAction;
 import action.UndoAction;
 import ai.NmSearchAI;
+import ai.RAND_METHOD;
 import ai.RandomAI;
-import ai.RandomMemAI;
+import ai.ScanRandomAI;
 import ui.UI;
 
 public class Game {
@@ -27,6 +29,7 @@ public class Game {
 	
 	public static void main(String [ ] args)
 	{
+		
 		AI[] players = new AI[2];
 		int p = -1;
 		for(int a = 0; a < args.length; a++){
@@ -41,7 +44,9 @@ public class Game {
 				if (args[a].toLowerCase().equals("human")){
 					players[p] = null;
 				} else if (args[a].toLowerCase().equals("random")){
-					players[p] = new RandomAI((p==0));
+					players[p] = new RandomAI((p==0), RAND_METHOD.TREE);
+				} else if (args[a].toLowerCase().equals("scanrandom")){
+					players[p] = new ScanRandomAI((p==0));
 				} else if (args[a].toLowerCase().equals("nmsearch")){
 					a++;
 					int n = Integer.parseInt(args[a]);
@@ -66,7 +71,8 @@ public class Game {
 		
 		game.run();
 		
-		//experiment(game, 10000);
+		//Game game = new Game(null, false, new RandomAI(true), new RandomAI(false));
+		//experiment(game, 100);
 		//System.out.println(ImageLib.lib.get("crystal-1").getHeight());
 		
 	}
@@ -78,9 +84,11 @@ public class Game {
 		int p2Won = 0;
 		int draw = 0;
 		
+		int turns = 0;
+		long start = System.nanoTime();
 		while (run < runs){
 			
-			Game newGame = new Game(null, game.ui != null, game.player1, game.player2);
+			Game newGame = new Game(null, false, game.player1, game.player2);
 			newGame.run();
 			
 			if (newGame.state.getWinner() == 1)
@@ -90,15 +98,20 @@ public class Game {
 			else 
 				draw++;
 			
+			turns += newGame.state.turn;
+			/*
 			if (run % 1000 == 0){
 				System.out.println(run + "\t" + p1Won + "\t" + p2Won + "\t" + draw);
 			}
-			
+			*/
 			run++;
 			
-			
 		}
+		long ns = System.nanoTime() - start;
 		
+		System.out.println("Time: " + ns);
+		System.out.println("Time/game: " + ns/runs);
+		System.out.println("Turn/game: " + turns/runs);
 		System.out.println("P1: " + p1Won + " wins " + ((double)p1Won/(double)runs * 100.0));
 		System.out.println("P2: " + p2Won + " wins " + ((double)p2Won/(double)runs * 100.0));
 		System.out.println("Draws: " + draw);
@@ -158,6 +171,8 @@ public class Game {
 			
 			if (state.p1Turn && player1 != null) {
 				Action action = player1.act(state, TIME_LIMIT);
+				if (action == null)
+					action = new EndTurnAction();
 				state.update(action);
 				if (ui != null)
 					ui.lastAction = action;
@@ -170,6 +185,8 @@ public class Game {
 				}
 			} else if (!state.p1Turn && player2 != null){
 				Action action = player2.act(state, TIME_LIMIT);
+				if (action == null)
+					action = new EndTurnAction();
 				state.update(action);
 				if (ui != null)
 					ui.lastAction = action;
@@ -219,8 +236,13 @@ public class Game {
 			ui.state = state.copy();
 			ui.repaint();
 		}
-		System.out.println("Player " + state.getWinner() + " won the game!");
-		System.out.println("Turn: " + state.turn);
+		//long time = (System.nanoTime() - ns);
+		//System.out.println("Time = " + time + ", " + time/state.turn);
+		//System.out.println("Time = " + time/1000000.0 + ", " + time/state.turn/1000000.0);
+		//System.out.println("P1Time = " + p1Time + ", " + p1Time/((5*state.turn)/2));
+		//System.out.println("P2Time = " + p2Time + ", " + p2Time/((5*state.turn)/2));
+		//System.out.println("Player " + state.getWinner() + " won the game!");
+		//System.out.println("Turn: " + state.turn);
 		
 	}
 

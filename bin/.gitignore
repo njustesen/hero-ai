@@ -1,5 +1,4 @@
-/lib/
-/game/
+/LineIterators/
+/action/
 /ai/
-/ui/
-/model/
+/game/

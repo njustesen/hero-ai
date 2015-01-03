@@ -22,12 +22,14 @@ public class RandomAI implements AI {
 	
 	private static final double PROP_HAND = 0.25;
 	public boolean p1;
+	public RAND_METHOD randMethod;
 	private List<Integer> heightOrder;
 	private List<Integer> widthOrder;
 	private List<Integer> handOrder;
 
-	public RandomAI(boolean p1){
+	public RandomAI(boolean p1, RAND_METHOD randMethod){
 		this.p1 = p1;
+		this.randMethod = randMethod;
 		heightOrder = new ArrayList<Integer>();
 		widthOrder = new ArrayList<Integer>();
 		handOrder = new ArrayList<Integer>();
@@ -41,36 +43,22 @@ public class RandomAI implements AI {
 	
 	@Override
 	public Action act(GameState state, long ms) {
-		//long aiStart = System.nanoTime();
-		//Action selected = getActionVeryLazy(state);
-		Action selected = getActionLazy(state);
-		//Action selected = getActionBrute(state);
-		//long aiEnd = System.nanoTime();
-		//System.out.println("Move took " + ((aiEnd - aiStart)/1000000d) + " " + selected);
-		
-		//System.out.println(selected);
-		
+		Action selected = null;
+		switch(randMethod){ 
+			case BRUTE : selected = getActionBrute(state); break;
+			case TREE : selected = getActionLazy(state); break;
+			case SCAN : break;	// NOT IMPLEMENTED HERE
+		}
 		return selected;
 	}
 
 	private Action getActionBrute(GameState state) {
 		List<Action> actions = state.possibleActions();
-		//System.out.println(actions.size());
-		/*
-		System.out.println("-- Posible actions --");
-		for(Action action : actions){
-			System.out.println(action.toString());
-		}
-		*/
 		if (actions.isEmpty()){
-			//System.out.println("No actions!");
 			return new EndTurnAction();
 		}
-		//System.out.println("---------------------");
 		int idx = (int) (Math.random() * actions.size());
 		Action selected = actions.get(idx);
-		//System.out.println(selected);
-		//System.out.println("---------------------");
 		return selected;
 	}
 	
@@ -214,7 +202,7 @@ public class RandomAI implements AI {
 		return null;
 	}
 
-	private Action getActionLazy(GameState state) {
+	public Action getActionLazy(GameState state) {
 		
 		if (state.APLeft == 0)
 			return new EndTurnAction();

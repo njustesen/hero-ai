@@ -22,7 +22,7 @@ import action.UnitActionType;
 import game.AI;
 import game.GameState;
 
-public class RandomMemAI implements AI {
+public class ScanRandomAI implements AI {
 	
 	private static final double PROP_HAND = 0.25;
 	private static final double SWAP_PROP = 0.05;
@@ -33,7 +33,7 @@ public class RandomMemAI implements AI {
 	private List<Position> emptySpaces;
 	private List<Integer> handOrder;
 	
-	public RandomMemAI(boolean p1){
+	public ScanRandomAI(boolean p1){
 		this.p1 = p1;
 		this.handOrder = new ArrayList<Integer>();
 		this.handOrder.add(0);
@@ -61,7 +61,8 @@ public class RandomMemAI implements AI {
 		Collections.shuffle(emptySpaces);
 		
 		Action action = null;
-		if (Math.random() < PROP_HAND){
+		double rand = Math.random();
+		if (rand < PROP_HAND){
 			action = handAction(state);
 			if (action == null)
 				action = unitAction(state);
@@ -72,12 +73,8 @@ public class RandomMemAI implements AI {
 				action = handAction(state);
 		}
 		
-		//long aiEnd = System.nanoTime();
-		//System.out.println("Move took " + ((aiEnd - aiStart)/1000000d) + " " + selected);
-		
-		//System.out.println(selected);
-		
-		//System.out.println(action);
+		if (action == null)
+			return new EndTurnAction();
 		
 		return action;
 	}
@@ -217,7 +214,8 @@ public class RandomMemAI implements AI {
 				continue;
 			Card card = state.currentHand().get(i);
 			
-			if (!state.currentDeck().isEmpty() && Math.random() <= SWAP_PROP){
+			double rand = Math.random();
+			if (!state.currentDeck().isEmpty() && rand <= SWAP_PROP){
 				action = new SwapCardAction(card);
 			} else { 
 				if (card.type == CardType.ITEM)
