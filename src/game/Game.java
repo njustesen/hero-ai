@@ -127,22 +127,6 @@ public class Game {
 		else 
 			this.state = new GameState(HAMap.getMap());
 		
-		/*
-		// Add units
-		this.state.objects.put(new Position((byte)0,(byte)0), new Unit(GameObjectType.Knight, true));
-		this.state.objects.put(new Position((byte)0,(byte)1), new Unit(GameObjectType.Archer, true));
-		this.state.objects.put(new Position((byte)0,(byte)2), new Unit(GameObjectType.Wizard, true));
-		this.state.objects.put(new Position((byte)0,(byte)3), new Unit(GameObjectType.Cleric, true));
-		this.state.objects.put(new Position((byte)0,(byte)4), new Unit(GameObjectType.Ninja, true));
-		
-		// Add units
-		this.state.objects.put(new Position((byte)8,(byte)0), new Unit(GameObjectType.Knight, false));
-		this.state.objects.put(new Position((byte)8,(byte)1), new Unit(GameObjectType.Archer, false));
-		this.state.objects.put(new Position((byte)8,(byte)2), new Unit(GameObjectType.Wizard, false));
-		this.state.objects.put(new Position((byte)8,(byte)3), new Unit(GameObjectType.Cleric, false));
-		this.state.objects.put(new Position((byte)8,(byte)4), new Unit(GameObjectType.Ninja, false));
-		*/
-		//history.push(this.state.copy());
 		if (ui)
 			this.ui = new UI(this.state, (this.player1==null), (this.player2==null));
 		
@@ -170,33 +154,9 @@ public class Game {
 			}
 			
 			if (state.p1Turn && player1 != null) {
-				Action action = player1.act(state, TIME_LIMIT);
-				if (action == null)
-					action = new EndTurnAction();
-				state.update(action);
-				if (ui != null)
-					ui.lastAction = action;
-				if (player2 == null){
-					try {
-						Thread.sleep(ANIMATION);
-					} catch (InterruptedException e) {
-						e.printStackTrace();
-					}
-				}
+				act(player1, player2, state.copy());
 			} else if (!state.p1Turn && player2 != null){
-				Action action = player2.act(state, TIME_LIMIT);
-				if (action == null)
-					action = new EndTurnAction();
-				state.update(action);
-				if (ui != null)
-					ui.lastAction = action;
-				if (player1 == null){
-					try {
-						Thread.sleep(ANIMATION);
-					} catch (InterruptedException e) {
-						e.printStackTrace();
-					}
-				}
+				act(player2, player1, state.copy());
 			} else {
 				
 				if (ui.action != null){
@@ -244,6 +204,22 @@ public class Game {
 		//System.out.println("Player " + state.getWinner() + " won the game!");
 		//System.out.println("Turn: " + state.turn);
 		
+	}
+
+	private void act(AI p1, AI p2, GameState copy) {
+		Action action = p1.act(copy, TIME_LIMIT);
+		if (action == null)
+			action = new EndTurnAction();
+		state.update(action);
+		if (ui != null)
+			ui.lastAction = action;
+		if (p2 == null){
+			try {
+				Thread.sleep(ANIMATION);
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
+		}
 	}
 
 	private void undoAction() {
