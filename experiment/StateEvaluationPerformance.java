@@ -1,4 +1,4 @@
-import ai.GameStateEvaluator;
+import evaluate.GameStateEvaluator;
 import ai.RAND_METHOD;
 import ai.RandomAI;
 import ai.ScanRandomAI;

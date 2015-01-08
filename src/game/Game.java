@@ -8,6 +8,9 @@ import model.HAMap;
 import action.Action;
 import action.EndTurnAction;
 import action.UndoAction;
+import ai.GreedyActionAI;
+import ai.GreedyTurnAI;
+import ai.GreedyTurnAI2;
 import ai.NmSearchAI;
 import ai.RAND_METHOD;
 import ai.RandomAI;
@@ -53,6 +56,10 @@ public class Game {
 					a++;
 					int m = Integer.parseInt(args[a]);
 					players[p] = new NmSearchAI((p==0), n, m);
+				} if (args[a].toLowerCase().equals("greedyaction")){
+					players[p] = new GreedyActionAI();
+				} if (args[a].toLowerCase().equals("greedyturn")){
+					players[p] = new GreedyTurnAI2();
 				}
 				p = -1;
 			} else if (args[a].toLowerCase().equals("sleep")){
@@ -74,47 +81,6 @@ public class Game {
 		//Game game = new Game(null, false, new RandomAI(true), new RandomAI(false));
 		//experiment(game, 100);
 		//System.out.println(ImageLib.lib.get("crystal-1").getHeight());
-		
-	}
-	
-	private static void experiment(Game game, int runs) {
-		
-		int run = 1;
-		int p1Won = 0;
-		int p2Won = 0;
-		int draw = 0;
-		
-		int turns = 0;
-		long start = System.nanoTime();
-		while (run < runs){
-			
-			Game newGame = new Game(null, false, game.player1, game.player2);
-			newGame.run();
-			
-			if (newGame.state.getWinner() == 1)
-				p1Won++;
-			else if (newGame.state.getWinner() == 2)
-				p2Won++;
-			else 
-				draw++;
-			
-			turns += newGame.state.turn;
-			/*
-			if (run % 1000 == 0){
-				System.out.println(run + "\t" + p1Won + "\t" + p2Won + "\t" + draw);
-			}
-			*/
-			run++;
-			
-		}
-		long ns = System.nanoTime() - start;
-		
-		System.out.println("Time: " + ns);
-		System.out.println("Time/game: " + ns/runs);
-		System.out.println("Turn/game: " + turns/runs);
-		System.out.println("P1: " + p1Won + " wins " + ((double)p1Won/(double)runs * 100.0));
-		System.out.println("P2: " + p2Won + " wins " + ((double)p2Won/(double)runs * 100.0));
-		System.out.println("Draws: " + draw);
 		
 	}
 
@@ -187,22 +153,10 @@ public class Game {
 			}
 			
 		}
-		//System.out.println("Game took " + ((end - start)/1000000d) + " ms. (" + ((end - start)/1000000d)/(double)state.turn + " per turn.");
-		//System.out.println("Game had " + state.turn + " turns.");
-		//System.out.println("AI spend " + (ai/1000000d) + " ms. (" + (ai/1000000d)/(double)state.turn + " per turn." );
-		//System.out.println("Engine spend " + (engine/1000000d) + " ms. (" + (engine/1000000d)/(double)state.turn + " per turn." );
-		//System.out.println("Missing " + (((end - start) - (engine+ai))/1000000d) + " ms.");
 		if (ui != null){
 			ui.state = state.copy();
 			ui.repaint();
 		}
-		//long time = (System.nanoTime() - ns);
-		//System.out.println("Time = " + time + ", " + time/state.turn);
-		//System.out.println("Time = " + time/1000000.0 + ", " + time/state.turn/1000000.0);
-		//System.out.println("P1Time = " + p1Time + ", " + p1Time/((5*state.turn)/2));
-		//System.out.println("P2Time = " + p2Time + ", " + p2Time/((5*state.turn)/2));
-		//System.out.println("Player " + state.getWinner() + " won the game!");
-		//System.out.println("Turn: " + state.turn);
 		
 	}
 

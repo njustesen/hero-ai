@@ -6,6 +6,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import evaluate.GameStateEvaluator;
+
 import lib.Card;
 import lib.CardType;
 import lib.UnitClassLib;

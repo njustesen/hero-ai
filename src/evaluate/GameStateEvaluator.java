@@ -1,4 +1,4 @@
-package ai;
+package evaluate;
 
 import lib.Card;
 import lib.CardType;
