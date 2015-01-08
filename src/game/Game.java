@@ -2,7 +2,6 @@ package game;
 
 import java.util.Stack;
 
-import lib.ImageLib;
 import model.HAMap;
 
 import action.Action;

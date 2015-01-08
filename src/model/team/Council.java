@@ -14,22 +14,22 @@ public class Council {
 		deck.add(Card.KNIGHT);
 		deck.add(Card.KNIGHT);
 		deck.add(Card.KNIGHT);
-		deck.add(Card.KNIGHT);
+		//deck.add(Card.KNIGHT);
 		
 		deck.add(Card.ARCHER);
 		deck.add(Card.ARCHER);
 		deck.add(Card.ARCHER);
-		deck.add(Card.ARCHER);
+		//deck.add(Card.ARCHER);
 		
 		deck.add(Card.CLERIC);
 		deck.add(Card.CLERIC);
 		deck.add(Card.CLERIC);
-		deck.add(Card.CLERIC);
+		//deck.add(Card.CLERIC);
 		
 		//for(int i = 0; i < 100; i++)
-		//	deck.add(Card.WIZARD);
-		//deck.add(Card.WIZARD);
-		//deck.add(Card.WIZARD);
+		deck.add(Card.WIZARD);
+		deck.add(Card.WIZARD);
+		deck.add(Card.WIZARD);
 		//for(int i = 0; i < 10; i++)
 		deck.add(Card.NINJA);
 		

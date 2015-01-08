@@ -100,7 +100,9 @@ public class MoveSearch {
 		
 		List<Action> possible = state.possibleActions();
 		for(Action action : possible){
-			if (depth<5){
+			if (depth==0)
+				System.out.print("|");
+			if (depth<5 && !(action instanceof EndTurnAction)){
 				GameState next = state.copy();
 				next.update(action);
 				Node node = initTree(next, depth+1);

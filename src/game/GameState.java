@@ -112,10 +112,12 @@ public class GameState {
 			}
 		}
 		
-		Set<Card> visited = new HashSet<Card>();
+		List<Card> visited = new ArrayList<Card>();
 		for(Card card : currentHand()){
-			if (!visited.contains(card))
+			if (!visited.contains(card)){
 				actions.addAll(possibleActions(card));
+				visited.add(card);
+			}
 		}
 		
 		return actions;
@@ -126,9 +128,8 @@ public class GameState {
 		
 		List<Action> actions = new ArrayList<Action>();
 		
-		if (APLeft == 0){
+		if (APLeft == 0)
 			return actions;
-		}
 		
 		if (card.type == CardType.ITEM){
 			for(int x = 0; x < map.width; x++){
@@ -147,39 +148,19 @@ public class GameState {
 				}
 			}
 		} else if(card.type == CardType.SPELL){
-			Set<Position> sq = new HashSet<Position>();
-			for(int x = 0; x < map.width; x++){
-				for(int y = 0; y < map.height; y++){
-					if (squares[x][y].unit != null && squares[x][y].unit.p1Owner != p1Turn){
-						for(int xx = -1; xx <=1; xx++){
-							for(int yy = -1; yy <=1; yy++){
-								int xxx = Math.max(0, x + xx);
-								xxx = Math.min(map.width-1, xxx);
-								int yyy = Math.max(0, y + yy);
-								yyy = Math.min(map.height-1, yyy);
-								sq.add(new Position(xxx, yyy));
-							}
-						}
-					}
-				}
-			}
-			
-			for(Position pos : sq)
-				actions.add(new DropAction(card, pos));
+			for(int x = 0; x < map.width; x++)
+				for(int y = 0; y < map.height; y++)
+					actions.add(new DropAction(card, new Position(x,y)));
 			
 		} else if (card.type == CardType.UNIT){
 			if (p1Turn){
-				for(Position pos : map.p1DeploySquares){
-					if (squares[pos.x][pos.y].unit == null){
+				for(Position pos : map.p1DeploySquares)
+					if (squares[pos.x][pos.y].unit == null)
 						actions.add(new DropAction(card, new Position(pos.x, pos.y)));
-					}
-				}
 			} else {
-				for(Position pos : map.p2DeploySquares){
-					if (squares[pos.x][pos.y].unit == null){
+				for(Position pos : map.p2DeploySquares)
+					if (squares[pos.x][pos.y].unit == null)
 						actions.add(new DropAction(card, new Position(pos.x, pos.y)));
-					}
-				}
 			}
 		}
 		
