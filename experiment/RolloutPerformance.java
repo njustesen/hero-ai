@@ -1,6 +1,6 @@
-import ai.RAND_METHOD;
 import ai.RandomAI;
 import ai.ScanRandomAI;
+import ai.util.RAND_METHOD;
 import game.AI;
 import game.Game;
 

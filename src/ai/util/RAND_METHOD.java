@@ -1,4 +1,4 @@
-package ai;
+package ai.util;
 
 public enum RAND_METHOD {
 

@@ -10,11 +10,10 @@ import action.EndTurnAction;
 import action.UndoAction;
 import ai.GreedyActionAI;
 import ai.GreedyTurnAI;
-import ai.GreedyTurnAI2;
 import ai.NmSearchAI;
-import ai.RAND_METHOD;
 import ai.RandomAI;
 import ai.ScanRandomAI;
+import ai.util.RAND_METHOD;
 import ui.UI;
 
 public class Game {
@@ -59,7 +58,7 @@ public class Game {
 				} if (args[a].toLowerCase().equals("greedyaction")){
 					players[p] = new GreedyActionAI();
 				} if (args[a].toLowerCase().equals("greedyturn")){
-					players[p] = new GreedyTurnAI2();
+					players[p] = new GreedyTurnAI();
 				}
 				p = -1;
 			} else if (args[a].toLowerCase().equals("sleep")){

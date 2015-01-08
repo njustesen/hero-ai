@@ -1,4 +1,4 @@
-package ai;
+package ai.util;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -10,7 +10,7 @@ import action.EndTurnAction;
 import game.AI;
 import game.GameState;
 
-public class GreedyTurnAI2 implements AI {
+public class MoveSearch {
 	
 	class Node {
 		public Action action;
@@ -54,7 +54,7 @@ public class GreedyTurnAI2 implements AI {
 			return moves;
 		}
 		public void movesLeaf(List<List<Action>> moves, int depth) {
-			if (depth>=3 || children.isEmpty()){
+			if (children.isEmpty()){
 				List<Action> actions = new ArrayList<Action>();
 				actions.add(action);
 				Node p = parent;
@@ -64,49 +64,43 @@ public class GreedyTurnAI2 implements AI {
 				}
 				moves.add(actions);
 			} else {
-				for(Node child : children)
+				for(Node child : children){
 					child.movesLeaf(moves,depth+1);
+				}
 			}
 		}
 	}
 	
 	GameStateEvaluator evalutator;
 	
-	@Override
-	public Action act(GameState state, long ms) {
+	public List<List<Action>> possibleMoves(GameState state) {
 		
+		List<List<Action>> moves = new ArrayList<List<Action>>();
 		evalutator = new GameStateEvaluator();
 
-		Node root = initTree(state, 0);		
-		//root.print(0);
-		if (root.children.isEmpty())
-			return new EndTurnAction();
+		Node root = initTree(state, 0);	
+		if (root.children.isEmpty()){
+			List<Action> actions = new ArrayList<Action>();
+			actions.add(new EndTurnAction());
+			moves.add(actions);
+			return moves;
+		}
 		
-		System.out.println(root.size());
-		System.out.println(root.children.size());
-		System.out.println(root.children.get(0).action);
-		//root.print(0);
-		//List<List<Action>> moves = root.moves(0);
-		//System.out.println("Moves: " + moves.size());
-		List<List<Action>> moves = new ArrayList<List<Action>>();
 		root.movesLeaf(moves,0);
-		System.out.println("MOVES: " + moves.size());
-		//System.out.println("moves="+moves.size());
-		//System.out.println("value="+value);
-		return root.children.get(0).action;
-		//return moves.get(0).get(0);
+		
+		return moves;
 		
 	}
 
 	private Node initTree(GameState state, int depth) {
 		
 		Node root = new Node(null, null);
-		if (depth>=4)
-			return root;
+//		if (depth>=4)
+//			return root;
 		
 		List<Action> possible = state.possibleActions();
 		for(Action action : possible){
-			if (!(action instanceof EndTurnAction)){
+			if (depth<5){
 				GameState next = state.copy();
 				next.update(action);
 				Node node = initTree(next, depth+1);

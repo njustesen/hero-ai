@@ -19,6 +19,7 @@ import action.DropAction;
 import action.EndTurnAction;
 import action.UnitAction;
 import action.UnitActionType;
+import ai.util.RAND_METHOD;
 import game.AI;
 import game.GameState;
 
