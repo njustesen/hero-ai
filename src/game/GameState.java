@@ -211,14 +211,7 @@ public class GameState {
 					if (squares[to.x][to.y].unit.hp == 0){
 						
 						if ((squares[to.x][to.y].type == SquareType.DEPLOY_1 && !p1Turn) || (squares[to.x][to.y].type == SquareType.DEPLOY_2 && p1Turn)){
-							if (unit.p1Owner != squares[to.x][to.y].unit.p1Owner && from.distance(to) <= unit.unitClass.attack.range){
-								actions.add(new UnitAction(from, to, UnitActionType.ATTACK));
-							}else if (unit.p1Owner == squares[to.x][to.y].unit.p1Owner){
-								if (unit.unitClass.heal != null)
-									actions.add(new UnitAction(from, to, UnitActionType.ATTACK));
-								if (unit.unitClass.swap)
-									actions.add(new UnitAction(from, to, UnitActionType.SWAP));
-							}
+							// NOT ALLOWED!
 						} else {
 							if (unit.unitClass.heal != null && from.distance(to) <= unit.unitClass.heal.range)
 								actions.add(new UnitAction(from, to, UnitActionType.HEAL));
@@ -243,8 +236,13 @@ public class GameState {
 					
 				} else {
 					
-					if (from.distance(to) <= unit.unitClass.speed)
-						actions.add(new UnitAction(from, to, UnitActionType.MOVE));
+					if (from.distance(to) <= unit.unitClass.speed){
+						if ((squares[to.x][to.y].type == SquareType.DEPLOY_1 && !p1Turn) || (squares[to.x][to.y].type == SquareType.DEPLOY_2 && p1Turn)){
+							// NOT ALLOWED!
+						} else {
+							actions.add(new UnitAction(from, to, UnitActionType.MOVE));
+						}
+					}
 					
 				}
 			}

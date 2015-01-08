@@ -95,21 +95,23 @@ public class MoveSearch {
 	private Node initTree(GameState state, int depth) {
 		
 		Node root = new Node(null, null);
-//		if (depth>=4)
-//			return root;
 		
 		List<Action> possible = state.possibleActions();
+		int i = 1;
 		for(Action action : possible){
 			if (depth==0)
-				System.out.print("|");
+				System.out.println(i+"/"+possible.size());
 			if (depth<5 && !(action instanceof EndTurnAction)){
 				GameState next = state.copy();
 				next.update(action);
+				if (next.APLeft == state.APLeft)
+					continue;	// Nothing happened
 				Node node = initTree(next, depth+1);
 				root.children.add(node);
 				node.parent = root;
 				node.action = action;
 			}
+			i++;
 		}
 		
 		return root;

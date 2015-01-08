@@ -7,80 +7,66 @@ import evaluate.GameStateEvaluator;
 
 import action.Action;
 import action.EndTurnAction;
+import ai.util.MoveSearch;
 import game.AI;
 import game.GameState;
 
 public class GreedyTurnAI implements AI {
 	
-	GameStateEvaluator evalutator;
+	GameStateEvaluator evalutator = new GameStateEvaluator();
+	MoveSearch searcher = new MoveSearch();
+	List<Action> actions = new ArrayList<Action>();
 	
 	@Override
 	public Action act(GameState state, long ms) {
 		
-		evalutator = new GameStateEvaluator();
+		if (!actions.isEmpty()){
+			Action action = actions.get(0);
+			actions.remove(0);
+			return action;
+		}
+			
+		//List<List<Action>> possibleActions = searcher.possibleMoves(state);		
+		System.out.println("GTAI: Searching for possible moves.");
+		actions = best(state, searcher.possibleMoves(state));
 		
-		List<Action> actions = best(state, state.copy(), new ArrayList<Action>());		
+		Action action = actions.get(0);
+		actions.remove(0);
 		
-		System.out.println("actions="+actions);
-		//System.out.println("value="+value);
-		
-		return actions.get(0);
+		return action;
 		
 	}
 
-	private List<Action> best(GameState root, GameState state, List<Action> actions) {
-		
-		if (state.APLeft <= 0){
-			List<Action> newActions = new ArrayList<Action>();
-			for(Action a : actions)
-				newActions.add(a);
-			newActions.add(new EndTurnAction());
-			return newActions;
-		}
-		
-		List<Action> possible = state.possibleActions();
-		if (possible.isEmpty()){
-			List<Action> newActions = new ArrayList<Action>();
-			for(Action a : actions)
-				newActions.add(a);
-			newActions.add(new EndTurnAction());
-			return newActions;
-		}
-		
-		List<Action> best = null;
-		double bestValue = -100000000;
-		for(Action p : possible){
-			List<Action> newActions = new ArrayList<Action>();
-			for(Action a : actions)
-				newActions.add(a);
-			newActions.add(p);
-			GameState clone = state.copy();
-			clone.update(p);
-			List<Action> resulting = best(root, clone, newActions);
-			double value = value(root.copy(), resulting, root.p1Turn);
-			//System.out.println("actions="+resulting);
-			//System.out.println("value="+value);
-			if (value > bestValue){
+	private List<Action> best(GameState state, List<List<Action>> possibleMoves) {
+		System.out.println("GTAI: Evaluation " + possibleMoves.size() + " moves.");
+		double bestValue = -10000000;
+		List<Action> bestMove = null;
+		for(List<Action> move : possibleMoves){
+			double value = evaluateMove(state, move);
+			if (value > bestValue || bestMove == null){
+				bestMove = move;
 				bestValue = value;
-				best = resulting;
 			}
 		}
-		
-		return best;
+		System.out.println("GTAI: Best move found : " + bestMove);
+		System.out.println("GTAI: Value : " + bestValue);
+		return bestMove;
 	}
 
-	private double value(GameState state, List<Action> actions, boolean p1) {
+
+	private double evaluateMove(GameState state, List<Action> move) {
 		
 		int i = 0;
-		while(state.APLeft > 0){
-			state.update(actions.get(i));
+		int lastAP = 0;
+		GameState clone = state.copy();
+		while(clone.APLeft > 0 && lastAP != clone.APLeft){
+			lastAP = clone.APLeft;
+			clone.update(move.get(i));
 			i++;
 		}
 		
-		return evalutator.eval(state, p1);
+		return evalutator.eval(clone, clone.p1Turn);
+		
 	}
 
-
-	
-	
 }

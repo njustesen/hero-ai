@@ -118,8 +118,10 @@ public class Game {
 			}
 			
 			if (state.p1Turn && player1 != null) {
+				System.out.println("PLAYER 1 TURN");
 				act(player1, player2, state.copy());
 			} else if (!state.p1Turn && player2 != null){
+				System.out.println("PLAYER 2 TURN");
 				act(player2, player1, state.copy());
 			} else {
 				
