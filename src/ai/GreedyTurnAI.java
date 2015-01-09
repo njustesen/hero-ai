@@ -29,7 +29,7 @@ public class GreedyTurnAI implements AI {
 		//List<List<Action>> possibleActions = searcher.possibleMoves(state);		
 		System.out.println("GTAI: Searching for possible moves.");
 		actions = best(state, searcher.possibleMoves(state));
-		
+		actions.add(new EndTurnAction());
 		Action action = actions.get(0);
 		actions.remove(0);
 		
