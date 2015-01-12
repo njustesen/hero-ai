@@ -2,8 +2,39 @@ package model;
 
 public class Direction {
 
-	int x;
-	int y;
+	public static Direction NORTH = new Direction(0, -1);
+	public static Direction EAST = new Direction(1, 0);
+	public static Direction SOUTH = new Direction(0, 1);
+	public static Direction WEST = new Direction(-1, 0);
+	public static Direction NORTH_EAST = new Direction(1, -1);
+	public static Direction SOUTH_EAST = new Direction(1, 1);
+	public static Direction NORTH_WEST = new Direction(-1, -1);
+	public static Direction SOUTH_WEST = new Direction(-1, 1);
+	public int x;
+	public int y;
+
+	public static Direction direction(int x, int y) {
+		if (x == -1) {
+			if (y <= -1)
+				return NORTH_WEST;
+			else if (y == 0)
+				return WEST;
+			else if (y >= 1)
+				return SOUTH_WEST;
+		} else if (x == 0) {
+			if (y <= -1)
+				return NORTH;
+			else if (y >= 1)
+				return SOUTH;
+		} else if (x == 0)
+			if (y <= -1)
+				return NORTH_EAST;
+			else if (y == 0)
+				return EAST;
+			else if (y >= 1)
+				return SOUTH_EAST;
+		return new Direction(x, y);
+	}
 
 	public Direction(int x, int y) {
 		super();
@@ -57,9 +88,8 @@ public class Direction {
 	}
 
 	public boolean opposite(Direction dir) {
-		if (dir.x * (-1) == x && dir.y * (-1) == y) {
+		if (dir.x * (-1) == x && dir.y * (-1) == y)
 			return true;
-		}
 		return false;
 	}
 

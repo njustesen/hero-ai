@@ -20,7 +20,7 @@ public class Position {
 	public Direction getDirection(Position pos) {
 		if (pos == null)
 			return null;
-		return new Direction(pos.x - x, pos.y - y);
+		return Direction.direction(pos.x - x, pos.y - y);
 	}
 
 	@Override

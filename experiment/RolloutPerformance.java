@@ -1,7 +1,6 @@
 import game.AI;
 import game.Game;
 import ai.RandomAI;
-import ai.ScanRandomAI;
 import ai.util.RAND_METHOD;
 
 public class RolloutPerformance {
@@ -10,24 +9,21 @@ public class RolloutPerformance {
 
 		AI p1 = null;
 		AI p2 = null;
-
-		System.out.println("## Random AI GAME BRUTE ##");
-		p1 = new RandomAI(true, RAND_METHOD.BRUTE);
-		p2 = new RandomAI(false, RAND_METHOD.BRUTE);
-		runGame(1000, p1, p2);
-		System.out.println("## DONE ##");
-
-		System.out.println("## Random AI GAME TREE ##");
-		p1 = new RandomAI(true, RAND_METHOD.TREE);
-		p2 = new RandomAI(false, RAND_METHOD.TREE);
-		runGame(1000, p1, p2);
-		System.out.println("## DONE ##");
-
-		System.out.println("## Random AI GAME SCAN ##");
-		p1 = new ScanRandomAI(true);
-		p2 = new ScanRandomAI(false);
-		runGame(1000, p1, p2);
-
+		/*
+		 * System.out.println("## Random AI GAME BRUTE ##"); p1 = new
+		 * RandomAI(true, RAND_METHOD.BRUTE); p2 = new RandomAI(false,
+		 * RAND_METHOD.BRUTE); runGame(1000, p1, p2);
+		 * System.out.println("## DONE ##");
+		 * 
+		 * System.out.println("## Random AI GAME TREE ##"); p1 = new
+		 * RandomAI(true, RAND_METHOD.TREE); p2 = new RandomAI(false,
+		 * RAND_METHOD.TREE); runGame(1000, p1, p2);
+		 * System.out.println("## DONE ##");
+		 * 
+		 * System.out.println("## Random AI GAME SCAN ##"); p1 = new
+		 * ScanRandomAI(true); p2 = new ScanRandomAI(false); runGame(1000, p1,
+		 * p2);
+		 */
 		System.out.println("## Random AI SIM BRUTE ##");
 		p1 = new RandomAI(true, RAND_METHOD.BRUTE);
 		p2 = new RandomAI(false, RAND_METHOD.BRUTE);
@@ -39,11 +35,11 @@ public class RolloutPerformance {
 		p2 = new RandomAI(false, RAND_METHOD.TREE);
 		simulateGame(1000, p1, p2);
 		System.out.println("Done");
-
-		System.out.println("## Random AI SIM SCAN ##");
-		p1 = new ScanRandomAI(true);
-		p2 = new ScanRandomAI(false);
-		simulateGame(1000, p1, p2);
+		/*
+		 * System.out.println("## Random AI SIM SCAN ##"); p1 = new
+		 * ScanRandomAI(true); p2 = new ScanRandomAI(false); simulateGame(1000,
+		 * p1, p2);
+		 */
 
 	}
 
@@ -75,13 +71,11 @@ public class RolloutPerformance {
 		for (int i = 0; i < n; i++) {
 			final Game game = new Game(null, false, p1, p2);
 			final long start = System.nanoTime();
-			while (!game.state.isTerminal) {
-				if (game.state.p1Turn) {
+			while (!game.state.isTerminal)
+				if (game.state.p1Turn)
 					game.state.update(p1.act(game.state, -1));
-				} else {
+				else
 					game.state.update(p2.act(game.state, -1));
-				}
-			}
 			final long end = System.nanoTime();
 			ns += end - start;
 			turns += game.state.turn;
