@@ -40,14 +40,14 @@ public class HAMap {
 		// Power boost squares
 		grid[4][4] = new Square(SquareType.ASSAULT, null);
 		
-		HAMap map = new HAMap((byte)grid.length, (byte)grid[0].length, grid);
+		HAMap map = new HAMap(grid.length, grid[0].length, grid);
 		
 		return map;
 	
 	}
 	
-	public byte width;
-	public byte height;
+	public int width;
+	public int height;
 	public Square[][] squares;
 	public List<Position> assaultSquares;
 	public List<Position> p1DeploySquares;
@@ -55,7 +55,7 @@ public class HAMap {
 	public List<Position> p1Crystals;
 	public List<Position> p2Crystals;
 	
-	public HAMap(byte width, byte height, Square[][] squares) {
+	public HAMap(int width, int height, Square[][] squares) {
 		super();
 		this.width = width;
 		this.height = height;
@@ -84,7 +84,7 @@ public class HAMap {
 		}
 	}
 	
-	public Square squareAt(byte x, byte y){
+	public Square squareAt(int x, int y){
 		
 		return squares[x][y];
 		

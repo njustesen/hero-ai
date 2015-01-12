@@ -98,8 +98,8 @@ public class LineIterators {
 
 			@Override
 			public Position next() {
-				p.x = (byte)x;
-				p.y = (byte)y;
+				p.x = x;
+				p.y = y;
 
 				if (x == x1 && y == y1)
 					finished = true;
@@ -160,8 +160,8 @@ public class LineIterators {
 	
 			@Override
 			public Position next() {
-				p.x = (byte)x;
-				p.y = (byte)y;
+				p.x = x;
+				p.y = y;
 	
 				final float e2 = 2 * err;
 				if (e2 > -dy) {

@@ -2,9 +2,7 @@ package game;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 import util.LineIterators;
 
@@ -22,7 +20,6 @@ import model.team.Council;
 import action.Action;
 import action.DropAction;
 import action.EndTurnAction;
-import action.UndoAction;
 import action.UnitAction;
 import action.UnitActionType;
 import action.SwapCardAction;
@@ -31,15 +28,15 @@ public class GameState {
 
 	private static final int ASSAULT_BONUS = 300;
 	private static final double INFERNO_DAMAGE = 350;
-	private static final byte STARTING_AP = 3;
+	private static final int STARTING_AP = 3;
 	private static final int REQUIRED_UNITS = 3;
 	private static final int POTION_REVIVE = 100;
 	private static final int POTION_HEAL = 1000;
 	
 	public HAMap map;
 	public boolean p1Turn;
-	public short turn;
-	public byte APLeft;
+	public int turn;
+	public int APLeft;
 	public Square[][] squares;
 	public List<Card> p1Deck;
 	public List<Card> p2Deck;
@@ -78,8 +75,8 @@ public class GameState {
 	public GameState(
 			HAMap map, 
 			boolean p1Turn, 
-			short turn, 
-			byte APLeft,
+			int turn, 
+			int APLeft,
 			Square[][] squares, 
 			List<Card> p1Hand,
 			List<Card> p2Hand, 
@@ -412,9 +409,9 @@ public class GameState {
 
 	private void dropInferno(Position to) {
 		
-		for(byte x = -1; x <= 1; x++){
-			for(byte y = -1; y <= 1; y++){
-				Position pos = new Position((byte)(to.x + x), (byte)(to.y + y));
+		for(int x = -1; x <= 1; x++){
+			for(int y = -1; y <= 1; y++){
+				Position pos = new Position(to.x + x, to.y + y);
 				if (pos.x < 0 || pos.x >= map.width || pos.y < 0 || pos.y >= map.height)
 					continue;
 				if (squares[pos.x][pos.y].unit != null && squares[pos.x][pos.y].unit.p1Owner != p1Turn){
@@ -695,8 +692,8 @@ public class GameState {
 		if (defender.unitClass.card == Card.CRYSTAL)
 			return;
 			
-		byte x = 0;
-		byte y = 0;
+		int x = 0;
+		int y = 0;
 		
 		if (attPos.x > defPos.x)
 			x = -1;
@@ -707,7 +704,7 @@ public class GameState {
 		if (attPos.y < defPos.y)
 			y = 1;
 		
-		Position newPos = new Position((byte)(defPos.x + x), (byte)(defPos.y + y));
+		Position newPos = new Position(defPos.x + x, defPos.y + y);
 		if (newPos.x >= map.width || newPos.x < 0 || newPos.y >= map.height || newPos.y < 0)
 			return;
 		

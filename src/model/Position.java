@@ -2,13 +2,13 @@ package model;
 
 public class Position {
 
-	public byte x;
-	public byte y;
+	public int x;
+	public int y;
 	
 	public Position(int x, int y) {
 		super();
-		this.x = (byte) x;
-		this.y = (byte) y;
+		this.x = x;
+		this.y = y;
 	}
 
 	public Position() {
@@ -53,14 +53,14 @@ public class Position {
 		return true;
 	}
 	
-	public byte distance(Position to) {
+	public int distance(Position to) {
 		int xx = x - to.x;
 		if (xx < 0)
 			xx = xx * (-1);
 		int yy = y - to.y;
 		if (yy < 0)
 			yy = yy * (-1);
-		return (byte) (xx + yy);
+		return xx + yy;
 	}
 
 

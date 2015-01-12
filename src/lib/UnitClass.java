@@ -6,17 +6,17 @@ import model.Heal;
 public class UnitClass {
 
 	public Card card;
-	public short maxHP;
-	public byte speed;
-	public byte physicalResistance;
-	public byte magicalResistance;
-	public short power;
+	public int maxHP;
+	public int speed;
+	public int physicalResistance;
+	public int magicalResistance;
+	public int power;
 	public Attack attack;
 	public Heal heal;
 	public boolean swap;
 	
-	public UnitClass(Card card, short maxHP, byte speed, short power, byte physicalResistance, 
-			byte magicalResistance, Attack attack,
+	public UnitClass(Card card, int maxHP, int speed, int power, int physicalResistance, 
+			int magicalResistance, Attack attack,
 			Heal heal, boolean swap) {
 		super();
 		

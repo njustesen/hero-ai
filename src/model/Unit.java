@@ -13,7 +13,7 @@ import lib.UnitClassLib;
 
 public class Unit {
 
-	public short hp;
+	public int hp;
 	public UnitClass unitClass;
 	public Set<Card> equipment;
 	public boolean p1Owner;
@@ -26,7 +26,7 @@ public class Unit {
 		this.p1Owner = p1Owner;
 	}
 	
-	public Unit(short hp, Unit type, boolean p1Owner, Set<Card> equipment) {
+	public Unit(int hp, Unit type, boolean p1Owner, Set<Card> equipment) {
 		super();
 		this.unitClass = UnitClassLib.lib.get(type);
 		this.hp = hp;
@@ -34,7 +34,7 @@ public class Unit {
 		this.p1Owner = p1Owner;
 	}
 	
-	public Unit(short hp, UnitClass uclass, boolean p1Owner, Set<Card> equipment) {
+	public Unit(int hp, UnitClass uclass, boolean p1Owner, Set<Card> equipment) {
 		super();
 		this.unitClass = uclass;
 		this.hp = hp;
@@ -53,7 +53,7 @@ public class Unit {
 			if (card == Card.DRAGONSCALE || card == Card.SHINING_HELM)
 				hp += (double)hp / 10d;			
 		}
-		hp = (short) Math.min(hp, maxHP());
+		hp = Math.min(hp, maxHP());
 	}
 	
 	public int power(GameState state, Position pos) {
@@ -90,9 +90,9 @@ public class Unit {
 		return (int) (dam * ((100d - resistance)/100d));
 	}
 	
-	public short maxHP() {
+	public int maxHP() {
 		
-		short max = unitClass.maxHP;
+		int max = unitClass.maxHP;
 		
 		if (equipment.contains(Card.DRAGONSCALE))
 			max += unitClass.maxHP/10;
@@ -131,7 +131,7 @@ public class Unit {
 	
 	public void heal(int health) {
 		
-		hp = (short) Math.min(hp + health, this.maxHP());
+		hp = Math.min(hp + health, this.maxHP());
 		
 	}
 

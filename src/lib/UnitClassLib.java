@@ -14,24 +14,24 @@ public class UnitClassLib {
 	static {
 		
 		// Add units
-		lib.put(Card.KNIGHT, new UnitClass(Card.KNIGHT, (short)1000, (byte)2, (short)200, (byte)20, (byte)0, null, null, false));
-		lib.put(Card.ARCHER, new UnitClass(Card.ARCHER, (short)800,  (byte)2, (short)300, (byte)0,  (byte)0, null, null, false));
-		lib.put(Card.CLERIC, new UnitClass(Card.CLERIC, (short)800,  (byte)2, (short)200, (byte)0,  (byte)0, null, null, false));
-		lib.put(Card.WIZARD, new UnitClass(Card.WIZARD, (short)800,  (byte)2, (short)200, (byte)0,  (byte)10, null, null, false));
-		lib.put(Card.NINJA,  new UnitClass(Card.NINJA, (short)800,  (byte)3, (short)200, (byte)0,  (byte)0, null, null, false));
+		lib.put(Card.KNIGHT, new UnitClass(Card.KNIGHT, 1000, 2, 200, 20, 0, null, null, false));
+		lib.put(Card.ARCHER, new UnitClass(Card.ARCHER, 800,  2, 300, 0,  0, null, null, false));
+		lib.put(Card.CLERIC, new UnitClass(Card.CLERIC, 800,  2, 200, 0,  0, null, null, false));
+		lib.put(Card.WIZARD, new UnitClass(Card.WIZARD, 800,  2, 200, 0,  10, null, null, false));
+		lib.put(Card.NINJA,  new UnitClass(Card.NINJA, 800,  3, 200, 0,  0, null, null, false));
 		
 		// Add crystal
-		lib.put(Card.CRYSTAL, new UnitClass(Card.CRYSTAL, (short)4500, (byte)0, (short)0, (byte)0, (byte)0, null, null, false));
+		lib.put(Card.CRYSTAL, new UnitClass(Card.CRYSTAL, 4500, 0, 0, 0, 0, null, null, false));
 		
 		// Add attacks
-		lib.get(Card.KNIGHT).attack = new Attack((byte)1,AttackType.Physical,(short)200,1,1,false,true);
-		lib.get(Card.ARCHER).attack = new Attack((byte)3,AttackType.Physical,(short)300,0.5,1,false,false);
-		lib.get(Card.CLERIC).attack = new Attack((byte)2,AttackType.Magical,(short)200,1,1,false,false);
-		lib.get(Card.WIZARD).attack = new Attack((byte)2,AttackType.Magical,(short)200,1,1,true,false);
-		lib.get(Card.NINJA).attack = new Attack((byte)2,AttackType.Physical,(short)200,2,1,false,false);
+		lib.get(Card.KNIGHT).attack = new Attack(1,AttackType.Physical,200,1,1,false,true);
+		lib.get(Card.ARCHER).attack = new Attack(3,AttackType.Physical,300,0.5,1,false,false);
+		lib.get(Card.CLERIC).attack = new Attack(2,AttackType.Magical,200,1,1,false,false);
+		lib.get(Card.WIZARD).attack = new Attack(2,AttackType.Magical,200,1,1,true,false);
+		lib.get(Card.NINJA).attack = new Attack(2,AttackType.Physical,200,2,1,false,false);
 		
 		// Add heal
-		lib.get(Card.CLERIC).heal = new Heal((byte)2, (short)3, (short)2);
+		lib.get(Card.CLERIC).heal = new Heal(2, 3, 2);
 		lib.get(Card.NINJA).swap = true;
 		
 	}

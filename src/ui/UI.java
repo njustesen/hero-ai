@@ -710,8 +710,8 @@ public class UI extends JComponent {
 		g.setColor(new Color(170, 185, 68));
         g.fillRect(0, 0, width, height);
         
-        for(byte x = 0; x < state.map.width; x++){
-        	for(byte y = 0; y < state.map.height; y++){
+        for(int x = 0; x < state.map.width; x++){
+        	for(int y = 0; y < state.map.height; y++){
         		
         		Position pos = new Position(x, y);
         		
