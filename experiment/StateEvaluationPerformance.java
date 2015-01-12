@@ -1,8 +1,8 @@
 import evaluate.GameStateEvaluator;
+import ai.AI;
 import ai.RandomAI;
 import ai.ScanRandomAI;
 import ai.util.RAND_METHOD;
-import game.AI;
 import game.Game;
 
 public class StateEvaluationPerformance {

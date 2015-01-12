@@ -7,6 +7,8 @@ import lib.Card;
 
 public class HAMap {
 
+	public static HAMap mapA = HAMap.getMap();
+
 	public static HAMap getMap() {
 
 		final Square[][] grid = new Square[9][5];
@@ -62,7 +64,7 @@ public class HAMap {
 		p2DeploySquares = new ArrayList<Position>();
 		p1Crystals = new ArrayList<Position>();
 		p2Crystals = new ArrayList<Position>();
-		for (int x = 0; x < squares.length; x++) {
+		for (int x = 0; x < squares.length; x++)
 			for (int y = 0; y < squares[0].length; y++) {
 				if (squares[x][y].type == SquareType.DEPLOY_1)
 					p1DeploySquares.add(new Position(x, y));
@@ -71,15 +73,12 @@ public class HAMap {
 				if (squares[x][y].type == SquareType.ASSAULT)
 					assaultSquares.add(new Position(x, y));
 				if (squares[x][y].unit != null
-						&& squares[x][y].unit.unitClass.card == Card.CRYSTAL) {
-					if (squares[x][y].unit.p1Owner) {
+						&& squares[x][y].unit.unitClass.card == Card.CRYSTAL)
+					if (squares[x][y].unit.p1Owner)
 						p1Crystals.add(new Position(x, y));
-					} else {
+					else
 						p2Crystals.add(new Position(x, y));
-					}
-				}
 			}
-		}
 	}
 
 	public Square squareAt(int x, int y) {

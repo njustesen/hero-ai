@@ -1,6 +1,6 @@
+import ai.AI;
 import ai.RandomAI;
 import ai.util.RAND_METHOD;
-import game.AI;
 import game.Game;
 import game.GameState;
 

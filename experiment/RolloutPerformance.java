@@ -1,5 +1,5 @@
-import game.AI;
 import game.Game;
+import ai.AI;
 import ai.RandomAI;
 import ai.util.RAND_METHOD;
 
@@ -35,6 +35,7 @@ public class RolloutPerformance {
 		p2 = new RandomAI(false, RAND_METHOD.TREE);
 		simulateGame(1000, p1, p2);
 		System.out.println("Done");
+
 		/*
 		 * System.out.println("## Random AI SIM SCAN ##"); p1 = new
 		 * ScanRandomAI(true); p2 = new ScanRandomAI(false); simulateGame(1000,

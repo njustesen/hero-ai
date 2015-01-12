@@ -3,6 +3,8 @@ package ai.util;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.commons.pool2.ObjectPool;
+
 import action.Action;
 import action.EndTurnAction;
 import action.SingletonAction;
@@ -43,7 +45,7 @@ public class MoveSearch {
 				final List<Action> actions = new ArrayList<Action>();
 				actions.add(action);
 				moves.add(actions);
-			} else {
+			} else
 				for (final Node child : children) {
 					final List<List<Action>> newMoves = child.moves(depth + 1);
 					for (final List<Action> move : newMoves) {
@@ -53,7 +55,6 @@ public class MoveSearch {
 						moves.add(newMove);
 					}
 				}
-			}
 			return moves;
 		}
 
@@ -67,22 +68,33 @@ public class MoveSearch {
 					p = p.parent;
 				}
 				moves.add(actions);
-			} else {
-				for (final Node child : children) {
+			} else
+				for (final Node child : children)
 					child.movesLeaf(moves, depth + 1);
-				}
-			}
 		}
 	}
 
 	GameStateEvaluator evalutator = new GameStateEvaluator();
 	ActionPruner pruner = new ActionPruner();
 
-	public List<List<Action>> possibleMoves(GameState state) {
+	public List<List<Action>> possibleMoves(GameState state,
+			ObjectPool<GameState> pool) {
 
 		final List<List<Action>> moves = new ArrayList<List<Action>>();
 
-		final Node root = initTree(state, 0);
+		Node root = null;
+		try {
+			root = initTree(state, 0, pool);
+		} catch (final IllegalStateException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (final UnsupportedOperationException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (final Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		if (root.children.isEmpty()) {
 			final List<Action> actions = new ArrayList<Action>();
 			actions.add(SingletonAction.endTurnAction);
@@ -96,7 +108,9 @@ public class MoveSearch {
 
 	}
 
-	private Node initTree(GameState state, int depth) {
+	private Node initTree(GameState state, int depth, ObjectPool<GameState> pool)
+			throws IllegalStateException, UnsupportedOperationException,
+			Exception {
 
 		final Node root = new Node(null, null);
 
@@ -108,14 +122,19 @@ public class MoveSearch {
 			if (depth == 0)
 				System.out.println(i + "/" + actions.size());
 			if (depth < 5 && !(action instanceof EndTurnAction)) {
-				final GameState next = state.copy();
+				GameState next;
+				if (pool.getNumIdle() == 0)
+					pool.addObject();
+				next = pool.borrowObject();
+				next.imitate(state);
 				next.update(action);
 				if (next.APLeft == state.APLeft)
 					continue; // Nothing happened
-				final Node node = initTree(next, depth + 1);
+				final Node node = initTree(next, depth + 1, pool);
 				root.children.add(node);
 				node.parent = root;
 				node.action = action;
+				pool.returnObject(next);
 			}
 			i++;
 		}

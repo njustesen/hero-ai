@@ -2,14 +2,14 @@ package model;
 
 public class Direction {
 
-	public static Direction NORTH = new Direction(0, -1);
-	public static Direction EAST = new Direction(1, 0);
-	public static Direction SOUTH = new Direction(0, 1);
-	public static Direction WEST = new Direction(-1, 0);
-	public static Direction NORTH_EAST = new Direction(1, -1);
-	public static Direction SOUTH_EAST = new Direction(1, 1);
-	public static Direction NORTH_WEST = new Direction(-1, -1);
-	public static Direction SOUTH_WEST = new Direction(-1, 1);
+	public static final Direction NORTH = new Direction(0, -1);
+	public static final Direction EAST = new Direction(1, 0);
+	public static final Direction SOUTH = new Direction(0, 1);
+	public static final Direction WEST = new Direction(-1, 0);
+	public static final Direction NORTH_EAST = new Direction(1, -1);
+	public static final Direction SOUTH_EAST = new Direction(1, 1);
+	public static final Direction NORTH_WEST = new Direction(-1, -1);
+	public static final Direction SOUTH_WEST = new Direction(-1, 1);
 	public int x;
 	public int y;
 

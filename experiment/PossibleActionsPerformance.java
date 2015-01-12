@@ -1,4 +1,3 @@
-import game.AI;
 import game.Game;
 import game.GameState;
 
@@ -6,6 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import action.Action;
+import ai.AI;
 import ai.RandomAI;
 import ai.util.RAND_METHOD;
 

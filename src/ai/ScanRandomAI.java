@@ -1,6 +1,5 @@
 package ai;
 
-import game.AI;
 import game.GameState;
 
 import java.util.ArrayList;
@@ -222,9 +221,9 @@ public class ScanRandomAI implements AI {
 			final Card card = state.currentHand().get(i);
 
 			final double rand = Math.random();
-			if (!state.currentDeck().isEmpty() && rand <= SWAP_PROP) {
+			if (!state.currentDeck().isEmpty() && rand <= SWAP_PROP)
 				action = SingletonAction.swapActions.get(card);
-			} else {
+			else {
 				if (card.type == CardType.ITEM)
 					action = dropItemAction(state, card);
 				if (card.type == CardType.UNIT)
@@ -241,10 +240,9 @@ public class ScanRandomAI implements AI {
 
 	private Action dropSpellAction(GameState state, Card card) {
 
-		for (final Position pos : enemyUnits) {
+		for (final Position pos : enemyUnits)
 			return new DropAction(card, pos);
-			// TODO: also around unit
-		}
+		// TODO: also around unit
 
 		return null;
 	}
@@ -295,18 +293,21 @@ public class ScanRandomAI implements AI {
 		myUnits.clear();
 		enemyUnits.clear();
 
-		for (int x = 0; x < state.map.width; x++) {
-			for (int y = 0; y < state.map.height; y++) {
+		for (int x = 0; x < state.map.width; x++)
+			for (int y = 0; y < state.map.height; y++)
 				if (state.squares[x][y].unit != null) {
 					if (state.squares[x][y].unit.p1Owner == p1)
 						myUnits.add(new Position(x, y));
 					else
 						enemyUnits.add(new Position(x, y));
-				} else {
+				} else
 					emptySpaces.add(new Position(x, y));
-				}
-			}
-		}
+	}
+
+	@Override
+	public Action init(GameState state, long ms) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 }

@@ -1,21 +1,25 @@
 package ai;
 
-import evaluate.GameStateEvaluator;
-import game.AI;
-import game.GameState;
-
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.commons.pool2.ObjectPool;
+import org.apache.commons.pool2.impl.GenericObjectPool;
+
 import action.Action;
 import action.SingletonAction;
+import ai.util.GameStateFactory;
 import ai.util.MoveSearch;
+import evaluate.GameStateEvaluator;
+import game.GameState;
 
 public class GreedyTurnAI implements AI {
 
 	GameStateEvaluator evalutator = new GameStateEvaluator();
 	MoveSearch searcher = new MoveSearch();
 	List<Action> actions = new ArrayList<Action>();
+	ObjectPool<GameState> pool = new GenericObjectPool<GameState>(
+			new GameStateFactory());
 
 	@Override
 	public Action act(GameState state, long ms) {
@@ -28,7 +32,8 @@ public class GreedyTurnAI implements AI {
 
 		// List<List<Action>> possibleActions = searcher.possibleMoves(state);
 		System.out.println("GTAI: Searching for possible moves.");
-		actions = best(state, searcher.possibleMoves(state));
+
+		actions = best(state, searcher.possibleMoves(state, pool));
 		actions.add(SingletonAction.endTurnAction);
 		final Action action = actions.get(0);
 		actions.remove(0);
@@ -67,6 +72,12 @@ public class GreedyTurnAI implements AI {
 
 		return evalutator.eval(clone, clone.p1Turn);
 
+	}
+
+	@Override
+	public Action init(GameState state, long ms) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 }

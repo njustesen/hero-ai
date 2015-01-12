@@ -1,7 +1,6 @@
 package ai;
 
 import evaluate.GameStateEvaluator;
-import game.AI;
 import game.GameState;
 
 import java.util.ArrayList;
@@ -70,15 +69,13 @@ public class NmSearchAI implements AI {
 	private void randomizeHand(GameState clone, boolean player1) {
 
 		if (player1) {
-			for (final Card card : clone.p1Hand) {
+			for (final Card card : clone.p1Hand)
 				clone.p1Deck.add(card);
-			}
 			clone.p1Hand.clear();
 			drawCards(clone.p1Hand, clone.p1Deck);
 		} else {
-			for (final Card card : clone.p2Hand) {
+			for (final Card card : clone.p2Hand)
 				clone.p2Deck.add(card);
-			}
 			clone.p2Hand.clear();
 			drawCards(clone.p2Hand, clone.p2Deck);
 		}
@@ -107,12 +104,11 @@ public class NmSearchAI implements AI {
 
 		double oppWorstVal = 1000000;
 		int best = -1;
-		for (int i = 0; i < states.size(); i++) {
+		for (int i = 0; i < states.size(); i++)
 			if (values.get(i) < oppWorstVal) {
 				oppWorstVal = values.get(i);
 				best = i;
 			}
-		}
 
 		// System.out.println(highest);
 
@@ -142,6 +138,12 @@ public class NmSearchAI implements AI {
 		}
 
 		return oppBest;
+	}
+
+	@Override
+	public Action init(GameState state, long ms) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 }

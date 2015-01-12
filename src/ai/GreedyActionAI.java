@@ -1,10 +1,10 @@
 package ai;
 
 import evaluate.GameStateEvaluator;
-import game.AI;
 import game.GameState;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import action.Action;
@@ -28,6 +28,7 @@ public class GreedyActionAI implements AI {
 
 		actions.clear();
 		state.possibleActions(actions);
+		Collections.shuffle(actions);
 		for (final Action action : actions) {
 
 			final GameState next = state.copy();
@@ -42,6 +43,12 @@ public class GreedyActionAI implements AI {
 		}
 
 		return best;
+	}
+
+	@Override
+	public Action init(GameState state, long ms) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 }

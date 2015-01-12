@@ -1,6 +1,5 @@
 package ai;
 
-import game.AI;
 import game.GameState;
 
 import java.util.ArrayList;
@@ -102,7 +101,7 @@ public class RandomAI implements AI {
 
 	private Action unitAction(GameState state) {
 
-		for (int xx = 0; xx < widthOrder.size(); xx++) {
+		for (int xx = 0; xx < widthOrder.size(); xx++)
 			for (int yy = 0; yy < heightOrder.size(); yy++) {
 				final int x = widthOrder.get(xx);
 				final int y = heightOrder.get(yy);
@@ -122,7 +121,6 @@ public class RandomAI implements AI {
 						return action;
 				}
 			}
-		}
 
 		return null;
 	}
@@ -137,7 +135,7 @@ public class RandomAI implements AI {
 			if (at.get(0) == UnitActionType.ATTACK) {
 
 				final int d = unit.unitClass.attack.range;
-				for (int x = d * -1; x <= d; x++) {
+				for (int x = d * -1; x <= d; x++)
 					for (int y = d * -1; y <= d; y++) {
 						final Position to = new Position(pos.x + x, pos.y + y);
 						if (to.x >= state.map.width || to.x < 0
@@ -153,11 +151,10 @@ public class RandomAI implements AI {
 									UnitActionType.ATTACK);
 						}
 					}
-				}
 			} else if (at.get(0) == UnitActionType.HEAL) {
 
 				final int d = unit.unitClass.heal.range;
-				for (int x = d * -1; x <= d; x++) {
+				for (int x = d * -1; x <= d; x++)
 					for (int y = d * -1; y <= d; y++) {
 						final Position to = new Position(pos.x + x, pos.y + y);
 						if (to.x >= state.map.width || to.x < 0
@@ -170,11 +167,10 @@ public class RandomAI implements AI {
 							return new UnitAction(pos, to, UnitActionType.HEAL);
 						}
 					}
-				}
 			} else if (at.get(0) == UnitActionType.MOVE) {
 
 				final int d = unit.unitClass.speed;
-				for (int x = d * -1; x <= d; x++) {
+				for (int x = d * -1; x <= d; x++)
 					for (int y = d * -1; y <= d; y++) {
 						final Position to = new Position(pos.x + x, pos.y + y);
 						if (to.x >= state.map.width || to.x < 0
@@ -186,11 +182,9 @@ public class RandomAI implements AI {
 
 						return new UnitAction(pos, to, UnitActionType.MOVE);
 					}
-				}
 
-			} else if (at.get(0) == UnitActionType.SWAP) {
-
-				for (int x = 0; x <= state.map.width; x++) {
+			} else if (at.get(0) == UnitActionType.SWAP)
+				for (int x = 0; x <= state.map.width; x++)
 					for (int y = 0; y <= state.map.height; y++) {
 						final Position to = new Position(x, y);
 						if (to.x >= state.map.width || to.x < 0
@@ -201,8 +195,6 @@ public class RandomAI implements AI {
 								&& state.squares[to.x][to.y].unit.p1Owner == state.p1Turn)
 							return new UnitAction(pos, to, UnitActionType.SWAP);
 					}
-				}
-			}
 
 			at.remove(0);
 
@@ -286,6 +278,12 @@ public class RandomAI implements AI {
 		}
 
 		return SingletonAction.endTurnAction;
+	}
+
+	@Override
+	public Action init(GameState state, long ms) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 }

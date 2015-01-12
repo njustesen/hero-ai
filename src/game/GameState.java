@@ -58,6 +58,7 @@ public class GameState {
 		p2Deck = new ArrayList<Card>();
 		chainTargets = new ArrayList<Position>();
 		squares = new Square[map.width][map.height];
+
 		for (int x = 0; x < map.width; x++)
 			for (int y = 0; y < map.height; y++)
 				squares[x][y] = map.squares[x][y].copy();
@@ -458,8 +459,8 @@ public class GameState {
 			if (defender.hp <= 0) {
 				defender.hp = 0;
 				if (defender.unitClass.card == Card.CRYSTAL) {
-					checkWinOnCrystals(p1Turn ? 2 : 1);
 					squares[defPos.x][defPos.y].unit = null;
+					checkWinOnCrystals(p1Turn ? 2 : 1);
 				} else {
 					squares[defPos.x][defPos.y].unit.hp = 0;
 					checkWinOnUnits(p1Turn ? 2 : 1);
@@ -875,6 +876,35 @@ public class GameState {
 			p2d.add(card);
 		return new GameState(map, p1Turn, turn, APLeft, sq, p1h, p2h, p1d, p2d,
 				chainTargets, isTerminal);
+	}
+
+	public void imitate(GameState state) {
+		for (int x = 0; x < map.width; x++)
+			for (int y = 0; y < map.height; y++)
+				if (state.squares[x][y].unit != null)
+					squares[x][y].unit = state.squares[x][y].unit.copy();
+				else
+					squares[x][y].unit = null;
+		p1Hand.clear();
+		for (final Card card : state.p1Hand)
+			p1Hand.add(card);
+		p2Hand.clear();
+		for (final Card card : state.p2Hand)
+			p2Hand.add(card);
+		p1Deck.clear();
+		for (final Card card : state.p1Deck)
+			p1Deck.add(card);
+		p2Deck.clear();
+		for (final Card card : state.p2Deck)
+			p2Deck.add(card);
+		isTerminal = state.isTerminal;
+		p1Turn = state.p1Turn;
+		turn = state.turn;
+		APLeft = state.APLeft;
+		map = state.map;
+		chainTargets.clear();
+		for (final Position pos : chainTargets)
+			chainTargets.add(pos);
 	}
 
 	@Override

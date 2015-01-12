@@ -7,6 +7,7 @@ import ui.UI;
 import action.Action;
 import action.SingletonAction;
 import action.UndoAction;
+import ai.AI;
 import ai.GreedyActionAI;
 import ai.GreedyTurnAI;
 import ai.NmSearchAI;
@@ -40,25 +41,23 @@ public class Game {
 				continue;
 			}
 			if (p == 0 || p == 1) {
-				if (args[a].toLowerCase().equals("human")) {
+				if (args[a].toLowerCase().equals("human"))
 					players[p] = null;
-				} else if (args[a].toLowerCase().equals("random")) {
+				else if (args[a].toLowerCase().equals("random"))
 					players[p] = new RandomAI((p == 0), RAND_METHOD.TREE);
-				} else if (args[a].toLowerCase().equals("scanrandom")) {
+				else if (args[a].toLowerCase().equals("scanrandom"))
 					players[p] = new ScanRandomAI((p == 0));
-				} else if (args[a].toLowerCase().equals("nmsearch")) {
+				else if (args[a].toLowerCase().equals("nmsearch")) {
 					a++;
 					final int n = Integer.parseInt(args[a]);
 					a++;
 					final int m = Integer.parseInt(args[a]);
 					players[p] = new NmSearchAI((p == 0), n, m);
 				}
-				if (args[a].toLowerCase().equals("greedyaction")) {
+				if (args[a].toLowerCase().equals("greedyaction"))
 					players[p] = new GreedyActionAI();
-				}
-				if (args[a].toLowerCase().equals("greedyturn")) {
+				if (args[a].toLowerCase().equals("greedyturn"))
 					players[p] = new GreedyTurnAI();
-				}
 				p = -1;
 			} else if (args[a].toLowerCase().equals("sleep")) {
 				a++;
@@ -90,7 +89,7 @@ public class Game {
 		if (state != null)
 			this.state = state;
 		else
-			this.state = new GameState(HAMap.getMap());
+			this.state = new GameState(HAMap.mapA);
 
 		if (ui)
 			this.ui = new UI(this.state, (this.player1 == null),
@@ -107,44 +106,43 @@ public class Game {
 		history.add(state.copy());
 		lastTurn = 5;
 
+		if (SLEEP >= 20 && ui != null) {
+			ui.state = state.copy();
+			ui.repaint();
+			try {
+				Thread.sleep(SLEEP);
+			} catch (final InterruptedException e) {
+				e.printStackTrace();
+			}
+		}
+
+		if (player1 != null)
+			player1.init(state, -1);
+		if (player2 != null)
+			player2.init(state, -1);
+
 		while (!state.isTerminal && state.turn < turnLimit) {
 
-			if (SLEEP >= 20 && ui != null) {
-				ui.state = state.copy();
-				ui.repaint();
-				try {
-					Thread.sleep(SLEEP);
-				} catch (final InterruptedException e) {
-					e.printStackTrace();
-				}
-			}
-
-			if (state.p1Turn && player1 != null) {
+			if (state.p1Turn && player1 != null)
 				// System.out.println("PLAYER 1 TURN");
 				act(player1, player2, state.copy());
-			} else if (!state.p1Turn && player2 != null) {
+			else if (!state.p1Turn && player2 != null)
 				// System.out.println("PLAYER 2 TURN");
 				act(player2, player1, state.copy());
-			} else {
+			else if (ui.action != null) {
 
-				if (ui.action != null) {
-
-					if (ui.action instanceof UndoAction) {
-						undoAction();
-					} else {
-						state.update(ui.action);
-					}
-					ui.lastAction = ui.action;
-					ui.resetActions();
-
-				}
+				if (ui.action instanceof UndoAction)
+					undoAction();
+				else
+					state.update(ui.action);
+				ui.lastAction = ui.action;
+				ui.resetActions();
 
 			}
 
 			if (state.APLeft != lastTurn) {
-				if (state.APLeft < lastTurn) {
+				if (state.APLeft < lastTurn)
 					history.add(state.copy());
-				}
 				lastTurn = state.APLeft;
 			}
 
@@ -169,13 +167,12 @@ public class Game {
 		state.update(action);
 		if (ui != null)
 			ui.lastAction = action;
-		if (p2 == null) {
+		if (p2 == null)
 			try {
 				Thread.sleep(ANIMATION);
 			} catch (final InterruptedException e) {
 				e.printStackTrace();
 			}
-		}
 	}
 
 	private void undoAction() {
