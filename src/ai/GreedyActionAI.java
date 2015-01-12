@@ -1,11 +1,21 @@
 package ai;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import evaluate.GameStateEvaluator;
 import action.Action;
 import game.AI;
 import game.GameState;
 
 public class GreedyActionAI implements AI {
+
+	private List<Action> actions;
+	
+	public GreedyActionAI() {
+		super();
+		this.actions = new ArrayList<Action>();
+	}
 
 	@Override
 	public Action act(GameState state, long ms) {
@@ -14,10 +24,10 @@ public class GreedyActionAI implements AI {
 		
 		Action best = null;
 		double bestValue = -100000000;
-		if (!state.p1Turn)
-			bestValue = 100000000;
 		
-		for(Action action : state.possibleActions()){
+		actions.clear();
+		state.possibleActions(actions);
+		for(Action action : actions){
 			
 			GameState next = state.copy();
 			next.update(action);

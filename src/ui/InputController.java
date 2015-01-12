@@ -157,7 +157,8 @@ public class InputController implements MouseListener, KeyListener, MouseMotionL
 		
 		activeSquare = null;
 		activeCardIdx = i;
-		possibleActions = state.possibleActions(state.currentHand().get(i));
+		possibleActions.clear();
+		state.possibleActions(state.currentHand().get(i), possibleActions);
 		
 	}
 
@@ -209,7 +210,7 @@ public class InputController implements MouseListener, KeyListener, MouseMotionL
 			
 			if ((unit.p1Owner && humanP1 && state.p1Turn) || (!unit.p1Owner && humanP2 && !state.p1Turn)){
 				
-				possibleActions = state.possibleActions(unit, position);
+				state.possibleActions(unit, position, possibleActions);
 				
 			}
 			

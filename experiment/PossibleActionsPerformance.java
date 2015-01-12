@@ -1,3 +1,4 @@
+import java.util.ArrayList;
 import java.util.List;
 
 import action.Action;
@@ -25,9 +26,10 @@ public class PossibleActionsPerformance {
 		
 		long start = System.nanoTime();
 		
+		List<Action> actions = new ArrayList<Action>();
 		for(int i = 0; i < n; i++){
 			
-			List<Action> actions = state.possibleActions();
+			state.possibleActions(actions);
 			
 		}
 		

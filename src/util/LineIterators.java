@@ -44,6 +44,9 @@ import java.util.ArrayList;
 * 
 */
 public class LineIterators {
+	
+	public static List<Position> positions = new ArrayList<Position>();
+	
 	/**
 	* Position iterator based on Bresenham's algorithm for a line between two
 	* discrete endpoints. <b>The Position returned by the iterator will always be
@@ -219,7 +222,7 @@ public class LineIterators {
 	* @return the list of Positions representing the supercover line
 	*/
 	public static List<Position> supercoverAsList(int x1, int y1, int x2, int y2) {
-		final List<Position> Positions = new ArrayList<Position>();
+		positions.clear();;
 
 		int ystep, xstep; // the step on y and x axis
 		int error; // the error accumulated during the increment
@@ -229,7 +232,7 @@ public class LineIterators {
 		int dx = x2 - x1;
 		int dy = y2 - y1;
 
-		Positions.add(new Position(x1, y1)); // first point
+		positions.add(new Position(x1, y1)); // first point
 		// NB the last point can't be here, because of its previous point (which
 		// has to be verified)
 		if (dy < 0) {
@@ -260,15 +263,15 @@ public class LineIterators {
 					// three cases (octant == right->right-top for directions
 					// below):
 					if (error + errorprev < ddx) // bottom square also
-						Positions.add(new Position(x, y - ystep));
+						positions.add(new Position(x, y - ystep));
 					else if (error + errorprev > ddx) // left square also
-						Positions.add(new Position(x - xstep, y));
+						positions.add(new Position(x - xstep, y));
 					else { // corner: bottom and left squares also
-						Positions.add(new Position(x, y - ystep));
-						Positions.add(new Position(x - xstep, y));
+						positions.add(new Position(x, y - ystep));
+						positions.add(new Position(x - xstep, y));
 					}
 				}
-				Positions.add(new Position(x, y));
+				positions.add(new Position(x, y));
 				errorprev = error;
 			}
 		} else { // the same as above
@@ -281,20 +284,20 @@ public class LineIterators {
 					x += xstep;
 					error -= ddy;
 					if (error + errorprev < ddy)
-						Positions.add(new Position(x - xstep, y));
+						positions.add(new Position(x - xstep, y));
 					else if (error + errorprev > ddy)
-						Positions.add(new Position(x, y - ystep));
+						positions.add(new Position(x, y - ystep));
 					else {
-						Positions.add(new Position(x - xstep, y));
-						Positions.add(new Position(x, y - ystep));
+						positions.add(new Position(x - xstep, y));
+						positions.add(new Position(x, y - ystep));
 					}
 				}
-				Positions.add(new Position(x, y));
+				positions.add(new Position(x, y));
 				errorprev = error;
 			}
 		}
 		
-		return Positions;
+		return positions;
 	}
 
 	/**

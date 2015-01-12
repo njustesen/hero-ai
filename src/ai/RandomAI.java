@@ -27,10 +27,18 @@ public class RandomAI implements AI {
 	private List<Integer> heightOrder;
 	private List<Integer> widthOrder;
 	private List<Integer> handOrder;
+	private List<Action> actions;
+	private List<Position> positions;
+	private List<Integer> idxs;
 
 	public RandomAI(boolean p1, RAND_METHOD randMethod){
 		this.p1 = p1;
 		this.randMethod = randMethod;
+		this.positions = new ArrayList<Position>();
+		this.actions = new ArrayList<Action>();
+		this.idxs = new ArrayList<Integer>();
+		for(int i = 0; i < 6; i++)
+			this.idxs.add(i);
 		heightOrder = new ArrayList<Integer>();
 		widthOrder = new ArrayList<Integer>();
 		handOrder = new ArrayList<Integer>();
@@ -54,10 +62,11 @@ public class RandomAI implements AI {
 	}
 
 	private Action getActionBrute(GameState state) {
-		List<Action> actions = state.possibleActions();
-		if (actions.isEmpty()){
+		actions.clear();
+		state.possibleActions(actions);
+		if (actions.isEmpty())
 			return new EndTurnAction();
-		}
+		
 		int idx = (int) (Math.random() * actions.size());
 		Action selected = actions.get(idx);
 		return selected;
@@ -95,16 +104,17 @@ public class RandomAI implements AI {
 			for (int yy = 0; yy < heightOrder.size(); yy++){
 				int x = widthOrder.get(xx);
 				int y = heightOrder.get(yy);
-				Unit unit = state.squares[x][y].unit;
-				if (unit != null && unit.hp > 0 && unit.unitClass.card != Card.CRYSTAL){
+				if (state.squares[x][y].unit != null && 
+						state.squares[x][y].unit.hp > 0 && 
+						state.squares[x][y].unit.unitClass.card != Card.CRYSTAL){
 					List<UnitActionType> at = new ArrayList<UnitActionType>();
-					if (unit.unitClass.heal != null)
+					if (state.squares[x][y].unit.unitClass.heal != null)
 						at.add(UnitActionType.HEAL);
 					at.add(UnitActionType.ATTACK);
 					at.add(UnitActionType.MOVE);
-					if (unit.unitClass.swap)
+					if (state.squares[x][y].unit.unitClass.swap)
 						at.add(UnitActionType.SWAP);
-					Action action = randomUnitAction(state, unit, new Position(x, y), at);
+					Action action = randomUnitAction(state, state.squares[x][y].unit, new Position(x, y), at);
 					if (action != null)
 						return action;
 				}
@@ -120,9 +130,7 @@ public class RandomAI implements AI {
 		
 		while(!at.isEmpty()){
 			
-			UnitActionType a = at.get(0);
-			
-			if (a == UnitActionType.ATTACK){
+			if (at.get(0) == UnitActionType.ATTACK){
 				
 				int d = unit.unitClass.attack.range;
 				for(int x = d*-1; x <= d; x++){
@@ -140,7 +148,7 @@ public class RandomAI implements AI {
 						}
 					}
 				}
-			} else if (a == UnitActionType.HEAL){
+			} else if (at.get(0) == UnitActionType.HEAL){
 				
 				int d = unit.unitClass.heal.range;
 				for(int x = d*-1; x <= d; x++){
@@ -156,7 +164,7 @@ public class RandomAI implements AI {
 						}
 					}
 				}
-			} else if (a == UnitActionType.MOVE){
+			} else if (at.get(0) == UnitActionType.MOVE){
 				
 				int d = unit.unitClass.speed;
 				for(int x = d*-1; x <= d; x++){
@@ -171,7 +179,7 @@ public class RandomAI implements AI {
 					}
 				}
 				
-			} else if (a == UnitActionType.SWAP){
+			} else if (at.get(0) == UnitActionType.SWAP){
 				
 				for(int x = 0; x <= state.map.width; x++){
 					for(int y = 0; y <= state.map.height; y++){
@@ -184,7 +192,7 @@ public class RandomAI implements AI {
 				}
 			}
 			
-			at.remove(a);
+			at.remove(0);
 			
 		}
 		
@@ -196,7 +204,8 @@ public class RandomAI implements AI {
 			int c = handOrder.get(cc);
 			if (c >= state.currentHand().size())
 				continue;
-			List<Action> actions = state.possibleActions(state.currentHand().get(c));
+			actions.clear();
+			state.possibleActions(state.currentHand().get(c), actions);
 			if (!actions.isEmpty())
 				return actions.get((int)(actions.size() * Math.random()));
 		}
@@ -209,44 +218,47 @@ public class RandomAI implements AI {
 			return new EndTurnAction();
 		
 		if (Math.random() < PROP_HAND){
-			List<Integer> idxs = new ArrayList<Integer>();
+			List<Integer> idxs = new ArrayList<Integer>(state.currentHand().size());
 			for(int i = 0; i < state.currentHand().size(); i++)
 				idxs.add(i);
 			Collections.shuffle(idxs);
 			for(Integer i : idxs){
-				List<Action> actions = state.possibleActions(state.currentHand().get(i));
+				actions.clear();
+				state.possibleActions(state.currentHand().get(i), actions);
 				if (!actions.isEmpty())
 					return actions.get((int) (Math.random() * actions.size()));
 			}
-			List<Position> positions = new ArrayList<Position>();
+			positions.clear();
 			for(int x = 0; x < state.map.width; x++)
 				for(int y = 0; y < state.map.height; y++)
 					if (state.squares[x][y].unit != null && state.squares[x][y].unit.p1Owner == state.p1Turn && state.squares[x][y].unit.hp > 0 && state.squares[x][y].unit.unitClass.card != Card.CRYSTAL)
 						positions.add(new Position(x,y));
 			Collections.shuffle(positions);
 			for(Position pos : positions){
-				List<Action> actions = state.possibleActions(state.squares[pos.x][pos.y].unit, pos);
+				actions.clear();
+				state.possibleActions(state.squares[pos.x][pos.y].unit, pos, actions);
 				if (!actions.isEmpty())
 					return actions.get((int) (Math.random() * actions.size()));
 			}
 		} else {
-			List<Position> positions = new ArrayList<Position>();
+			positions.clear();
 			for(int x = 0; x < state.map.width; x++)
 				for(int y = 0; y < state.map.height; y++)
 					if (state.squares[x][y].unit != null && state.squares[x][y].unit.p1Owner == state.p1Turn && state.squares[x][y].unit.hp > 0 && state.squares[x][y].unit.unitClass.card != Card.CRYSTAL)
 						positions.add(new Position(x,y));
 			Collections.shuffle(positions);
 			for(Position pos : positions){
-				List<Action> actions = state.possibleActions(state.squares[pos.x][pos.y].unit, pos);
+				actions.clear();
+				state.possibleActions(state.squares[pos.x][pos.y].unit, pos, actions);
 				if (!actions.isEmpty())
 					return actions.get((int) (Math.random() * actions.size()));
 			}
-			List<Integer> idxs = new ArrayList<Integer>();
-			for(int i = 0; i < state.currentHand().size(); i++)
-				idxs.add(i);
 			Collections.shuffle(idxs);
 			for(Integer i : idxs){
-				List<Action> actions = state.possibleActions(state.currentHand().get(i));
+				if (i >= state.currentHand().size())
+					continue;
+				actions.clear();
+				state.possibleActions(state.currentHand().get(i), actions);
 				if (!actions.isEmpty())
 					return actions.get((int) (Math.random() * actions.size()));
 			}

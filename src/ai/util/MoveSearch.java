@@ -96,11 +96,12 @@ public class MoveSearch {
 		
 		Node root = new Node(null, null);
 		
-		List<Action> possible = state.possibleActions();
+		List<Action> actions = new ArrayList<Action>();
+		state.possibleActions(actions);
 		int i = 1;
-		for(Action action : possible){
+		for(Action action : actions){
 			if (depth==0)
-				System.out.println(i+"/"+possible.size());
+				System.out.println(i+"/"+actions.size());
 			if (depth<5 && !(action instanceof EndTurnAction)){
 				GameState next = state.copy();
 				next.update(action);
