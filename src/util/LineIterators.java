@@ -1,85 +1,87 @@
 package util;
 
 /** 
- 	* Copyright (c) 2011, The University of Southampton and the individual contributors.
-	* All rights reserved.
-	*
-	* Redistribution and use in source and binary forms, with or without modification,
-	* are permitted provided that the following conditions are met:
-	*
-	*   *  Redistributions of source code must retain the above copyright notice,
-	*      this list of conditions and the following disclaimer.
-	*
-	*   *  Redistributions in binary form must reproduce the above copyright notice,
-	*      this list of conditions and the following disclaimer in the documentation
-	*      and/or other materials provided with the distribution.
-	*
-	*   *  Neither the name of the University of Southampton nor the names of its
-	*      contributors may be used to endorse or promote products derived from this
-	*      software without specific prior written permission.
-	*
-	* THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
-	* ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
-	* WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
-	* DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR
-	* ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
-	* (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
-	* LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON
-	* ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
-	* (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
-	* SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-	*/
-	/*package org.openimaj.image.Position.util;*/
+ * Copyright (c) 2011, The University of Southampton and the individual contributors.
+ * All rights reserved.
+ *
+ * Redistribution and use in source and binary forms, with or without modification,
+ * are permitted provided that the following conditions are met:
+ *
+ *   *  Redistributions of source code must retain the above copyright notice,
+ *      this list of conditions and the following disclaimer.
+ *
+ *   *  Redistributions in binary form must reproduce the above copyright notice,
+ *      this list of conditions and the following disclaimer in the documentation
+ *      and/or other materials provided with the distribution.
+ *
+ *   *  Neither the name of the University of Southampton nor the names of its
+ *      contributors may be used to endorse or promote products derived from this
+ *      software without specific prior written permission.
+ *
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
+ * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+ * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+ * DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR
+ * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
+ * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
+ * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON
+ * ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+ * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
+ * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ */
+/*package org.openimaj.image.Position.util;*/
 
 import java.util.ArrayList;
-	import java.util.Iterator;
-	import java.util.List;
+import java.util.Iterator;
+import java.util.List;
 
-	import model.Position;
+import model.Position;
 
 /**
-* Iterators for producing discrete Position positions along a line.
-* 
-* @author Jonathon Hare (jsh2@ecs.soton.ac.uk)
-* 
-*/
+ * Iterators for producing discrete Position positions along a line.
+ * 
+ * @author Jonathon Hare (jsh2@ecs.soton.ac.uk)
+ * 
+ */
 public class LineIterators {
-	
+
 	public static List<Position> positions = new ArrayList<Position>();
-	
+
 	/**
-	* Position iterator based on Bresenham's algorithm for a line between two
-	* discrete endpoints. <b>The Position returned by the iterator will always be
-	* the same object for efficiency; if you need to hold on to it, you should
-	* clone it first.<b>
-	* 
-	* @param start
-	*            the coordinate of the start point
-	* @param end
-	*            the coordinate of the end point
-	* @return an iterator over the Positions in the line
-	*/
-	public static Iterator<Position> bresenham(final Position start, final Position end) {
+	 * Position iterator based on Bresenham's algorithm for a line between two
+	 * discrete endpoints. <b>The Position returned by the iterator will always
+	 * be the same object for efficiency; if you need to hold on to it, you
+	 * should clone it first.<b>
+	 * 
+	 * @param start
+	 *            the coordinate of the start point
+	 * @param end
+	 *            the coordinate of the end point
+	 * @return an iterator over the Positions in the line
+	 */
+	public static Iterator<Position> bresenham(final Position start,
+			final Position end) {
 		return bresenham(start.x, start.y, end.x, end.y);
 	}
 
 	/**
-	* Position iterator based on Bresenham's algorithm for a line between two
-	* discrete endpoints. <b>The Position returned by the iterator will always be
-	* the same object for efficiency; if you need to hold on to it, you should
-	* clone it first.<b>
-	* 
-	* @param x0
-	*            the x-ordinate of the start point
-	* @param y0
-	*            the y-ordinate of the start point
-	* @param x1
-	*            the x-ordinate of the end point
-	* @param y1
-	*            the y-ordinate of the end point
-	* @return an iterator over the Positions in the line
-	*/
-	public static Iterator<Position> bresenham(final int x0, final int y0, final int x1, final int y1) {
+	 * Position iterator based on Bresenham's algorithm for a line between two
+	 * discrete endpoints. <b>The Position returned by the iterator will always
+	 * be the same object for efficiency; if you need to hold on to it, you
+	 * should clone it first.<b>
+	 * 
+	 * @param x0
+	 *            the x-ordinate of the start point
+	 * @param y0
+	 *            the y-ordinate of the start point
+	 * @param x1
+	 *            the x-ordinate of the end point
+	 * @param y1
+	 *            the y-ordinate of the end point
+	 * @return an iterator over the Positions in the line
+	 */
+	public static Iterator<Position> bresenham(final int x0, final int y0,
+			final int x1, final int y1) {
 		return new Iterator<Position>() {
 			int x = x0;
 			int y = y0;
@@ -90,7 +92,7 @@ public class LineIterators {
 			int err = dx - dy;
 			Position p = new Position();
 			boolean finished = false;
-	
+
 			@Override
 			public boolean hasNext() {
 				return !finished;
@@ -125,24 +127,25 @@ public class LineIterators {
 	}
 
 	/**
-	* Position iterator based on Bresenham's algorithm for a line starting at a
-	* given point, with an angle given by the provided x and y deltas. <b>The
-	* Position returned by the iterator will always be the same object for
-	* efficiency; if you need to hold on to it, you should clone it first.<b>
-	* <b>Note: The returned iterator is infinite; that is it won't ever
-	* end.</b>
-	* 
-	* @param x0
-	*            the x-ordinate of the start point
-	* @param y0
-	*            the y-ordinate of the start point
-	* @param fdx
-	*            the x-gradient
-	* @param fdy
-	*            the y-gradient
-	* @return an iterator over the Positions in the line
-	*/
-	public static Iterator<Position> bresenham(final int x0, final int y0, final float fdx, final float fdy) {
+	 * Position iterator based on Bresenham's algorithm for a line starting at a
+	 * given point, with an angle given by the provided x and y deltas. <b>The
+	 * Position returned by the iterator will always be the same object for
+	 * efficiency; if you need to hold on to it, you should clone it first.<b>
+	 * <b>Note: The returned iterator is infinite; that is it won't ever
+	 * end.</b>
+	 * 
+	 * @param x0
+	 *            the x-ordinate of the start point
+	 * @param y0
+	 *            the y-ordinate of the start point
+	 * @param fdx
+	 *            the x-gradient
+	 * @param fdy
+	 *            the y-gradient
+	 * @return an iterator over the Positions in the line
+	 */
+	public static Iterator<Position> bresenham(final int x0, final int y0,
+			final float fdx, final float fdy) {
 		return new Iterator<Position>() {
 			int x = x0;
 			int y = y0;
@@ -152,17 +155,17 @@ public class LineIterators {
 			final int sy = (fdy > 0) ? 1 : -1;
 			float err = dx - dy;
 			Position p = new Position();
-		
+
 			@Override
 			public boolean hasNext() {
 				return true;
 			}
-	
+
 			@Override
 			public Position next() {
 				p.x = x;
 				p.y = y;
-	
+
 				final float e2 = 2 * err;
 				if (e2 > -dy) {
 					err = err - dy;
@@ -172,10 +175,10 @@ public class LineIterators {
 					err = err + dx;
 					y = y + sy;
 				}
-	
+
 				return p;
 			}
-	
+
 			@Override
 			public void remove() {
 				throw new UnsupportedOperationException();
@@ -184,45 +187,46 @@ public class LineIterators {
 	}
 
 	/**
-	* Generate the Positions for the supercover of the line between two points.
-	* Based directly on code from Eugen Dedu.
-	* 
-	* @see "http://lifc.univ-fcomte.fr/~dedu/projects/bresenham/index.html"
-	* 
-	* @param x1
-	*            the x-ordinate of the start point
-	* @param y1
-	*            the y-ordinate of the start point
-	* @param x2
- 	*            the x-ordinate of the end point
-	* @param y2
-	*            the y-ordinate of the end point
-	* 
-	* @return the iterator of Positions representing the supercover line
-	*/
+	 * Generate the Positions for the supercover of the line between two points.
+	 * Based directly on code from Eugen Dedu.
+	 * 
+	 * @see "http://lifc.univ-fcomte.fr/~dedu/projects/bresenham/index.html"
+	 * 
+	 * @param x1
+	 *            the x-ordinate of the start point
+	 * @param y1
+	 *            the y-ordinate of the start point
+	 * @param x2
+	 *            the x-ordinate of the end point
+	 * @param y2
+	 *            the y-ordinate of the end point
+	 * 
+	 * @return the iterator of Positions representing the supercover line
+	 */
 	public static Iterator<Position> supercover(int x1, int y1, int x2, int y2) {
 		return supercoverAsList(x1, y1, x2, y2).iterator();
 	}
 
 	/**
-	* Generate the Positions for the supercover of the line between two points.
-	* Based directly on code from Eugen Dedu.
-	* 
-	* @see "http://lifc.univ-fcomte.fr/~dedu/projects/bresenham/index.html"
-	* 
-	* @param x1
-	*            the x-ordinate of the start point
-	* @param y1
-	*            the y-ordinate of the start point
-	* @param x2
-	*            the x-ordinate of the end point
-	* @param y2
-	*            the y-ordinate of the end point
-	* 
-	* @return the list of Positions representing the supercover line
-	*/
+	 * Generate the Positions for the supercover of the line between two points.
+	 * Based directly on code from Eugen Dedu.
+	 * 
+	 * @see "http://lifc.univ-fcomte.fr/~dedu/projects/bresenham/index.html"
+	 * 
+	 * @param x1
+	 *            the x-ordinate of the start point
+	 * @param y1
+	 *            the y-ordinate of the start point
+	 * @param x2
+	 *            the x-ordinate of the end point
+	 * @param y2
+	 *            the y-ordinate of the end point
+	 * 
+	 * @return the list of Positions representing the supercover line
+	 */
 	public static List<Position> supercoverAsList(int x1, int y1, int x2, int y2) {
-		positions.clear();;
+		positions.clear();
+		;
 
 		int ystep, xstep; // the step on y and x axis
 		int error; // the error accumulated during the increment
@@ -275,8 +279,8 @@ public class LineIterators {
 				errorprev = error;
 			}
 		} else { // the same as above
-				errorprev = error = dy;
-				
+			errorprev = error = dy;
+
 			for (int i = 0; i < dy; i++) {
 				y += ystep;
 				error += ddx;
@@ -296,27 +300,24 @@ public class LineIterators {
 				errorprev = error;
 			}
 		}
-		
+
 		return positions;
 	}
 
 	/**
-	* Generate the Positions for the supercover of the line between two points.
-	* Based directly on code from Eugen Dedu.
-	* 
-	* @see "http://lifc.univ-fcomte.fr/~dedu/projects/bresenham/index.html"
-	* 
-	* @param start
-	*            the coordinate of the start point
-	* @param end
-	*            the coordinate of the end point
-	* 
-	* @return the list of Positions representing the supercover line
-	*/
+	 * Generate the Positions for the supercover of the line between two points.
+	 * Based directly on code from Eugen Dedu.
+	 * 
+	 * @see "http://lifc.univ-fcomte.fr/~dedu/projects/bresenham/index.html"
+	 * 
+	 * @param start
+	 *            the coordinate of the start point
+	 * @param end
+	 *            the coordinate of the end point
+	 * 
+	 * @return the list of Positions representing the supercover line
+	 */
 	public static List<Position> supercoverAsList(Position start, Position end) {
 		return supercoverAsList(start.x, start.y, end.x, end.y);
 	}
 }
-
-
-

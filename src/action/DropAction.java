@@ -7,7 +7,7 @@ public class DropAction extends Action {
 
 	public Card type;
 	public Position to;
-	
+
 	public DropAction(Card type, Position to) {
 		super();
 		this.type = type;
@@ -31,7 +31,7 @@ public class DropAction extends Action {
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
-		DropAction other = (DropAction) obj;
+		final DropAction other = (DropAction) obj;
 		if (to == null) {
 			if (other.to != null)
 				return false;
@@ -46,5 +46,5 @@ public class DropAction extends Action {
 	public String toString() {
 		return "DropAction [type=" + type + ", to=" + to + "]";
 	}
-	
+
 }

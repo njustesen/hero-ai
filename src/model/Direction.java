@@ -4,7 +4,7 @@ public class Direction {
 
 	int x;
 	int y;
-	
+
 	public Direction(int x, int y) {
 		super();
 		this.x = x;
@@ -18,16 +18,16 @@ public class Direction {
 		if (this.y < -1)
 			this.y = -1;
 	}
-	
-	public boolean isDiagonal(){
+
+	public boolean isDiagonal() {
 		return (x != 0 && y != 0);
 	}
-	
-	public boolean isNorth(){
+
+	public boolean isNorth() {
 		return (y == -1);
 	}
-	
-	public boolean isEast(){
+
+	public boolean isEast() {
 		return (x == 1);
 	}
 
@@ -48,7 +48,7 @@ public class Direction {
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
-		Direction other = (Direction) obj;
+		final Direction other = (Direction) obj;
 		if (x != other.x)
 			return false;
 		if (y != other.y)
@@ -57,10 +57,10 @@ public class Direction {
 	}
 
 	public boolean opposite(Direction dir) {
-		if (dir.x*(-1) == x && dir.y*(-1) == y){
+		if (dir.x * (-1) == x && dir.y * (-1) == y) {
 			return true;
 		}
 		return false;
 	}
-	
+
 }

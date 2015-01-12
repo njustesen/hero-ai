@@ -1,8 +1,8 @@
 /ai/
 /game/
-/model/
+/evaluate/
 /action/
+/lib/
+/model/
 /ui/
 /util/
-/evaluate/
-/lib/

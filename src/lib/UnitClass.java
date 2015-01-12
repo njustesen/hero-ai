@@ -14,12 +14,12 @@ public class UnitClass {
 	public Attack attack;
 	public Heal heal;
 	public boolean swap;
-	
-	public UnitClass(Card card, int maxHP, int speed, int power, int physicalResistance, 
-			int magicalResistance, Attack attack,
+
+	public UnitClass(Card card, int maxHP, int speed, int power,
+			int physicalResistance, int magicalResistance, Attack attack,
 			Heal heal, boolean swap) {
 		super();
-		
+
 		this.card = card;
 		this.maxHP = maxHP;
 		this.speed = speed;
@@ -30,5 +30,4 @@ public class UnitClass {
 		this.magicalResistance = magicalResistance;
 		this.swap = swap;
 	}
-	
 }

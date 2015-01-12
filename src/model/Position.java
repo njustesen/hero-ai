@@ -4,7 +4,7 @@ public class Position {
 
 	public int x;
 	public int y;
-	
+
 	public Position(int x, int y) {
 		super();
 		this.x = x;
@@ -13,10 +13,10 @@ public class Position {
 
 	public Position() {
 		super();
-		this.x = 0;
-		this.y = 0;
+		x = 0;
+		y = 0;
 	}
-	
+
 	public Direction getDirection(Position pos) {
 		if (pos == null)
 			return null;
@@ -31,7 +31,7 @@ public class Position {
 		result = prime * result + y;
 		return result;
 	}
-	
+
 	@Override
 	public String toString() {
 		return "[x=" + x + ", y=" + y + "]";
@@ -45,14 +45,14 @@ public class Position {
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
-		Position other = (Position) obj;
+		final Position other = (Position) obj;
 		if (x != other.x)
 			return false;
 		if (y != other.y)
 			return false;
 		return true;
 	}
-	
+
 	public int distance(Position to) {
 		int xx = x - to.x;
 		if (xx < 0)
@@ -62,6 +62,5 @@ public class Position {
 			yy = yy * (-1);
 		return xx + yy;
 	}
-
 
 }

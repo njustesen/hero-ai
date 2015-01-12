@@ -21,5 +21,6 @@ public class Attack {
 		this.push = push;
 		
 	}
+
 	
 }
