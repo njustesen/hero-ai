@@ -8,7 +8,6 @@ import org.apache.commons.pool2.ObjectPool;
 import action.Action;
 import action.EndTurnAction;
 import action.SingletonAction;
-import evaluate.GameStateEvaluator;
 import game.GameState;
 
 public class MoveSearch {
@@ -74,8 +73,9 @@ public class MoveSearch {
 		}
 	}
 
-	GameStateEvaluator evalutator = new GameStateEvaluator();
+	HeuristicEvaluation evalutator = new HeuristicEvaluation();
 	ActionPruner pruner = new ActionPruner();
+	int depth = 2;
 
 	public List<List<Action>> possibleMoves(GameState state,
 			ObjectPool<GameState> pool) {
@@ -121,7 +121,7 @@ public class MoveSearch {
 		for (final Action action : actions) {
 			if (depth == 0)
 				System.out.println(i + "/" + actions.size());
-			if (depth < 5 && !(action instanceof EndTurnAction)) {
+			if (depth < 3 && !(action instanceof EndTurnAction)) {
 				GameState next;
 				if (pool.getNumIdle() == 0)
 					pool.addObject();

@@ -9,17 +9,23 @@ import org.apache.commons.pool2.impl.GenericObjectPool;
 import action.Action;
 import action.SingletonAction;
 import ai.util.GameStateFactory;
+import ai.util.HeuristicEvaluation;
+import ai.util.IHeuristic;
 import ai.util.MoveSearch;
-import evaluate.GameStateEvaluator;
 import game.GameState;
 
 public class GreedyTurnAI implements AI {
 
-	GameStateEvaluator evalutator = new GameStateEvaluator();
-	MoveSearch searcher = new MoveSearch();
-	List<Action> actions = new ArrayList<Action>();
-	ObjectPool<GameState> pool = new GenericObjectPool<GameState>(
+	private final MoveSearch searcher = new MoveSearch();
+	private List<Action> actions = new ArrayList<Action>();
+	private final ObjectPool<GameState> pool = new GenericObjectPool<GameState>(
 			new GameStateFactory());
+	private IHeuristic heuristic;
+	
+	public GreedyTurnAI(IHeuristic heuristic) {
+		super();
+		this.heuristic = heuristic;
+	}
 
 	@Override
 	public Action act(GameState state, long ms) {
@@ -70,7 +76,7 @@ public class GreedyTurnAI implements AI {
 			i++;
 		}
 
-		return evalutator.eval(clone, clone.p1Turn);
+		return heuristic.eval(clone, clone.p1Turn);
 
 	}
 

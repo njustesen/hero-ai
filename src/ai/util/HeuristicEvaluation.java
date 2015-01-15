@@ -1,4 +1,4 @@
-package evaluate;
+package ai.util;
 
 import game.GameState;
 import lib.Card;
@@ -6,11 +6,11 @@ import lib.CardType;
 import lib.UnitClassLib;
 import model.Square;
 
-public class GameStateEvaluator {
+public class HeuristicEvaluation implements IHeuristic {
 
 	private static final boolean pos = true;
 	
-	public GameStateEvaluator() {
+	public HeuristicEvaluation() {
 
 	}
 

@@ -10,8 +10,8 @@ public class ClonePerformance {
 	public static void main(String[] args){
 		
 		GameState state = createGameState(10, 
-				new RandomAI(true, RAND_METHOD.BRUTE), 
-				new RandomAI(false, RAND_METHOD.BRUTE));
+				new RandomAI(RAND_METHOD.BRUTE), 
+				new RandomAI(RAND_METHOD.BRUTE));
 		
 		System.out.println("## Game state cloning - 1 ##");
 		cloneGameState(state, 1);

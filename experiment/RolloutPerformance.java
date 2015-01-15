@@ -33,8 +33,8 @@ public class RolloutPerformance {
 		System.out.println("Done");
 */
 		System.out.println("## Random AI SIM TREE ##");
-		p1 = new RandomAI(true, RAND_METHOD.TREE);
-		p2 = new RandomAI(false, RAND_METHOD.TREE);
+		p1 = new RandomAI(RAND_METHOD.TREE);
+		p2 = new RandomAI(RAND_METHOD.TREE);
 		simulateGame(10000, p1, p2);
 		System.out.println("Done");
 

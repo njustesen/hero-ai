@@ -13,8 +13,8 @@ public class PossibleActionsPerformance {
 
 	public static void main(String[] args) {
 
-		final AI p1 = new RandomAI(true, RAND_METHOD.BRUTE);
-		final AI p2 = new RandomAI(false, RAND_METHOD.BRUTE);
+		final AI p1 = new RandomAI(RAND_METHOD.BRUTE);
+		final AI p2 = new RandomAI(RAND_METHOD.BRUTE);
 
 		final GameState state = createGameState(20, p1, p2);
 

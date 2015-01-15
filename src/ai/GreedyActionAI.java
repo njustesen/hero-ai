@@ -1,6 +1,5 @@
 package ai;
 
-import evaluate.GameStateEvaluator;
 import game.GameState;
 
 import java.util.ArrayList;
@@ -8,20 +7,22 @@ import java.util.Collections;
 import java.util.List;
 
 import action.Action;
+import ai.util.HeuristicEvaluation;
+import ai.util.IHeuristic;
 
 public class GreedyActionAI implements AI {
 
 	private final List<Action> actions;
+	private final IHeuristic heuristic;
 
-	public GreedyActionAI() {
+	public GreedyActionAI(IHeuristic heuristic) {
 		super();
+		this.heuristic = heuristic;
 		actions = new ArrayList<Action>();
 	}
 
 	@Override
 	public Action act(GameState state, long ms) {
-
-		final GameStateEvaluator evaluator = new GameStateEvaluator();
 
 		Action best = null;
 		double bestValue = -100000000;
@@ -33,7 +34,7 @@ public class GreedyActionAI implements AI {
 
 			final GameState next = state.copy();
 			next.update(action);
-			final double val = evaluator.eval(next, state.p1Turn);
+			final double val = heuristic.eval(next, state.p1Turn);
 
 			if (val > bestValue) {
 				bestValue = val;

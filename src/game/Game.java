@@ -14,7 +14,9 @@ import ai.NmSearchAI;
 import ai.RandomAI;
 import ai.ScanRandomAI;
 import ai.HeuristicAI;
+import ai.util.HeuristicEvaluation;
 import ai.util.RAND_METHOD;
+import ai.util.RolloutEvalutation;
 
 public class Game {
 
@@ -45,7 +47,7 @@ public class Game {
 				if (args[a].toLowerCase().equals("human"))
 					players[p] = null;
 				else if (args[a].toLowerCase().equals("random"))
-					players[p] = new RandomAI((p == 0), RAND_METHOD.TREE);
+					players[p] = new RandomAI(RAND_METHOD.TREE);
 				else if (args[a].toLowerCase().equals("heuristic"))
 					players[p] = new HeuristicAI();
 				else if (args[a].toLowerCase().equals("scanrandom"))
@@ -55,12 +57,44 @@ public class Game {
 					final int n = Integer.parseInt(args[a]);
 					a++;
 					final int m = Integer.parseInt(args[a]);
-					players[p] = new NmSearchAI((p == 0), n, m);
+					a++;
+					if (args[a].toLowerCase().equals("heuristic")){
+						players[p] = new NmSearchAI((p == 0), n, m, new HeuristicEvaluation());
+					} else {
+						a++;
+						int rolls = Integer.parseInt(args[a]);
+						a++;
+						int depth = Integer.parseInt(args[a]);
+						players[p] = new NmSearchAI((p == 0), n, m, new RolloutEvalutation(rolls, depth, new RandomAI(RAND_METHOD.TREE), new HeuristicEvaluation()));
+					}
+					
 				}
-				if (args[a].toLowerCase().equals("greedyaction"))
-					players[p] = new GreedyActionAI();
-				if (args[a].toLowerCase().equals("greedyturn"))
-					players[p] = new GreedyTurnAI();
+				if (args[a].toLowerCase().equals("greedyaction")){
+					a++;
+					if (args[a].toLowerCase().equals("heuristic"))
+						players[p] = new GreedyActionAI(new HeuristicEvaluation());
+					else if (args[a].toLowerCase().equals("rollouts")){
+						a++;
+						int rolls = Integer.parseInt(args[a]);
+						a++;
+						int depth = Integer.parseInt(args[a]);
+						players[p] = new GreedyActionAI(new RolloutEvalutation(rolls, depth, new RandomAI(RAND_METHOD.TREE), new HeuristicEvaluation()));
+					}
+				}
+				if (args[a].toLowerCase().equals("greedyturn")){
+					a++;
+					if (args[a].toLowerCase().equals("heuristic")){
+						players[p] = new GreedyTurnAI(new HeuristicEvaluation());
+					} else if (args[a].toLowerCase().equals("rollouts")){
+						a++;
+						int rolls = Integer.parseInt(args[a]);
+						a++;
+						int depth = Integer.parseInt(args[a]);
+						players[p] = new GreedyTurnAI(new RolloutEvalutation(rolls, depth, new RandomAI(RAND_METHOD.TREE), new HeuristicEvaluation()));
+					}
+						
+				}
+					
 				p = -1;
 			} else if (args[a].toLowerCase().equals("sleep")) {
 				a++;

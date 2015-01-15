@@ -17,8 +17,7 @@ public class MoveSearchPerformance {
 
 	public static void main(String[] args) {
 
-		final GameState state = createGameState(10, new RandomAI(true,
-				RAND_METHOD.BRUTE), new RandomAI(false, RAND_METHOD.BRUTE));
+		final GameState state = createGameState(10, new RandomAI(RAND_METHOD.BRUTE), new RandomAI(RAND_METHOD.BRUTE));
 
 		search(state);
 

@@ -1,6 +1,5 @@
 package ai;
 
-import evaluate.GameStateEvaluator;
 import game.GameState;
 
 import java.util.ArrayList;
@@ -9,6 +8,8 @@ import java.util.List;
 import lib.Card;
 import action.Action;
 import action.EndTurnAction;
+import ai.util.HeuristicEvaluation;
+import ai.util.IHeuristic;
 import ai.util.RAND_METHOD;
 
 public class NmSearchAI implements AI {
@@ -19,14 +20,16 @@ public class NmSearchAI implements AI {
 	private List<Action> foundActions;
 	private final int n;
 	private final int m;
-
-	public NmSearchAI(boolean p1, int n, int m) {
+	private IHeuristic heuristic;
+	
+	public NmSearchAI(boolean p1, int n, int m, IHeuristic heuristic) {
 		this.p1 = p1;
-		p1Ai = new RandomAI(p1, RAND_METHOD.TREE);
-		p2Ai = new RandomAI(!p1, RAND_METHOD.TREE);
+		p1Ai = new RandomAI(RAND_METHOD.TREE);
+		p2Ai = new RandomAI(RAND_METHOD.TREE);
 		foundActions = new ArrayList<Action>();
 		this.n = n;
 		this.m = m;
+		this.heuristic = heuristic;
 	}
 
 	@Override
@@ -118,8 +121,6 @@ public class NmSearchAI implements AI {
 
 	private double evaluate(GameState state, int runs) {
 
-		final GameStateEvaluator evaluator = new GameStateEvaluator();
-
 		double oppBest = -1000000;
 		for (int r = 0; r < runs; r++) {
 
@@ -132,7 +133,7 @@ public class NmSearchAI implements AI {
 					break;
 			}
 
-			final double value = evaluator.eval(state, !p1);
+			final double value = heuristic.eval(state, !p1);
 			if (value > oppBest)
 				oppBest = value;
 		}
