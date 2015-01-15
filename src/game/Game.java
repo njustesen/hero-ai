@@ -138,8 +138,9 @@ public class Game {
 
 	public void run() {
 
-		final int turnLimit = 50000;
+		final int turnLimit = 1000;
 
+		state.dealCards();
 		history.add(state.copy());
 		lastTurn = 5;
 

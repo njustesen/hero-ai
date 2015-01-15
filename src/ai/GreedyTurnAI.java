@@ -68,10 +68,8 @@ public class GreedyTurnAI implements AI {
 	private double evaluateMove(GameState state, List<Action> move) {
 
 		int i = 0;
-		int lastAP = 0;
 		final GameState clone = state.copy();
-		while (clone.APLeft > 0 && lastAP != clone.APLeft) {
-			lastAP = clone.APLeft;
+		while (i < move.size()) {
 			clone.update(move.get(i));
 			i++;
 		}

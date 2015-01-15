@@ -75,7 +75,6 @@ public class MoveSearch {
 
 	HeuristicEvaluation evalutator = new HeuristicEvaluation();
 	ActionPruner pruner = new ActionPruner();
-	int depth = 2;
 
 	public List<List<Action>> possibleMoves(GameState state,
 			ObjectPool<GameState> pool) {
@@ -121,7 +120,7 @@ public class MoveSearch {
 		for (final Action action : actions) {
 			if (depth == 0)
 				System.out.println(i + "/" + actions.size());
-			if (depth < 3 && !(action instanceof EndTurnAction)) {
+			if (depth < 5 && !(action instanceof EndTurnAction)) {
 				GameState next;
 				if (pool.getNumIdle() == 0)
 					pool.addObject();
@@ -134,6 +133,7 @@ public class MoveSearch {
 				root.children.add(node);
 				node.parent = root;
 				node.action = action;
+				next.reset();
 				pool.returnObject(next);
 			}
 			i++;

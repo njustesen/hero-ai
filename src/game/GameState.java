@@ -63,11 +63,7 @@ public class GameState {
 			for (int y = 0; y < map.height; y++)
 				squares[x][y] = map.squares[x][y].copy();
 
-		while (!legalStartingHand(p1Hand))
-			dealCards(1);
-
-		while (!legalStartingHand(p2Hand))
-			dealCards(2);
+		
 
 	}
 
@@ -776,6 +772,14 @@ public class GameState {
 		APLeft = 5;
 		turn++;
 	}
+	
+	public void dealCards(){
+		while (!legalStartingHand(p1Hand))
+			dealCards(1);
+
+		while (!legalStartingHand(p2Hand))
+			dealCards(2);
+	}
 
 	private void dealCards(int player) {
 		if (player == 1) {
@@ -981,6 +985,21 @@ public class GameState {
 		else if (p == 2)
 			return p2Deck.size() + p2Hand.size();
 		return -1;
+	}
+
+	public void reset() {
+		isTerminal = false;
+		p1Turn = true;
+		turn = 1;
+		APLeft = STARTING_AP;
+		p1Hand.clear();
+		p1Deck.clear();
+		p2Hand.clear();
+		p2Deck.clear();
+		chainTargets.clear();
+		for (int x = 0; x < map.width; x++)
+			for (int y = 0; y < map.height; y++)
+				squares[x][y].unit = null;
 	}
 
 }
