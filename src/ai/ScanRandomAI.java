@@ -243,7 +243,6 @@ public class ScanRandomAI implements AI {
 		for (final Position pos : enemyUnits)
 			return new DropAction(card, pos);
 		// TODO: also around unit
-
 		return null;
 	}
 

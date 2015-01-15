@@ -13,6 +13,7 @@ import ai.GreedyTurnAI;
 import ai.NmSearchAI;
 import ai.RandomAI;
 import ai.ScanRandomAI;
+import ai.SemiRandomAI;
 import ai.util.RAND_METHOD;
 
 public class Game {
@@ -45,6 +46,8 @@ public class Game {
 					players[p] = null;
 				else if (args[a].toLowerCase().equals("random"))
 					players[p] = new RandomAI((p == 0), RAND_METHOD.TREE);
+				else if (args[a].toLowerCase().equals("simple"))
+					players[p] = new SemiRandomAI();
 				else if (args[a].toLowerCase().equals("scanrandom"))
 					players[p] = new ScanRandomAI((p == 0));
 				else if (args[a].toLowerCase().equals("nmsearch")) {
@@ -122,6 +125,16 @@ public class Game {
 			player2.init(state, -1);
 
 		while (!state.isTerminal && state.turn < turnLimit) {
+
+			if (SLEEP >= 20 && ui != null) {
+				ui.state = state.copy();
+				ui.repaint();
+				try {
+					Thread.sleep(SLEEP);
+				} catch (final InterruptedException e) {
+					e.printStackTrace();
+				}
+			}
 
 			if (state.p1Turn && player1 != null)
 				// System.out.println("PLAYER 1 TURN");

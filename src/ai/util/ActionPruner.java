@@ -15,19 +15,27 @@ import action.DropAction;
 
 public class ActionPruner {
 
+	final Map<DropAction, List<Position>> spellTargets;
+	final List<Action> pruned;
+
+	public ActionPruner() {
+		super();
+		spellTargets = new HashMap<DropAction, List<Position>>();
+		pruned = new ArrayList<Action>();
+	}
+
 	public void prune(List<Action> actions, GameState state) {
 
-		final List<Action> pruned = new ArrayList<Action>();
-		final Map<DropAction, List<Position>> spellTargets = new HashMap<DropAction, List<Position>>();
-		for (final Action action : actions) {
+		pruned.clear();
+		spellTargets.clear();
+
+		for (final Action action : actions)
 			if (action instanceof DropAction) {
 				final DropAction dropAction = ((DropAction) action);
-				if (dropAction.type == Card.INFERNO) {
+				if (dropAction.type == Card.INFERNO)
 					spellTargets.put(((DropAction) action),
 							spellTargets(dropAction.to, state));
-				}
 			}
-		}
 
 		for (final DropAction spell : spellTargets.keySet())
 			if (spellTargets.get(spell).isEmpty()
@@ -55,16 +63,14 @@ public class ActionPruner {
 
 	private List<Position> spellTargets(Position to, GameState state) {
 		final List<Position> targets = new ArrayList<Position>();
-		for (int x = to.x - 1; x <= to.x + 1; x++) {
-			for (int y = to.y - 1; y <= to.y + 1; y++) {
+		for (int x = to.x - 1; x <= to.x + 1; x++)
+			for (int y = to.y - 1; y <= to.y + 1; y++)
 				if (x >= 0 && x < state.map.width && y >= 0
 						&& y < state.map.height) {
 					final Unit unit = state.map.squareAt(x, y).unit;
 					if (unit != null && unit.p1Owner != state.p1Turn)
 						targets.add(new Position(x, y));
 				}
-			}
-		}
 		return targets;
 	}
 

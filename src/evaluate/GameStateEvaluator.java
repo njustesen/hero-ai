@@ -26,45 +26,33 @@ public class GameStateEvaluator {
 
 		int p1Units = 0;
 		int p2Units = 0;
-		for (int x = 0; x < state.map.width; x++) {
-			for (int y = 0; y < state.map.height; y++) {
-				if (state.squares[x][y].unit != null) {
-					int m = 0;
-					if (state.squares[x][y].unit.hp != 0)
-						m = state.squares[x][y].unit.unitClass.maxHP;
+		final int m = 0;
+		for (int x = 0; x < state.map.width; x++)
+			for (int y = 0; y < state.map.height; y++)
+				if (state.squares[x][y].unit != null)
 					if (state.squares[x][y].unit.p1Owner)
-						p1Units += state.squares[x][y].unit.hp + m;
+						p1Units += state.squares[x][y].unit.hp
+								+ state.squares[x][y].unit.unitClass.maxHP;
 					else
-						p2Units += state.squares[x][y].unit.hp + m;
-				}
-			}
-		}
+						p2Units += state.squares[x][y].unit.hp
+								+ state.squares[x][y].unit.unitClass.maxHP;
 		// TODO: Opponent hand should be hidden
-		for (final Card card : state.p1Deck) {
-			if (card.type == CardType.UNIT) {
+		for (final Card card : state.p1Deck)
+			if (card.type == CardType.UNIT)
 				p1Units += UnitClassLib.lib.get(card).maxHP * 1.75;
-			}
-		}
-		for (final Card card : state.p1Hand) {
-			if (card.type == CardType.UNIT) {
+		for (final Card card : state.p1Hand)
+			if (card.type == CardType.UNIT)
 				p1Units += UnitClassLib.lib.get(card).maxHP * 1.75;
-			}
-		}
-		for (final Card card : state.p2Hand) {
-			if (card.type == CardType.UNIT) {
+		for (final Card card : state.p2Hand)
+			if (card.type == CardType.UNIT)
 				p2Units += UnitClassLib.lib.get(card).maxHP * 1.75;
-			}
-		}
-		for (final Card card : state.p2Deck) {
-			if (card.type == CardType.UNIT) {
+		for (final Card card : state.p2Deck)
+			if (card.type == CardType.UNIT)
 				p2Units += UnitClassLib.lib.get(card).maxHP * 1.75;
-			}
-		}
 
 		if (p1)
 			return p1Units - p2Units;
 		return p2Units - p1Units;
 
 	}
-
 }
