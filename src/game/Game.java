@@ -13,7 +13,7 @@ import ai.GreedyTurnAI;
 import ai.NmSearchAI;
 import ai.RandomAI;
 import ai.ScanRandomAI;
-import ai.SemiRandomAI;
+import ai.HeuristicAI;
 import ai.util.RAND_METHOD;
 
 public class Game {
@@ -46,8 +46,8 @@ public class Game {
 					players[p] = null;
 				else if (args[a].toLowerCase().equals("random"))
 					players[p] = new RandomAI((p == 0), RAND_METHOD.TREE);
-				else if (args[a].toLowerCase().equals("simple"))
-					players[p] = new SemiRandomAI();
+				else if (args[a].toLowerCase().equals("heuristic"))
+					players[p] = new HeuristicAI();
 				else if (args[a].toLowerCase().equals("scanrandom"))
 					players[p] = new ScanRandomAI((p == 0));
 				else if (args[a].toLowerCase().equals("nmsearch")) {

@@ -1,5 +1,6 @@
 import game.Game;
 import ai.AI;
+import ai.HeuristicAI;
 import ai.RandomAI;
 import ai.util.RAND_METHOD;
 
@@ -24,18 +25,25 @@ public class RolloutPerformance {
 		 * ScanRandomAI(true); p2 = new ScanRandomAI(false); runGame(1000, p1,
 		 * p2);
 		 */
+		/*
 		System.out.println("## Random AI SIM BRUTE ##");
 		p1 = new RandomAI(true, RAND_METHOD.BRUTE);
 		p2 = new RandomAI(false, RAND_METHOD.BRUTE);
 		simulateGame(1000, p1, p2);
 		System.out.println("Done");
-
+*/
 		System.out.println("## Random AI SIM TREE ##");
 		p1 = new RandomAI(true, RAND_METHOD.TREE);
 		p2 = new RandomAI(false, RAND_METHOD.TREE);
-		simulateGame(1000, p1, p2);
+		simulateGame(10000, p1, p2);
 		System.out.println("Done");
 
+		System.out.println("## Random AI SIM TREE ##");
+		p1 = new HeuristicAI();
+		p2 = new HeuristicAI();
+		simulateGame(10, p1, p2);
+		System.out.println("Done");
+		
 		/*
 		 * System.out.println("## Random AI SIM SCAN ##"); p1 = new
 		 * ScanRandomAI(true); p2 = new ScanRandomAI(false); simulateGame(1000,

@@ -4,26 +4,25 @@ import game.GameState;
 import lib.Card;
 import lib.CardType;
 import lib.UnitClassLib;
+import model.Square;
 
 public class GameStateEvaluator {
 
+	private static final boolean pos = true;
+	
 	public GameStateEvaluator() {
 
 	}
 
 	public double eval(GameState state, boolean p1) {
 
-		/*
-		 * int p1CrystalHP = 0; int p2CrystalHP = 0; for(Position pos :
-		 * state.map.p1Crystals){ if (state.squares[pos.x][pos.y].unit != null
-		 * && state.squares[pos.x][pos.y].unit.unitClass.card == Card.CRYSTAL){
-		 * p1CrystalHP += state.squares[pos.x][pos.y].unit.hp; } } for(Position
-		 * pos : state.map.p2Crystals){ if (state.squares[pos.x][pos.y].unit !=
-		 * null && state.squares[pos.x][pos.y].unit.unitClass.card ==
-		 * Card.CRYSTAL){ p2CrystalHP += state.squares[pos.x][pos.y].unit.hp; }
-		 * }
-		 */
+		int hpDif = hpDif(state, p1);
+		
+		return hpDif;
 
+	}
+
+	private int hpDif(GameState state, boolean p1) {
 		int p1Units = 0;
 		int p2Units = 0;
 		final int m = 0;
@@ -32,10 +31,12 @@ public class GameStateEvaluator {
 				if (state.squares[x][y].unit != null)
 					if (state.squares[x][y].unit.p1Owner)
 						p1Units += state.squares[x][y].unit.hp
-								+ state.squares[x][y].unit.unitClass.maxHP;
+								+ state.squares[x][y].unit.unitClass.maxHP
+								+ squareVal(state.squares[x][y]);
 					else
 						p2Units += state.squares[x][y].unit.hp
-								+ state.squares[x][y].unit.unitClass.maxHP;
+								+ state.squares[x][y].unit.unitClass.maxHP
+								+ squareVal(state.squares[x][y]);
 		// TODO: Opponent hand should be hidden
 		for (final Card card : state.p1Deck)
 			if (card.type == CardType.UNIT)
@@ -53,6 +54,20 @@ public class GameStateEvaluator {
 		if (p1)
 			return p1Units - p2Units;
 		return p2Units - p1Units;
+	}
 
+	private int squareVal(Square square) {
+		
+		switch(square.type){
+		case ASSAULT : return 100;
+		case DEPLOY_1 : return -75;
+		case DEPLOY_2 : return -75;
+		case DEFENSE : return 100;
+		case POWER : return 100;
+		case NONE : return 0;
+		}
+		
+		return 0;
+		
 	}
 }

@@ -11,13 +11,13 @@ import action.SingletonAction;
 import ai.util.ActionComparator;
 import ai.util.ActionPruner;
 
-public class SemiRandomAI implements AI {
+public class HeuristicAI implements AI {
 
 	private final List<Action> actions;
 	private final ActionComparator comparator;
 	ActionPruner pruner;
 
-	public SemiRandomAI() {
+	public HeuristicAI() {
 		actions = new ArrayList<Action>();
 		pruner = new ActionPruner();
 		comparator = new ActionComparator();
