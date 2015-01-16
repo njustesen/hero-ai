@@ -10,17 +10,21 @@ import action.EndTurnAction;
 import action.SingletonAction;
 import game.GameState;
 
-public class MoveSearch {
+public class BestMoveSearch {
 
 	HeuristicEvaluation evalutator = new HeuristicEvaluation();
 	ActionPruner pruner = new ActionPruner();
-	List<List<Action>> moves;
 	ObjectPool<GameState> pool;
+	List<Action> bestMove = new ArrayList<Action>();
+	double bestValue;
+	private IHeuristic heuristic;
 	
-	public List<List<Action>> possibleMoves(GameState state, ObjectPool<GameState> pool) {
+	public List<Action> bestMove(GameState state, ObjectPool<GameState> pool, IHeuristic heuristic) {
 
-		moves = new ArrayList<List<Action>>();
 		this.pool = pool;
+		this.heuristic = heuristic;
+		this.bestValue = -1000000;
+		this.bestMove = null;
 		try {
 			addMoves(state, new ArrayList<Action>(), 0);
 		} catch (Exception e) {
@@ -28,9 +32,7 @@ public class MoveSearch {
 			e.printStackTrace();
 		}
 		
-		System.out.println(moves.size() + " moves found!");
-		
-		return moves;
+		return bestMove;
 
 	}
 
@@ -39,29 +41,32 @@ public class MoveSearch {
 		final List<Action> actions = new ArrayList<Action>();
 		state.possibleActions(actions);
 		pruner.prune(actions, state);
-		int i = 1;
+		int i = 0;
 		for (final Action action : actions) {
-			if (depth == 0)
-				System.out.println(i + "/" + actions.size());
-			if (depth < 5 && !(action instanceof EndTurnAction)) {
-				GameState next;
-				if (pool.getNumIdle() == 0)
-					pool.addObject();
-				next = pool.borrowObject();
-				next.imitate(state);
-				next.update(action);
-				//if (next.APLeft == state.APLeft)
-				//	continue; // Nothing happened
-				List<Action> clone = clone(move);
-				clone.add(action);
-				addMoves(next, clone, depth + 1);
-				next.reset();
-				pool.returnObject(next);
-			} else {
-				move.add(action);
-				moves.add(move);
+			if (depth == 0){
+				System.out.println(i++ + "/" + actions.size());
 			}
-			i++;
+			GameState next;
+			if (pool.getNumIdle() == 0)
+				pool.addObject();
+			next = pool.borrowObject();
+			next.imitate(state);
+			next.update(action);
+			//if (next.APLeft == state.APLeft)
+			//	continue; // Nothing happened
+			List<Action> nextMove = clone(move);
+			nextMove.add(action);
+			if (depth < 5 && !(action instanceof EndTurnAction)) {
+				addMoves(next, nextMove, depth + 1);
+			} else {
+				double value = heuristic.eval(next, state.p1Turn);
+				if (value > bestValue){
+					bestValue = value;
+					bestMove = nextMove;
+				}
+			}
+			next.reset();
+			pool.returnObject(next);
 		}
 		
 	}

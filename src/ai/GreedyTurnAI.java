@@ -8,6 +8,7 @@ import org.apache.commons.pool2.impl.GenericObjectPool;
 
 import action.Action;
 import ai.util.ActionEncoding;
+import ai.util.BestMoveSearch;
 import ai.util.GameStateFactory;
 import ai.util.IHeuristic;
 import ai.util.EncodedMoveSearch;
@@ -15,7 +16,7 @@ import game.GameState;
 
 public class GreedyTurnAI implements AI {
 
-	private final EncodedMoveSearch searcher = new EncodedMoveSearch();
+	private final BestMoveSearch searcher = new BestMoveSearch();
 	private List<Action> actions = new ArrayList<Action>();
 	private final ObjectPool<GameState> pool = new GenericObjectPool<GameState>(new GameStateFactory());
 	private IHeuristic heuristic;
@@ -37,7 +38,7 @@ public class GreedyTurnAI implements AI {
 		// List<List<Action>> possibleActions = searcher.possibleMoves(state);
 		System.out.println("GTAI: Searching for possible moves.");
 
-		actions = best(state, searcher.possibleMoves(state, pool));
+		actions = searcher.bestMove(state, pool, heuristic);
 		System.out.println(actions);
 		
 		final Action action = actions.get(0);
@@ -45,7 +46,7 @@ public class GreedyTurnAI implements AI {
 		return action;
 
 	}
-
+	
 	private List<Action> best(GameState state, List<String> possibleMoves) {
 		System.out.println("GTAI: Evaluating " + possibleMoves.size()
 				+ " moves.");
