@@ -7,19 +7,16 @@ import org.apache.commons.pool2.ObjectPool;
 import org.apache.commons.pool2.impl.GenericObjectPool;
 
 import action.Action;
-import action.SingletonAction;
 import ai.util.GameStateFactory;
-import ai.util.HeuristicEvaluation;
 import ai.util.IHeuristic;
-import ai.util.MoveSearch;
+import ai.util.RecMoveSearch;
 import game.GameState;
 
 public class GreedyTurnAI implements AI {
 
-	private final MoveSearch searcher = new MoveSearch();
+	private final RecMoveSearch searcher = new RecMoveSearch();
 	private List<Action> actions = new ArrayList<Action>();
-	private final ObjectPool<GameState> pool = new GenericObjectPool<GameState>(
-			new GameStateFactory());
+	private final ObjectPool<GameState> pool = new GenericObjectPool<GameState>(new GameStateFactory());
 	private IHeuristic heuristic;
 	
 	public GreedyTurnAI(IHeuristic heuristic) {
@@ -40,10 +37,10 @@ public class GreedyTurnAI implements AI {
 		System.out.println("GTAI: Searching for possible moves.");
 
 		actions = best(state, searcher.possibleMoves(state, pool));
-		actions.add(SingletonAction.endTurnAction);
+		System.out.println(actions);
+		
 		final Action action = actions.get(0);
 		actions.remove(0);
-
 		return action;
 
 	}
@@ -74,7 +71,7 @@ public class GreedyTurnAI implements AI {
 			i++;
 		}
 
-		return heuristic.eval(clone, clone.p1Turn);
+		return heuristic.eval(clone, state.p1Turn);
 
 	}
 
