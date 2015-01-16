@@ -12,106 +12,31 @@ import game.GameState;
 
 public class MoveSearch {
 
-	class Node {
-		public Action action;
-		public Node parent;
-		public List<Node> children;
-
-		public Node(Action action, Node parent) {
-			this.action = action;
-			this.parent = parent;
-			children = new ArrayList<Node>();
-		}
-
-		public void print(int depth) {
-			for (int i = 0; i < depth; i++)
-				System.out.print("\t");
-			System.out.print(action);
-			for (final Node node : children)
-				node.print(depth++);
-		}
-
-		public int size() {
-			int i = 1;
-			for (final Node child : children)
-				i += child.size();
-			return i;
-		}
-
-		public List<List<Action>> moves(int depth) {
-			final List<List<Action>> moves = new ArrayList<List<Action>>();
-			if (children.isEmpty()) {
-				final List<Action> actions = new ArrayList<Action>();
-				actions.add(action);
-				moves.add(actions);
-			} else
-				for (final Node child : children) {
-					final List<List<Action>> newMoves = child.moves(depth + 1);
-					for (final List<Action> move : newMoves) {
-						final List<Action> newMove = new ArrayList<Action>();
-						newMove.add(action);
-						newMove.addAll(move);
-						moves.add(newMove);
-					}
-				}
-			return moves;
-		}
-
-		public void movesLeaf(List<List<Action>> moves, int depth) {
-			if (children.isEmpty()) {
-				final List<Action> actions = new ArrayList<Action>();
-				actions.add(action);
-				Node p = parent;
-				while (p != null && p.action != null) {
-					actions.add(p.action);
-					p = p.parent;
-				}
-				moves.add(actions);
-			} else
-				for (final Node child : children)
-					child.movesLeaf(moves, depth + 1);
-		}
-	}
-
 	HeuristicEvaluation evalutator = new HeuristicEvaluation();
 	ActionPruner pruner = new ActionPruner();
+	List<List<Action>> moves;
+	ObjectPool<GameState> pool;
+	
+	
+	
+	public List<List<Action>> possibleMoves(GameState state, ObjectPool<GameState> pool) {
 
-	public List<List<Action>> possibleMoves(GameState state,
-			ObjectPool<GameState> pool) {
-
-		final List<List<Action>> moves = new ArrayList<List<Action>>();
-
-		Node root = null;
+		moves = new ArrayList<List<Action>>();
+		this.pool = pool;
 		try {
-			root = initTree(state, 0, pool);
-		} catch (final IllegalStateException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (final UnsupportedOperationException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (final Exception e) {
+			addMoves(state, new ArrayList<Action>(), 0);
+		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		if (root.children.isEmpty()) {
-			final List<Action> actions = new ArrayList<Action>();
-			actions.add(SingletonAction.endTurnAction);
-			moves.add(actions);
-			return moves;
-		}
-
-		root.movesLeaf(moves, 0);
-
+		
+		System.out.println(moves.size() + " moves found!");
+		
 		return moves;
 
 	}
 
-	private Node initTree(GameState state, int depth, ObjectPool<GameState> pool)
-			throws IllegalStateException, UnsupportedOperationException,
-			Exception {
-
-		final Node root = new Node(null, null);
+	private void addMoves(GameState state, List<Action> move, int depth) throws IllegalStateException, UnsupportedOperationException, Exception {
 
 		final List<Action> actions = new ArrayList<Action>();
 		state.possibleActions(actions);
@@ -127,18 +52,25 @@ public class MoveSearch {
 				next = pool.borrowObject();
 				next.imitate(state);
 				next.update(action);
-				if (next.APLeft == state.APLeft)
-					continue; // Nothing happened
-				final Node node = initTree(next, depth + 1, pool);
-				root.children.add(node);
-				node.parent = root;
-				node.action = action;
+				//if (next.APLeft == state.APLeft)
+				//	continue; // Nothing happened
+				List<Action> clone = clone(move);
+				clone.add(action);
+				addMoves(next, clone, depth + 1);
 				next.reset();
 				pool.returnObject(next);
+			} else {
+				move.add(action);
+				moves.add(move);
 			}
 			i++;
 		}
+		
+	}
 
-		return root;
+	private List<Action> clone(List<Action> move) {
+		List<Action> actions = new ArrayList<Action>();
+		actions.addAll(move);
+		return actions;
 	}
 }

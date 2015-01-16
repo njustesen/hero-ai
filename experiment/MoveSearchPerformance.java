@@ -10,7 +10,7 @@ import action.Action;
 import ai.AI;
 import ai.RandomAI;
 import ai.util.GameStateFactory;
-import ai.util.MoveSearch;
+import ai.util.TreeMoveSearch;
 import ai.util.RAND_METHOD;
 
 public class MoveSearchPerformance {
@@ -28,7 +28,7 @@ public class MoveSearchPerformance {
 		final ObjectPool<GameState> pool = new GenericObjectPool<GameState>(
 				new GameStateFactory());
 
-		final MoveSearch search = new MoveSearch();
+		final TreeMoveSearch search = new TreeMoveSearch();
 		final List<List<Action>> moves = search.possibleMoves(state, pool);
 		System.out.println(moves.size());
 

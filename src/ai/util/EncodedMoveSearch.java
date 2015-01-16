@@ -10,21 +10,19 @@ import action.EndTurnAction;
 import action.SingletonAction;
 import game.GameState;
 
-public class RecMoveSearch {
+public class EncodedMoveSearch {
 
 	HeuristicEvaluation evalutator = new HeuristicEvaluation();
 	ActionPruner pruner = new ActionPruner();
-	List<List<Action>> moves;
+	List<String> moves;
 	ObjectPool<GameState> pool;
 	
-	
-	
-	public List<List<Action>> possibleMoves(GameState state, ObjectPool<GameState> pool) {
+	public List<String> possibleMoves(GameState state, ObjectPool<GameState> pool) {
 
-		moves = new ArrayList<List<Action>>();
+		moves = new ArrayList<String>();
 		this.pool = pool;
 		try {
-			addMoves(state, new ArrayList<Action>(), 0);
+			addMoves(state, "", 0);
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -36,7 +34,7 @@ public class RecMoveSearch {
 
 	}
 
-	private void addMoves(GameState state, List<Action> move, int depth) throws IllegalStateException, UnsupportedOperationException, Exception {
+	private void addMoves(GameState state, String move, int depth) throws IllegalStateException, UnsupportedOperationException, Exception {
 
 		final List<Action> actions = new ArrayList<Action>();
 		state.possibleActions(actions);
@@ -44,7 +42,7 @@ public class RecMoveSearch {
 		int i = 1;
 		for (final Action action : actions) {
 			if (depth == 0)
-				System.out.println(i + "/" + actions.size());
+				System.out.println(i + "/" + actions.size() + " " + action);
 			if (depth < 5 && !(action instanceof EndTurnAction)) {
 				GameState next;
 				if (pool.getNumIdle() == 0)
@@ -54,23 +52,14 @@ public class RecMoveSearch {
 				next.update(action);
 				//if (next.APLeft == state.APLeft)
 				//	continue; // Nothing happened
-				List<Action> clone = clone(move);
-				clone.add(action);
-				addMoves(next, clone, depth + 1);
+				addMoves(next, move + ActionEncoding.encode(action) + " ", depth + 1);
 				next.reset();
 				pool.returnObject(next);
 			} else {
-				move.add(action);
-				moves.add(move);
+				moves.add(move + ActionEncoding.encode(action));
 			}
 			i++;
 		}
 		
-	}
-
-	private List<Action> clone(List<Action> move) {
-		List<Action> actions = new ArrayList<Action>();
-		actions.addAll(move);
-		return actions;
 	}
 }
