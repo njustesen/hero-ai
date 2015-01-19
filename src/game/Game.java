@@ -4,6 +4,7 @@ import java.util.Stack;
 
 import model.HAMap;
 import ui.UI;
+import util.CachedLines;
 import action.Action;
 import action.SingletonAction;
 import action.UndoAction;
@@ -139,6 +140,7 @@ public class Game {
 	public void run() {
 
 		final int turnLimit = 1000;
+		CachedLines.load(HAMap.mapA);
 
 		state.dealCards();
 		history.add(state.copy());

@@ -17,6 +17,7 @@ import model.Square;
 import model.SquareType;
 import model.Unit;
 import model.team.Council;
+import util.CachedLines;
 import util.LineIterators;
 import action.Action;
 import action.DropAction;
@@ -388,7 +389,7 @@ public class GameState {
 				|| (from.getDirection(to).isDiagonal() && from.distance(to) == 2))
 			return false;
 
-		for (final Position pos : LineIterators.supercoverAsList(from, to)) {
+		for (final Position pos : CachedLines.supercover(from, to)) {
 			if (pos.equals(from) || pos.equals(to))
 				continue;
 
