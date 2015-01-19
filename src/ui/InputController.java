@@ -59,11 +59,6 @@ public class InputController implements MouseListener, KeyListener,
 		// System.out.println("clicked on x:" + arg0.getX() + ", y:" +
 		// arg0.getY());
 
-		if (arg0.getX() < gridX || arg0.getY() < gridY) {
-			// System.out.println("Clicked out of bounds");
-			return;
-		}
-
 		final int squareX = (arg0.getX() - gridX) / squareSize;
 		final int squareY = (arg0.getY() - gridY) / squareSize;
 		// System.out.println("clicked on square x:" + squareX + ", y:" +
@@ -74,7 +69,7 @@ public class InputController implements MouseListener, KeyListener,
 			return;
 		}
 
-		if (squareX >= state.map.width || squareY >= state.map.height) {
+		if (arg0.getY() > gridY + state.map.height * squareSize) {
 			// System.out.println("Out of grid");
 
 			// Hand
@@ -121,7 +116,9 @@ public class InputController implements MouseListener, KeyListener,
 					action = new UndoAction();
 				}
 			}
-
+			
+		} else {
+			
 			// Door
 			final int doorWidth = 30;
 			int doorStart = 20;
@@ -140,11 +137,14 @@ public class InputController implements MouseListener, KeyListener,
 				}
 			}
 
-			return;
 		}
 
 		// System.out.println("click registered");
 
+		if (arg0.getX() < gridX || arg0.getX() > gridX + state.map.width * squareSize || arg0.getY() < gridY || arg0.getY() > gridY + state.map.height * squareSize) {
+			// System.out.println("Clicked out of bounds");
+			return;
+		}
 		squareClicked(new Position(squareX, squareY));
 
 	}

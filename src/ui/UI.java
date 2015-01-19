@@ -195,7 +195,9 @@ public class UI extends JComponent {
 				&& state.squareAt(inputController.activeSquare).unit != null) {
 
 			final Position pos = inputController.activeSquare;
-			final Unit selected = state.squareAt(pos).unit;
+			Unit selected = state.squareAt(pos).unit;
+			if (selected.unitClass.card == Card.CRYSTAL)
+				return;
 
 			int startX = 2;
 			int startY = 154;
