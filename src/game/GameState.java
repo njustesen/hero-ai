@@ -3,6 +3,9 @@ package game;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.NoSuchElementException;
+
+import org.apache.commons.pool2.ObjectPool;
 
 import lib.Card;
 import lib.CardType;
@@ -885,10 +888,11 @@ public class GameState {
 	public void imitate(GameState state) {
 		for (int x = 0; x < map.width; x++)
 			for (int y = 0; y < map.height; y++)
-				if (state.squares[x][y].unit != null)
+				if (state.squares[x][y].unit != null){
 					squares[x][y].unit = state.squares[x][y].unit.copy();
-				else
+				}else{
 					squares[x][y].unit = null;
+				}
 		p1Hand.clear();
 		for (final Card card : state.p1Hand)
 			p1Hand.add(card);
@@ -987,7 +991,7 @@ public class GameState {
 		return -1;
 	}
 
-	public void reset() {
+	public void reset() throws Exception {
 		isTerminal = false;
 		p1Turn = true;
 		turn = 1;
@@ -999,7 +1003,10 @@ public class GameState {
 		chainTargets.clear();
 		for (int x = 0; x < map.width; x++)
 			for (int y = 0; y < map.height; y++)
-				squares[x][y].unit = null;
+				if (squares[x][y].unit != null){
+					squares[x][y].unit.reset();
+					squares[x][y].unit = null;
+				}
 	}
 
 }

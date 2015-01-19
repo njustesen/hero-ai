@@ -1,4 +1,4 @@
-package ai.util;
+package ai.heuristic;
 
 import ai.AI;
 import game.Game;

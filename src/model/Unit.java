@@ -18,8 +18,10 @@ public class Unit {
 
 	public Unit(Card type, boolean p1Owner) {
 		super();
-		unitClass = UnitClassLib.lib.get(type);
-		hp = unitClass.maxHP;
+		if (type != null){
+			unitClass = UnitClassLib.lib.get(type);
+			hp = unitClass.maxHP;
+		}
 		equipment = new HashSet<Card>();
 		this.p1Owner = p1Owner;
 	}
@@ -135,6 +137,22 @@ public class Unit {
 
 	}
 
+	public void imitate(Unit unit) {
+		this.hp = unit.hp;
+		this.unitClass = unit.unitClass;
+		this.p1Owner = unit.p1Owner;
+		this.equipment.clear();
+		for(Card card : unit.equipment)
+			this.equipment.add(card);
+	}
+	
+	public void reset() {
+		this.equipment.clear();
+		this.hp = 0;
+		this.unitClass = null;
+		this.p1Owner = false;
+	}
+
 	public Unit copy() {
 		final Set<Card> eq = new HashSet<Card>();
 		for (final Card card : equipment)
@@ -181,5 +199,7 @@ public class Unit {
 			return false;
 		return true;
 	}
+
+
 
 }

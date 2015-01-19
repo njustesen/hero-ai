@@ -9,8 +9,8 @@ import org.apache.commons.pool2.impl.GenericObjectPool;
 import action.Action;
 import ai.AI;
 import ai.RandomAI;
+import ai.movesearch.TreeMoveSearch;
 import ai.util.GameStateFactory;
-import ai.util.TreeMoveSearch;
 import ai.util.RAND_METHOD;
 
 public class MoveSearchPerformance {

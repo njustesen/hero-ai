@@ -1,13 +1,17 @@
-package ai.util;
+package ai.movesearch;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import model.Unit;
 
 import org.apache.commons.pool2.ObjectPool;
 
 import action.Action;
 import action.EndTurnAction;
-import action.SingletonAction;
+import ai.heuristic.HeuristicEvaluation;
+import ai.heuristic.IHeuristic;
+import ai.util.ActionPruner;
 import game.GameState;
 
 public class BestMoveSearch {
@@ -15,13 +19,15 @@ public class BestMoveSearch {
 	HeuristicEvaluation evalutator = new HeuristicEvaluation();
 	ActionPruner pruner = new ActionPruner();
 	ObjectPool<GameState> pool;
+	ObjectPool<Unit> unitPool;
 	List<Action> bestMove = new ArrayList<Action>();
 	double bestValue;
 	private IHeuristic heuristic;
 	
-	public List<Action> bestMove(GameState state, ObjectPool<GameState> pool, IHeuristic heuristic) {
+	public List<Action> bestMove(GameState state, ObjectPool<GameState> pool, ObjectPool<Unit> unitPool, IHeuristic heuristic) {
 
 		this.pool = pool;
+		this.unitPool = unitPool;
 		this.heuristic = heuristic;
 		this.bestValue = -1000000;
 		this.bestMove = null;
@@ -46,10 +52,7 @@ public class BestMoveSearch {
 			if (depth == 0){
 				System.out.println(i++ + "/" + actions.size());
 			}
-			GameState next;
-			if (pool.getNumIdle() == 0)
-				pool.addObject();
-			next = pool.borrowObject();
+			GameState next = pool.borrowObject();
 			next.imitate(state);
 			next.update(action);
 			//if (next.APLeft == state.APLeft)

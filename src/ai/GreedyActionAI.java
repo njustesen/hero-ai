@@ -7,8 +7,8 @@ import java.util.Collections;
 import java.util.List;
 
 import action.Action;
-import ai.util.HeuristicEvaluation;
-import ai.util.IHeuristic;
+import ai.heuristic.HeuristicEvaluation;
+import ai.heuristic.IHeuristic;
 
 public class GreedyActionAI implements AI {
 

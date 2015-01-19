@@ -8,8 +8,8 @@ import java.util.List;
 import lib.Card;
 import action.Action;
 import action.EndTurnAction;
-import ai.util.HeuristicEvaluation;
-import ai.util.IHeuristic;
+import ai.heuristic.HeuristicEvaluation;
+import ai.heuristic.IHeuristic;
 import ai.util.RAND_METHOD;
 
 public class NmSearchAI implements AI {

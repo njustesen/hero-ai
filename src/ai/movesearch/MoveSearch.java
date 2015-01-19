@@ -1,4 +1,4 @@
-package ai.util;
+package ai.movesearch;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -8,6 +8,8 @@ import org.apache.commons.pool2.ObjectPool;
 import action.Action;
 import action.EndTurnAction;
 import action.SingletonAction;
+import ai.heuristic.HeuristicEvaluation;
+import ai.util.ActionPruner;
 import game.GameState;
 
 public class MoveSearch {

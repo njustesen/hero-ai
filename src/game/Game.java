@@ -14,9 +14,9 @@ import ai.NmSearchAI;
 import ai.RandomAI;
 import ai.ScanRandomAI;
 import ai.HeuristicAI;
-import ai.util.HeuristicEvaluation;
+import ai.heuristic.HeuristicEvaluation;
+import ai.heuristic.RolloutEvalutation;
 import ai.util.RAND_METHOD;
-import ai.util.RolloutEvalutation;
 
 public class Game {
 

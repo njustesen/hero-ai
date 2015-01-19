@@ -1,7 +1,7 @@
 import ai.AI;
 import ai.RandomAI;
 import ai.ScanRandomAI;
-import ai.util.HeuristicEvaluation;
+import ai.heuristic.HeuristicEvaluation;
 import ai.util.RAND_METHOD;
 import game.Game;
 
