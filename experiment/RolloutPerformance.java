@@ -1,3 +1,5 @@
+import model.HAMap;
+import util.CachedLines;
 import game.Game;
 import ai.AI;
 import ai.HeuristicAI;
@@ -7,6 +9,8 @@ import ai.util.RAND_METHOD;
 public class RolloutPerformance {
 
 	public static void main(String[] args) {
+
+		CachedLines.load(HAMap.mapA);
 
 		AI p1 = null;
 		AI p2 = null;
@@ -37,13 +41,13 @@ public class RolloutPerformance {
 		p2 = new RandomAI(RAND_METHOD.TREE);
 		simulateGame(10000, p1, p2);
 		System.out.println("Done");
-
+/*
 		System.out.println("## Random AI SIM TREE ##");
 		p1 = new HeuristicAI();
 		p2 = new HeuristicAI();
 		simulateGame(10, p1, p2);
 		System.out.println("Done");
-		
+	*/	
 		/*
 		 * System.out.println("## Random AI SIM SCAN ##"); p1 = new
 		 * ScanRandomAI(true); p2 = new ScanRandomAI(false); simulateGame(1000,
@@ -57,6 +61,7 @@ public class RolloutPerformance {
 		int turns = 0;
 		for (int i = 0; i < n; i++) {
 			final Game game = new Game(null, false, p1, p2);
+			game.state.dealCards();
 			final long start = System.nanoTime();
 			game.run();
 			final long end = System.nanoTime();
@@ -79,6 +84,7 @@ public class RolloutPerformance {
 		int turns = 0;
 		for (int i = 0; i < n; i++) {
 			final Game game = new Game(null, false, p1, p2);
+			game.state.dealCards();
 			final long start = System.nanoTime();
 			while (!game.state.isTerminal)
 				if (game.state.p1Turn)

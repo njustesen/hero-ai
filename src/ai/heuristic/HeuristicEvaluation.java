@@ -27,16 +27,21 @@ public class HeuristicEvaluation implements IHeuristic {
 		int p2Units = 0;
 		final int m = 0;
 		for (int x = 0; x < state.map.width; x++)
-			for (int y = 0; y < state.map.height; y++)
-				if (state.squares[x][y].unit != null)
+			for (int y = 0; y < state.map.height; y++){
+				if (state.squares[x][y].unit != null){
+					int up = 0;
+					if (state.squares[x][y].unit.hp > 0)
+						up = 1;
 					if (state.squares[x][y].unit.p1Owner)
 						p1Units += state.squares[x][y].unit.hp
-								+ state.squares[x][y].unit.unitClass.maxHP
+								+ state.squares[x][y].unit.unitClass.maxHP * (2 * up)
 								+ squareVal(state.squares[x][y]);
 					else
 						p2Units += state.squares[x][y].unit.hp
-								+ state.squares[x][y].unit.unitClass.maxHP
+								+ state.squares[x][y].unit.unitClass.maxHP * (2 * up)
 								+ squareVal(state.squares[x][y]);
+				}
+			}
 		// TODO: Opponent hand should be hidden
 		for (final Card card : state.p1Deck)
 			if (card.type == CardType.UNIT)

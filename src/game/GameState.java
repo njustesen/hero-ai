@@ -992,7 +992,7 @@ public class GameState {
 		return -1;
 	}
 
-	public void reset() throws Exception {
+	public void reset() {
 		isTerminal = false;
 		p1Turn = true;
 		turn = 1;

@@ -42,8 +42,7 @@ public class ActionPruner {
 					|| sameOrBetterSpellEffect(spellTargets, spell))
 				pruned.add(spell);
 
-		for (final Action action : pruned)
-			actions.remove(action);
+		actions.removeAll(pruned);
 
 	}
 
