@@ -140,12 +140,12 @@ public class GameState {
 		else if (card.type == CardType.UNIT)
 			if (p1Turn) {
 				for (final Position pos : map.p1DeploySquares)
-					if (squares[pos.x][pos.y].unit == null)
+					if (squares[pos.x][pos.y].unit == null || squares[pos.x][pos.y].unit.hp == 0)
 						actions.add(new DropAction(card, new Position(pos.x,
 								pos.y)));
 			} else
 				for (final Position pos : map.p2DeploySquares)
-					if (squares[pos.x][pos.y].unit == null)
+					if (squares[pos.x][pos.y].unit == null || squares[pos.x][pos.y].unit.hp == 0)
 						actions.add(new DropAction(card, new Position(pos.x,
 								pos.y)));
 
@@ -270,6 +270,9 @@ public class GameState {
 				if (drop.type == Card.REVIVE_POTION
 						&& (squares[drop.to.x][drop.to.y].unit.unitClass.card == Card.CRYSTAL || squares[drop.to.x][drop.to.y].unit
 								.fullHealth()))
+					return;
+				
+				if(drop.type != Card.REVIVE_POTION && squares[drop.to.x][drop.to.y].unit.hp == 0)
 					return;
 
 				if (squares[drop.to.x][drop.to.y].unit.equipment
