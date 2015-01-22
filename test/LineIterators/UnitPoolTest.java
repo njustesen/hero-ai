@@ -50,10 +50,12 @@ public class UnitPoolTest {
 		}
 		
 	}
-	
+	private static GenericObjectPool<Unit> unitPool = new GenericObjectPool<Unit>(new UnitFactory());
 	private static void borrowNReturnN(int n) {
 		
-		ObjectPool<Unit> unitPool = new GenericObjectPool<Unit>(new UnitFactory());
+		unitPool.setBlockWhenExhausted(false);
+		unitPool.setMaxTotal(n);
+		
 		List<Unit> units = new ArrayList<Unit>();
 		Unit unit = new Unit(Card.ARCHER, true);
 		
@@ -70,6 +72,8 @@ public class UnitPoolTest {
 			}
 			System.out.println(i);
 		}
+		
+		
 		
 		int i=0;
 		for(Unit u : units){

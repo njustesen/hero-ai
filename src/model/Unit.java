@@ -18,6 +18,7 @@ public class Unit {
 
 	public Unit(Card type, boolean p1Owner) {
 		super();
+		
 		if (type != null){
 			unitClass = UnitClassLib.lib.get(type);
 			hp = unitClass.maxHP;

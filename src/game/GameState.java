@@ -3,9 +3,6 @@ package game;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.NoSuchElementException;
-
-import org.apache.commons.pool2.ObjectPool;
 
 import lib.Card;
 import lib.CardType;
@@ -18,7 +15,6 @@ import model.SquareType;
 import model.Unit;
 import model.team.Council;
 import util.CachedLines;
-import util.LineIterators;
 import action.Action;
 import action.DropAction;
 import action.EndTurnAction;
