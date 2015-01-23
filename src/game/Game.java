@@ -1,5 +1,6 @@
 package game;
 
+import java.util.NoSuchElementException;
 import java.util.Stack;
 
 import model.HAMap;
@@ -111,7 +112,12 @@ public class Game {
 		final Game game = new Game(null, GFX, players[0], players[1]);
 		// Game game = new Game(null, true, new EvaAI(true,1000,1000), null);
 
-		game.run();
+		try {
+			game.run();
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 
 		// Game game = new Game(null, false, new RandomAI(true), new
 		// RandomAI(false));
@@ -137,12 +143,12 @@ public class Game {
 
 	}
 
-	public void run() {
+	public void run() throws NoSuchElementException, IllegalStateException, Exception {
 
 		final int turnLimit = 1000;
 		CachedLines.load(HAMap.mapA);
 
-		state.dealCards();
+		state.init();
 		history.add(state.copy());
 		lastTurn = 5;
 
@@ -210,7 +216,7 @@ public class Game {
 
 	}
 
-	private void act(AI p1, AI p2, GameState copy) {
+	private void act(AI p1, AI p2, GameState copy) throws NoSuchElementException, IllegalStateException, Exception {
 		Action action = p1.act(copy, TIME_LIMIT);
 		if (action == null)
 			action = SingletonAction.endTurnAction;

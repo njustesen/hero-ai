@@ -135,7 +135,6 @@ public class TreeMoveSearch {
 				root.children.add(node);
 				node.parent = root;
 				node.action = action;
-				next.reset();
 				pool.returnObject(next);
 			}
 			i++;

@@ -2,9 +2,6 @@ package LineIterators;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
-
-import game.GameState;
 import lib.Card;
 import model.Unit;
 
@@ -36,7 +33,6 @@ public class UnitPoolTest {
 				e.printStackTrace();
 			} finally {
 				if (clone != null){
-					clone.reset();
 					System.out.println(i);
 					try {
 						unitPool.returnObject(clone);
@@ -77,7 +73,7 @@ public class UnitPoolTest {
 		
 		int i=0;
 		for(Unit u : units){
-			u.reset();
+			//u.reset();
 			try {
 				unitPool.returnObject(u);
 			} catch (Exception e) {

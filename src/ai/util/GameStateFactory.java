@@ -31,6 +31,6 @@ public class GameStateFactory extends BasePooledObjectFactory<GameState> {
 	 */
 	@Override
 	public void passivateObject(PooledObject<GameState> pooledObject) throws Exception {
-		pooledObject.getObject().reset();
+		pooledObject.getObject().returnUnits();
 	}
 }

@@ -49,8 +49,7 @@ public class UI extends JComponent {
 	public UI(GameState state, boolean humanP1, boolean humanP2) {
 		frame = new JFrame();
 		width = state.map.width * squareSize + squareSize * 2;
-		height = state.map.height * squareSize + squareSize * 2 + squareSize
-				/ 2;
+		height = state.map.height * squareSize + squareSize * 2 + squareSize;
 		frame.setSize(width, height);
 		frame.setTitle("Hero Academy");
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -192,10 +191,10 @@ public class UI extends JComponent {
 	private void paintUnitDetails(Graphics g) {
 
 		if (inputController.activeSquare != null
-				&& state.squareAt(inputController.activeSquare).unit != null) {
+				&& state.unitAt(inputController.activeSquare) != null) {
 
 			final Position pos = inputController.activeSquare;
-			Unit selected = state.squareAt(pos).unit;
+			Unit selected = state.unitAt(pos);
 			if (selected.unitClass.card == Card.CRYSTAL)
 				return;
 
@@ -472,17 +471,17 @@ public class UI extends JComponent {
 					* UnitClassLib.lib.get(Card.CRYSTAL).maxHP;
 			if (p == 1) {
 				for (final Position pos : state.map.p1Crystals) {
-					if (state.squares[pos.x][pos.y].unit == null
-							|| state.squares[pos.x][pos.y].unit.unitClass.card != Card.CRYSTAL)
+					if (state.units[pos.x][pos.y] == null
+							|| state.units[pos.x][pos.y].unitClass.card != Card.CRYSTAL)
 						continue;
-					hp += state.squares[pos.x][pos.y].unit.hp;
+					hp += state.units[pos.x][pos.y].hp;
 				}
 			} else if (p == 2) {
 				for (final Position pos : state.map.p2Crystals) {
-					if (state.squares[pos.x][pos.y].unit == null
-							|| state.squares[pos.x][pos.y].unit.unitClass.card != Card.CRYSTAL)
+					if (state.units[pos.x][pos.y] == null
+							|| state.units[pos.x][pos.y].unitClass.card != Card.CRYSTAL)
 						continue;
-					hp += state.squares[pos.x][pos.y].unit.hp;
+					hp += state.units[pos.x][pos.y].hp;
 				}
 			}
 			final int w = 158;
@@ -511,10 +510,10 @@ public class UI extends JComponent {
 		// Units
 		for (int x = 0; x < state.map.width; x++) {
 			for (int y = 0; y < state.map.height; y++) {
-				if (state.squares[x][y].unit == null)
+				if (state.units[x][y] == null)
 					continue;
-				final double hp = state.squares[x][y].unit.hp;
-				final double maxHP = state.squares[x][y].unit.maxHP();
+				final double hp = state.units[x][y].hp;
+				final double maxHP = state.units[x][y].maxHP();
 
 				// if (maxHP > 0){
 				final int w = (int) (squareSize * 0.8);
@@ -541,41 +540,41 @@ public class UI extends JComponent {
 
 		for (int x = 0; x < state.map.width; x++) {
 			for (int y = 0; y < state.map.height; y++) {
-				if (state.squares[x][y].unit == null)
+				if (state.units[x][y] == null)
 					continue;
 
 				g.setFont(new Font("Arial", Font.PLAIN, 11));
 
 				g.setColor(new Color(50, 255, 50));
-				g.drawString(state.squares[x][y].unit.hp + "/"
-						+ state.squares[x][y].unit.maxHP(), squareSize
+				g.drawString(state.units[x][y].hp + "/"
+						+ state.units[x][y].maxHP(), squareSize
 						+ squareSize * x + squareSize / 8, squareSize
 						+ squareSize * y - (int) (squareSize / 3.75));
 
-				if (state.squares[x][y].unit == null)
+				if (state.units[x][y] == null)
 					continue;
 
 				g.setColor(new Color(50, 100, 50));
-				g.drawString(state.squares[x][y].unit.hp + "/"
-						+ state.squares[x][y].unit.maxHP(), squareSize
+				g.drawString(state.units[x][y].hp + "/"
+						+ state.units[x][y].maxHP(), squareSize
 						+ squareSize * x + squareSize / 8 - 1, squareSize
 						+ squareSize * y - (int) (squareSize / 3.75));
 
-				if (state.squares[x][y].unit == null)
+				if (state.units[x][y] == null)
 					continue;
 
-				if (state.squares[x][y].unit.power(state, new Position(x, y)) > 0) {
+				if (state.units[x][y].power(state, new Position(x, y)) > 0) {
 					g.setFont(new Font("Arial", Font.BOLD, 11));
 					g.setColor(new Color(50, 100, 50));
 					g.drawString(
-							state.squares[x][y].unit.power(state, new Position(
+							state.units[x][y].power(state, new Position(
 									x, y))
 									+ "", squareSize + squareSize * x
 									+ squareSize / 3, squareSize + squareSize
 									* y - 1);
 					g.setColor(new Color(255, 25, 25));
 					g.drawString(
-							state.squares[x][y].unit.power(state, new Position(
+							state.units[x][y].power(state, new Position(
 									x, y))
 									+ "", squareSize + squareSize * x
 									+ squareSize / 3, squareSize + squareSize
@@ -641,31 +640,31 @@ public class UI extends JComponent {
 
 	private void paintGameObjects(Graphics g) throws IOException {
 
-		for (int x = 0; x < state.squares.length; x++) {
-			for (int y = 0; y < state.squares[0].length; y++) {
-				if (state.squares[x][y].unit == null)
+		for (int x = 0; x < state.map.squares.length; x++) {
+			for (int y = 0; y < state.map.squares[0].length; y++) {
+				if (state.units[x][y] == null)
 					continue;
 
-				if (state.squares[x][y].unit.hp <= 0
-						&& state.squares[x][y].unit.unitClass.card == Card.CRYSTAL)
+				if (state.units[x][y].hp <= 0
+						&& state.units[x][y].unitClass.card == Card.CRYSTAL)
 					continue;
 
 				BufferedImage image = null;
 
 				String red = "";
-				if (state.squares[x][y].unit.hp <= 0)
+				if (state.units[x][y].hp <= 0)
 					red = "-red";
 
 				int p = 1;
-				if (!state.squares[x][y].unit.p1Owner)
+				if (!state.units[x][y].p1Owner)
 					p += 1;
-				final String name = state.squares[x][y].unit.unitClass.card
+				final String name = state.units[x][y].unitClass.card
 						.name().toString().toLowerCase()
 						+ red + "-" + p;
 				image = ImageLib.lib.get(name);
 
 				if (image == null)
-					System.out.println(state.squares[x][y].unit.unitClass.card
+					System.out.println(state.units[x][y].unitClass.card
 							.name());
 				else
 					g.drawImage(image, squareSize + x * squareSize + squareSize
@@ -674,7 +673,7 @@ public class UI extends JComponent {
 
 				image = null;
 				int i = 0;
-				for (final Card card : state.squares[x][y].unit.equipment) {
+				for (final Card card : state.units[x][y].equipment) {
 					i++;
 					switch (card) {
 					case DRAGONSCALE:
@@ -846,15 +845,15 @@ public class UI extends JComponent {
 
 				BufferedImage image = null;
 
-				if (state.map.squareAt(x, y).type == SquareType.ASSAULT)
+				if (state.map.squareAt(x, y) == SquareType.ASSAULT)
 					image = ImageLib.lib.get("assault");
-				else if (state.map.squareAt(x, y).type == SquareType.DEFENSE)
+				else if (state.map.squareAt(x, y) == SquareType.DEFENSE)
 					image = ImageLib.lib.get("defense");
-				else if (state.map.squareAt(x, y).type == SquareType.POWER)
+				else if (state.map.squareAt(x, y) == SquareType.POWER)
 					image = ImageLib.lib.get("power");
-				else if (state.map.squareAt(x, y).type == SquareType.DEPLOY_1)
+				else if (state.map.squareAt(x, y) == SquareType.DEPLOY_1)
 					image = ImageLib.lib.get("deploy-1");
-				else if (state.map.squareAt(x, y).type == SquareType.DEPLOY_2)
+				else if (state.map.squareAt(x, y) == SquareType.DEPLOY_2)
 					image = ImageLib.lib.get("deploy-2");
 
 				if (image != null)

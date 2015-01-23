@@ -56,7 +56,6 @@ public class EncodedMoveSearch {
 				//if (next.APLeft == state.APLeft)
 				//	continue; // Nothing happened
 				addMoves(next, move + ActionEncoding.encode(action) + " ", depth + 1);
-				next.reset();
 				pool.returnObject(next);
 			} else {
 				moves.add(move + ActionEncoding.encode(action));

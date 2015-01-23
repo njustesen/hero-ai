@@ -53,6 +53,7 @@ public class BestMoveSearch {
 				System.out.println(i++ + "/" + actions.size());
 			}
 			GameState next = pool.borrowObject();
+			next.unitPool = unitPool;
 			next.imitate(state);
 			next.update(action);
 			//if (next.APLeft == state.APLeft)
@@ -68,7 +69,8 @@ public class BestMoveSearch {
 					bestMove = nextMove;
 				}
 			}
-			next.reset();
+			//next.reset();
+			//next.returnUnits();
 			pool.returnObject(next);
 		}
 		

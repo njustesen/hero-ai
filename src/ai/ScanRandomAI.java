@@ -79,21 +79,21 @@ public class ScanRandomAI implements AI {
 
 		for (final Position pos : myUnits) {
 
-			if (state.squares[pos.x][pos.y].unit.hp <= 0)
+			if (state.units[pos.x][pos.y].hp <= 0)
 				continue;
 
 			final List<UnitActionType> types = new ArrayList<UnitActionType>();
 
-			if (state.squares[pos.x][pos.y].unit.unitClass.swap)
+			if (state.units[pos.x][pos.y].unitClass.swap)
 				types.add(UnitActionType.SWAP);
 
-			if (state.squares[pos.x][pos.y].unit.unitClass.heal != null)
+			if (state.units[pos.x][pos.y].unitClass.heal != null)
 				types.add(UnitActionType.HEAL);
 
-			if (state.squares[pos.x][pos.y].unit.unitClass.speed > 0)
+			if (state.units[pos.x][pos.y].unitClass.speed > 0)
 				types.add(UnitActionType.MOVE);
 
-			if (state.squares[pos.x][pos.y].unit.unitClass.attack != null)
+			if (state.units[pos.x][pos.y].unitClass.attack != null)
 				types.add(UnitActionType.ATTACK);
 
 			Collections.shuffle(types);
@@ -130,7 +130,7 @@ public class ScanRandomAI implements AI {
 		for (final Position other : myUnits) {
 
 			if (other.equals(pos)
-					|| state.squares[other.x][other.y].unit.hp <= 0)
+					|| state.units[other.x][other.y].hp <= 0)
 				continue;
 
 			return new UnitAction(pos, other, UnitActionType.SWAP);
@@ -145,13 +145,13 @@ public class ScanRandomAI implements AI {
 		for (final Position other : myUnits) {
 
 			if (other.equals(pos)
-					|| state.squares[other.x][other.y].unit.fullHealth())
+					|| state.units[other.x][other.y].fullHealth())
 				continue;
 
-			if (state.squares[other.x][other.y].unit.unitClass.card == Card.CRYSTAL)
+			if (state.units[other.x][other.y].unitClass.card == Card.CRYSTAL)
 				continue;
 
-			if (pos.distance(other) > state.squares[pos.x][pos.y].unit.unitClass.heal.range)
+			if (pos.distance(other) > state.units[pos.x][pos.y].unitClass.heal.range)
 				continue;
 
 			return new UnitAction(pos, other, UnitActionType.HEAL);
@@ -163,19 +163,19 @@ public class ScanRandomAI implements AI {
 
 	private Action attackAction(GameState state, Position pos) {
 
-		if (state.squares[pos.x][pos.y].unit.unitClass.attack == null)
+		if (state.units[pos.x][pos.y].unitClass.attack == null)
 			return null;
 
 		for (final Position other : enemyUnits) {
 
 			final int distance = pos.distance(other);
 
-			if (state.squares[other.x][other.y].unit.hp <= 0
-					&& distance > state.squares[pos.x][pos.y].unit.unitClass.speed)
+			if (state.units[other.x][other.y].hp <= 0
+					&& distance > state.units[pos.x][pos.y].unitClass.speed)
 				continue;
 
-			if (state.squares[other.x][other.y].unit.hp > 0
-					&& distance > state.squares[pos.x][pos.y].unit.unitClass.attack.range)
+			if (state.units[other.x][other.y].hp > 0
+					&& distance > state.units[pos.x][pos.y].unitClass.attack.range)
 				continue;
 
 			if (distance > 1 && state.losBlocked(p1, pos, other))
@@ -192,15 +192,15 @@ public class ScanRandomAI implements AI {
 
 		for (final Position empty : emptySpaces) {
 
-			if (pos.distance(empty) > state.squares[pos.x][pos.y].unit.unitClass.speed)
+			if (pos.distance(empty) > state.units[pos.x][pos.y].unitClass.speed)
 				continue;
 
-			if (!state.squares[pos.x][pos.y].unit.p1Owner
-					&& state.squares[empty.x][empty.y].type == SquareType.DEPLOY_1)
+			if (!state.units[pos.x][pos.y].p1Owner
+					&& state.map.squares[empty.x][empty.y] == SquareType.DEPLOY_1)
 				continue;
 
-			if (state.squares[pos.x][pos.y].unit.p1Owner
-					&& state.squares[empty.x][empty.y].type == SquareType.DEPLOY_2)
+			if (state.units[pos.x][pos.y].p1Owner
+					&& state.map.squares[empty.x][empty.y] == SquareType.DEPLOY_2)
 				continue;
 
 			return new UnitAction(pos, empty, UnitActionType.MOVE);
@@ -250,13 +250,13 @@ public class ScanRandomAI implements AI {
 
 		if (state.p1Turn)
 			for (final Position pos : state.map.p1DeploySquares)
-				if (state.squares[pos.x][pos.y].unit == null
-						|| state.squares[pos.x][pos.y].unit.hp <= 0)
+				if (state.units[pos.x][pos.y] == null
+						|| state.units[pos.x][pos.y].hp <= 0)
 					return new DropAction(card, pos);
 		if (!state.p1Turn)
 			for (final Position pos : state.map.p2DeploySquares)
-				if (state.squares[pos.x][pos.y].unit == null
-						|| state.squares[pos.x][pos.y].unit.hp <= 0)
+				if (state.units[pos.x][pos.y] == null
+						|| state.units[pos.x][pos.y].hp <= 0)
 					return new DropAction(card, pos);
 
 		return null;
@@ -266,16 +266,16 @@ public class ScanRandomAI implements AI {
 
 		for (final Position pos : myUnits) {
 
-			if (state.squares[pos.x][pos.y].unit.unitClass.card == Card.CRYSTAL)
+			if (state.units[pos.x][pos.y].unitClass.card == Card.CRYSTAL)
 				continue;
 
 			if (card == Card.REVIVE_POTION
-					&& state.squares[pos.x][pos.y].unit.fullHealth())
+					&& state.units[pos.x][pos.y].fullHealth())
 				continue;
 
 			if (card != Card.REVIVE_POTION
-					&& state.squares[pos.x][pos.y].unit.hp <= 0
-					|| state.squares[pos.x][pos.y].unit.equipment
+					&& state.units[pos.x][pos.y].hp <= 0
+					|| state.units[pos.x][pos.y].equipment
 							.contains(card))
 				continue;
 
@@ -294,8 +294,8 @@ public class ScanRandomAI implements AI {
 
 		for (int x = 0; x < state.map.width; x++)
 			for (int y = 0; y < state.map.height; y++)
-				if (state.squares[x][y].unit != null) {
-					if (state.squares[x][y].unit.p1Owner == p1)
+				if (state.units[x][y] != null) {
+					if (state.units[x][y].p1Owner == p1)
 						myUnits.add(new Position(x, y));
 					else
 						enemyUnits.add(new Position(x, y));

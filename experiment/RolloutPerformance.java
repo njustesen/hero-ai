@@ -55,36 +55,13 @@ public class RolloutPerformance {
 		 */
 
 	}
-
-	private static void runGame(int n, AI p1, AI p2) {
-		long ns = 0;
-		int turns = 0;
-		for (int i = 0; i < n; i++) {
-			final Game game = new Game(null, false, p1, p2);
-			game.state.dealCards();
-			final long start = System.nanoTime();
-			game.run();
-			final long end = System.nanoTime();
-			ns += end - start;
-			turns += game.state.turn;
-		}
-		System.out.println("// Run Game //");
-		System.out.println("Time (ns) avg. per game: " + (ns / n));
-		System.out
-				.println("Time (ns) avg. per turn: " + (ns / n / (turns / n)));
-		final double ms = ns / 1000000.0;
-		System.out.println("Time (ms) per game: " + (ms / n));
-		System.out.println("Time (ms) per turn: " + (ms / n / (turns / n)));
-		System.out.println("Turns avg. per game " + (turns / n));
-		System.out.println();
-	}
-
+	
 	private static void simulateGame(int n, AI p1, AI p2) {
 		long ns = 0;
 		int turns = 0;
 		for (int i = 0; i < n; i++) {
 			final Game game = new Game(null, false, p1, p2);
-			game.state.dealCards();
+			game.state.init();
 			final long start = System.nanoTime();
 			while (!game.state.isTerminal)
 				if (game.state.p1Turn)

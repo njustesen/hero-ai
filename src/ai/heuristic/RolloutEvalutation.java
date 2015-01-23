@@ -1,5 +1,7 @@
 package ai.heuristic;
 
+import java.util.NoSuchElementException;
+
 import ai.AI;
 import game.Game;
 import game.GameState;

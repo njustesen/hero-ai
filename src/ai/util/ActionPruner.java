@@ -66,7 +66,7 @@ public class ActionPruner {
 			for (int y = to.y - 1; y <= to.y + 1; y++)
 				if (x >= 0 && x < state.map.width && y >= 0
 						&& y < state.map.height) {
-					final Unit unit = state.map.squareAt(x, y).unit;
+					final Unit unit = state.unitAt(x, y);
 					if (unit != null && unit.p1Owner != state.p1Turn)
 						targets.add(new Position(x, y));
 				}

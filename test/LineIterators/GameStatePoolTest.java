@@ -15,7 +15,7 @@ import org.apache.commons.pool2.impl.GenericObjectPool;
 import ai.util.GameStateFactory;
 import ai.util.UnitFactory;
 
-public class GameStateTest {
+public class GameStatePoolTest {
 
 	public static void main(String[] args){
 		
@@ -40,7 +40,6 @@ public class GameStateTest {
 				e.printStackTrace();
 			} finally {
 				if (clone != null){
-					clone.reset();
 					System.out.println(i);
 					try {
 						pool.returnObject(clone);
@@ -57,7 +56,9 @@ public class GameStateTest {
 	
 	private static void borrowNReturnN(int n) {
 		
-		ObjectPool<GameState> pool = new GenericObjectPool<GameState>(new GameStateFactory());
+		GenericObjectPool<GameState> pool = new GenericObjectPool<GameState>(new GameStateFactory());
+		pool.setBlockWhenExhausted(false);
+		pool.setMaxTotal(n);
 		List<GameState> states = new ArrayList<GameState>();
 		GameState state = new GameState(HAMap.mapA);
 		
@@ -77,7 +78,7 @@ public class GameStateTest {
 		
 		int i=0;
 		for(GameState s : states){
-			s.reset();
+			//s.reset();
 			try {
 				pool.returnObject(s);
 			} catch (Exception e) {

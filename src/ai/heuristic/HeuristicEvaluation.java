@@ -4,7 +4,7 @@ import game.GameState;
 import lib.Card;
 import lib.CardType;
 import lib.UnitClassLib;
-import model.Square;
+import model.SquareType;
 
 public class HeuristicEvaluation implements IHeuristic {
 
@@ -28,18 +28,18 @@ public class HeuristicEvaluation implements IHeuristic {
 		final int m = 0;
 		for (int x = 0; x < state.map.width; x++)
 			for (int y = 0; y < state.map.height; y++){
-				if (state.squares[x][y].unit != null){
+				if (state.units[x][y] != null){
 					int up = 0;
-					if (state.squares[x][y].unit.hp > 0)
+					if (state.units[x][y].hp > 0)
 						up = 1;
-					if (state.squares[x][y].unit.p1Owner)
-						p1Units += state.squares[x][y].unit.hp
-								+ state.squares[x][y].unit.unitClass.maxHP * (2 * up)
-								+ squareVal(state.squares[x][y]);
+					if (state.units[x][y].p1Owner)
+						p1Units += state.units[x][y].hp
+								+ state.units[x][y].unitClass.maxHP * (2 * up)
+								+ squareVal(state.map.squares[x][y]);
 					else
-						p2Units += state.squares[x][y].unit.hp
-								+ state.squares[x][y].unit.unitClass.maxHP * (2 * up)
-								+ squareVal(state.squares[x][y]);
+						p2Units += state.units[x][y].hp
+								+ state.units[x][y].unitClass.maxHP * (2 * up)
+								+ squareVal(state.map.squares[x][y]);
 				}
 			}
 		// TODO: Opponent hand should be hidden
@@ -61,9 +61,9 @@ public class HeuristicEvaluation implements IHeuristic {
 		return p2Units - p1Units;
 	}
 
-	private int squareVal(Square square) {
+	private int squareVal(SquareType square) {
 		
-		switch(square.type){
+		switch(square){
 		case ASSAULT : return 100;
 		case DEPLOY_1 : return -75;
 		case DEPLOY_2 : return -75;

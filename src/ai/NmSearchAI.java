@@ -4,6 +4,7 @@ import game.GameState;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.NoSuchElementException;
 
 import lib.Card;
 import action.Action;
@@ -95,8 +96,7 @@ public class NmSearchAI implements AI {
 
 	}
 
-	private List<Action> findBest(List<GameState> states,
-			List<List<Action>> moves) {
+	private List<Action> findBest(List<GameState> states, List<List<Action>> moves) {
 
 		final List<Double> values = new ArrayList<Double>();
 

@@ -15,10 +15,11 @@ public class Unit {
 	public UnitClass unitClass;
 	public Set<Card> equipment;
 	public boolean p1Owner;
+	public static int count = 0;
 
 	public Unit(Card type, boolean p1Owner) {
 		super();
-		
+		//System.out.println(count++);
 		if (type != null){
 			unitClass = UnitClassLib.lib.get(type);
 			hp = unitClass.maxHP;
@@ -40,6 +41,15 @@ public class Unit {
 		unitClass = uclass;
 		this.hp = hp;
 		this.equipment = equipment;
+		this.p1Owner = p1Owner;
+	}
+	
+	public void init(Card type, boolean p1Owner) {
+		if (type != null){
+			unitClass = UnitClassLib.lib.get(type);
+			hp = unitClass.maxHP;
+		}
+		equipment = new HashSet<Card>();
 		this.p1Owner = p1Owner;
 	}
 
@@ -67,7 +77,7 @@ public class Unit {
 			power += power / 2;
 
 		// Power boost
-		if (state.map.squareAt(pos.x, pos.y).type == SquareType.POWER)
+		if (state.map.squareAt(pos.x, pos.y) == SquareType.POWER)
 			power += 100;
 
 		// Scroll
@@ -118,7 +128,7 @@ public class Unit {
 			res += unitClass.physicalResistance;
 			if (equipment.contains(Card.DRAGONSCALE))
 				res += 20;
-			if (state.map.squareAt(pos.x, pos.y).type == SquareType.DEFENSE)
+			if (state.map.squareAt(pos.x, pos.y) == SquareType.DEFENSE)
 				res += 20;
 		}
 
@@ -146,13 +156,6 @@ public class Unit {
 		for(Card card : unit.equipment)
 			this.equipment.add(card);
 	}
-	
-	public void reset() {
-		this.equipment.clear();
-		this.hp = 0;
-		this.unitClass = null;
-		this.p1Owner = false;
-	}
 
 	public Unit copy() {
 		final Set<Card> eq = new HashSet<Card>();
@@ -161,20 +164,7 @@ public class Unit {
 
 		return new Unit(hp, unitClass, p1Owner, eq);
 	}
-
-	@Override
-	public int hashCode() {
-		final int prime = 31;
-		int result = 1;
-		result = prime * result
-				+ ((equipment == null) ? 0 : equipment.hashCode());
-		result = prime * result + hp;
-		result = prime * result + (p1Owner ? 1231 : 1237);
-		result = prime * result
-				+ ((unitClass == null) ? 0 : unitClass.hashCode());
-		return result;
-	}
-
+	
 	@Override
 	public boolean equals(Object obj) {
 		if (this == obj)
@@ -200,7 +190,5 @@ public class Unit {
 			return false;
 		return true;
 	}
-
-
 
 }

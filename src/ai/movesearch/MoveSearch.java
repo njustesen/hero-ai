@@ -57,7 +57,6 @@ public class MoveSearch {
 				List<Action> clone = clone(move);
 				clone.add(action);
 				addMoves(next, clone, depth + 1);
-				next.reset();
 				pool.returnObject(next);
 			} else {
 				move.add(action);

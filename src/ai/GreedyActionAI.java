@@ -33,8 +33,14 @@ public class GreedyActionAI implements AI {
 		for (final Action action : actions) {
 
 			final GameState next = state.copy();
-			next.update(action);
-			final double val = heuristic.eval(next, state.p1Turn);
+			double val = 0.0;
+			try {
+				next.update(action);
+				val = heuristic.eval(next, state.p1Turn);
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 
 			if (val > bestValue) {
 				bestValue = val;

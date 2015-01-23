@@ -88,15 +88,15 @@ public class RandomAI implements AI {
 			positions.clear();
 			for (int x = 0; x < state.map.width; x++)
 				for (int y = 0; y < state.map.height; y++)
-					if (state.squares[x][y].unit != null
-							&& state.squares[x][y].unit.p1Owner == state.p1Turn
-							&& state.squares[x][y].unit.hp > 0
-							&& state.squares[x][y].unit.unitClass.card != Card.CRYSTAL)
+					if (state.units[x][y] != null
+							&& state.units[x][y].p1Owner == state.p1Turn
+							&& state.units[x][y].hp > 0
+							&& state.units[x][y].unitClass.card != Card.CRYSTAL)
 						positions.add(new Position(x, y));
 			Collections.shuffle(positions);
 			for (final Position pos : positions) {
 				actions.clear();
-				state.possibleActions(state.squares[pos.x][pos.y].unit, pos,
+				state.possibleActions(state.units[pos.x][pos.y], pos,
 						actions);
 				if (!actions.isEmpty())
 					return actions.get((int) (Math.random() * actions.size()));
@@ -105,15 +105,15 @@ public class RandomAI implements AI {
 			positions.clear();
 			for (int x = 0; x < state.map.width; x++)
 				for (int y = 0; y < state.map.height; y++)
-					if (state.squares[x][y].unit != null
-							&& state.squares[x][y].unit.p1Owner == state.p1Turn
-							&& state.squares[x][y].unit.hp > 0
-							&& state.squares[x][y].unit.unitClass.card != Card.CRYSTAL)
+					if (state.units[x][y] != null
+							&& state.units[x][y].p1Owner == state.p1Turn
+							&& state.units[x][y].hp > 0
+							&& state.units[x][y].unitClass.card != Card.CRYSTAL)
 						positions.add(new Position(x, y));
 			Collections.shuffle(positions);
 			for (final Position pos : positions) {
 				actions.clear();
-				state.possibleActions(state.squares[pos.x][pos.y].unit, pos,
+				state.possibleActions(state.units[pos.x][pos.y], pos,
 						actions);
 				if (!actions.isEmpty())
 					return actions.get((int) (Math.random() * actions.size()));

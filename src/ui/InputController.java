@@ -193,7 +193,7 @@ public class InputController implements MouseListener, KeyListener,
 			}
 			activateSquare(position);
 		} else {
-			if (state.squareAt(position).unit != null) {
+			if (state.unitAt(position) != null) {
 				activateSquare(position);
 			}
 		}
@@ -204,9 +204,9 @@ public class InputController implements MouseListener, KeyListener,
 
 		possibleActions.clear();
 
-		if (state.squareAt(position).unit != null) {
+		if (state.unitAt(position) != null) {
 
-			final Unit unit = state.squareAt(position).unit;
+			final Unit unit = state.unitAt(position);
 			activeSquare = position;
 			activeCardIdx = -1;
 

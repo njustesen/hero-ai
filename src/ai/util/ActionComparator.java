@@ -58,42 +58,42 @@ public class ActionComparator implements Comparator<Action> {
 				spellTargets(drop.to, targets);
 				int val = -500;
 				for (final Position pos : targets)
-					if (state.squares[pos.x][pos.y].unit.hp == 0)
-						val += state.squares[pos.x][pos.y].unit.maxHP() * 2;
+					if (state.units[pos.x][pos.y].hp == 0)
+						val += state.units[pos.x][pos.y].maxHP() * 2;
 					else
 						val += 300;
 
 				return val;
 			} else if (drop.type == Card.REVIVE_POTION) {
-				if (state.squares[drop.to.x][drop.to.y].unit.hp == 0)
+				if (state.units[drop.to.x][drop.to.y].hp == 0)
 					return 300
-							- state.squares[drop.to.x][drop.to.y].unit.maxHP()
-							+ state.squares[drop.to.x][drop.to.y].unit.equipment
+							- state.units[drop.to.x][drop.to.y].maxHP()
+							+ state.units[drop.to.x][drop.to.y].equipment
 									.size() * 200;
 			} else if (drop.type == Card.SCROLL)
-				return state.squares[drop.to.x][drop.to.y].unit.power(state,
+				return state.units[drop.to.x][drop.to.y].power(state,
 						drop.to)
 						* 2
-						+ state.squares[drop.to.x][drop.to.y].unit.hp;
+						+ state.units[drop.to.x][drop.to.y].hp;
 			else if (drop.type == Card.DRAGONSCALE)
-				return state.squares[drop.to.x][drop.to.y].unit.power(state,
+				return state.units[drop.to.x][drop.to.y].power(state,
 						drop.to)
-						+ state.squares[drop.to.x][drop.to.y].unit.hp
+						+ state.units[drop.to.x][drop.to.y].hp
 						* 2;
 			else if (drop.type == Card.RUNEMETAL)
-				return state.squares[drop.to.x][drop.to.y].unit.power(state,
+				return state.units[drop.to.x][drop.to.y].power(state,
 						drop.to)
 						* 2
-						+ state.squares[drop.to.x][drop.to.y].unit.hp * 2;
+						+ state.units[drop.to.x][drop.to.y].hp * 2;
 			else if (drop.type == Card.SHINING_HELM)
-				return state.squares[drop.to.x][drop.to.y].unit.power(state,
-						drop.to) + state.squares[drop.to.x][drop.to.y].unit.hp;
+				return state.units[drop.to.x][drop.to.y].power(state,
+						drop.to) + state.units[drop.to.x][drop.to.y].hp;
 			else
 				return 200;
 		} else if (action instanceof UnitAction)
 			if (((UnitAction) action).type == UnitActionType.ATTACK) {
-				final Unit defender = state.squares[((UnitAction) action).to.x][((UnitAction) action).to.y].unit;
-				final Unit attacker = state.squares[((UnitAction) action).from.x][((UnitAction) action).from.y].unit;
+				final Unit defender = state.units[((UnitAction) action).to.x][((UnitAction) action).to.y];
+				final Unit attacker = state.units[((UnitAction) action).from.x][((UnitAction) action).from.y];
 				if (attacker.unitClass.attack.chain) {
 					if (defender.hp == 0)
 						return defender.maxHP() * 2 + 200;
@@ -105,7 +105,7 @@ public class ActionComparator implements Comparator<Action> {
 				else
 					return attacker.power(state, ((UnitAction) action).from);
 			} else if (((UnitAction) action).type == UnitActionType.HEAL) {
-				final Unit target = state.squares[((UnitAction) action).to.x][((UnitAction) action).to.y].unit;
+				final Unit target = state.units[((UnitAction) action).to.x][((UnitAction) action).to.y];
 				if (target.hp == 0)
 					return 1400;
 				else
@@ -113,10 +113,10 @@ public class ActionComparator implements Comparator<Action> {
 			} else if (((UnitAction) action).type == UnitActionType.SWAP)
 				return 0;
 			else if (((UnitAction) action).type == UnitActionType.MOVE) {
-				if (state.squares[((UnitAction) action).to.x][((UnitAction) action).to.y].unit != null)
-					return state.squares[((UnitAction) action).to.x][((UnitAction) action).to.y].unit
+				if (state.units[((UnitAction) action).to.x][((UnitAction) action).to.y] != null)
+					return state.units[((UnitAction) action).to.x][((UnitAction) action).to.y]
 							.maxHP() * 2;
-				if (state.squares[((UnitAction) action).to.x][((UnitAction) action).to.y].type == SquareType.NONE)
+				if (state.map.squares[((UnitAction) action).to.x][((UnitAction) action).to.y] == SquareType.NONE)
 					return 0;
 				else
 					return 30;
@@ -129,7 +129,7 @@ public class ActionComparator implements Comparator<Action> {
 			for (int y = to.y - 1; y <= to.y + 1; y++)
 				if (x >= 0 && x < state.map.width && y >= 0
 						&& y < state.map.height) {
-					final Unit unit = state.map.squareAt(x, y).unit;
+					final Unit unit = state.unitAt(x, y);
 					if (unit != null && unit.p1Owner != state.p1Turn)
 						spellTargets.add(new Position(x, y));
 				}

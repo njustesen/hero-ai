@@ -24,7 +24,7 @@ public class UnitFactory extends BasePooledObjectFactory<Unit> {
 	 */
 	@Override
 	public void passivateObject(PooledObject<Unit> pooledObject) throws Exception {
-		pooledObject.getObject().reset();
+		//pooledObject.getObject().reset();
 	}
 	
 }

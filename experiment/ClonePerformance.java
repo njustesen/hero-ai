@@ -1,3 +1,5 @@
+import java.util.NoSuchElementException;
+
 import ai.AI;
 import ai.RandomAI;
 import ai.util.RAND_METHOD;
@@ -60,7 +62,7 @@ public class ClonePerformance {
 		
 	}
 	
-	private static GameState createGameState(int turns, AI p1, AI p2){
+	private static GameState createGameState(int turns, AI p1, AI p2) {
 		Game game = new Game(null, false, p1, p2);
 		while(game.state.turn < turns){
 			if (game.state.p1Turn) {
