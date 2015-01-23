@@ -90,6 +90,7 @@ public class GameState {
 					units[pos.x][pos.y] = unitPool.borrowObject();
 					units[pos.x][pos.y].init(Card.CRYSTAL, true);
 				} catch (Exception e) {
+					e.printStackTrace();
 					units[pos.x][pos.y] = new Unit(Card.CRYSTAL, true);
 				}
 			} else {
@@ -102,6 +103,7 @@ public class GameState {
 					units[pos.x][pos.y] = unitPool.borrowObject();
 					units[pos.x][pos.y].init(Card.CRYSTAL, false);
 				} catch (Exception e) {
+					e.printStackTrace();
 					units[pos.x][pos.y] = new Unit(Card.CRYSTAL, false);
 				}
 			} else {
@@ -807,6 +809,7 @@ public class GameState {
 			try {
 				units[pos.x][pos.y] = unitPool.borrowObject();
 			} catch (Exception e) {
+				e.printStackTrace();
 				units[pos.x][pos.y] = new Unit(card, p1Turn);
 			}
 			units[pos.x][pos.y].init(card, p1Turn);
@@ -947,6 +950,7 @@ public class GameState {
 							units[x][y] = unitPool.borrowObject();
 							units[x][y].imitate(state.units[x][y]);
 						} catch (Exception e) {
+							e.printStackTrace();
 							units[x][y] = state.units[x][y].copy();
 						}
 					}

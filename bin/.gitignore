@@ -1,7 +1,2 @@
-/ai/
-/game/
-/evaluate/
-/model/
-/ui/
-/util/
 /LineIterators/
+/game/
