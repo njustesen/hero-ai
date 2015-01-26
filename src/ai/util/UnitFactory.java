@@ -17,6 +17,11 @@ public class UnitFactory extends BasePooledObjectFactory<Unit> {
 	public PooledObject<Unit> wrap(Unit unit) {
 		return new DefaultPooledObject<Unit>(unit);
 	}
+	
+	@Override
+	public boolean validateObject(PooledObject<Unit> pooledObject){
+		return true;
+	}
 
 	/**
 	 * When an object is returned to the pool, clear the buffer.

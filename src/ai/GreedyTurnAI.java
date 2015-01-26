@@ -30,6 +30,7 @@ public class GreedyTurnAI implements AI {
 		pool.setMaxTotal(1000000);
 		unitPool.setBlockWhenExhausted(false);
 		unitPool.setMaxTotal(1000000);
+		unitPool.setMaxIdle(1000000);
 	}
 
 	@Override

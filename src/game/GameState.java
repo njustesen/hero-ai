@@ -85,30 +85,12 @@ public class GameState {
 	public void init() {
 		dealCards();
 		for(Position pos : map.p1Crystals){
-			if (unitPool != null){
-				try {
-					units[pos.x][pos.y] = unitPool.borrowObject();
-					units[pos.x][pos.y].init(Card.CRYSTAL, true);
-				} catch (Exception e) {
-					e.printStackTrace();
-					units[pos.x][pos.y] = new Unit(Card.CRYSTAL, true);
-				}
-			} else {
-				units[pos.x][pos.y] = new Unit(Card.CRYSTAL, true);
-			}
+			units[pos.x][pos.y] = borrowUnit(Card.CRYSTAL, true);
+			units[pos.x][pos.y].init(Card.CRYSTAL, true);
 		}
 		for(Position pos : map.p2Crystals){
-			if (unitPool != null){
-				try {
-					units[pos.x][pos.y] = unitPool.borrowObject();
-					units[pos.x][pos.y].init(Card.CRYSTAL, false);
-				} catch (Exception e) {
-					e.printStackTrace();
-					units[pos.x][pos.y] = new Unit(Card.CRYSTAL, false);
-				}
-			} else {
-				units[pos.x][pos.y] = new Unit(Card.CRYSTAL, false);
-			}
+			units[pos.x][pos.y] = borrowUnit(Card.CRYSTAL, false);
+			units[pos.x][pos.y].init(Card.CRYSTAL, false);
 		}
 	}
 
@@ -803,19 +785,23 @@ public class GameState {
 	}
 
 	private void deploy(Card card, Position pos, ObjectPool<Unit> unitPool) {
-		if (unitPool == null)
-			units[pos.x][pos.y] = new Unit(card, p1Turn);
-		else {
-			try {
-				units[pos.x][pos.y] = unitPool.borrowObject();
-			} catch (Exception e) {
-				e.printStackTrace();
-				units[pos.x][pos.y] = new Unit(card, p1Turn);
-			}
-			units[pos.x][pos.y].init(card, p1Turn);
-		}
+		units[pos.x][pos.y] = borrowUnit(card, p1Turn);
+		units[pos.x][pos.y].init(card, p1Turn);
 		currentHand().remove(card);
 		APLeft--;
+	}
+	
+	private Unit borrowUnit(Card card, boolean p1){
+		if (unitPool == null)
+			return new Unit(card, p1);
+		else {
+			try {
+				return unitPool.borrowObject();
+			} catch (Exception e) {
+				e.printStackTrace();
+				return new Unit(card, p1);
+			}
+		}
 	}
 
 	private void endTurn() {
@@ -949,7 +935,7 @@ public class GameState {
 						try {
 							units[x][y] = unitPool.borrowObject();
 							units[x][y].imitate(state.units[x][y]);
-						} catch (Exception e) {
+						} catch (Exception e) {	
 							e.printStackTrace();
 							units[x][y] = state.units[x][y].copy();
 						}

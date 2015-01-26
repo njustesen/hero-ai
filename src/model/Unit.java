@@ -19,7 +19,7 @@ public class Unit {
 
 	public Unit(Card type, boolean p1Owner) {
 		super();
-		//System.out.println(count++);
+		System.out.println(count++);
 		if (type != null){
 			unitClass = UnitClassLib.lib.get(type);
 			hp = unitClass.maxHP;
@@ -30,6 +30,7 @@ public class Unit {
 
 	public Unit(int hp, Unit type, boolean p1Owner, Set<Card> equipment) {
 		super();
+		System.out.println(count++);
 		unitClass = UnitClassLib.lib.get(type);
 		this.hp = hp;
 		this.equipment = equipment;
@@ -38,6 +39,7 @@ public class Unit {
 
 	public Unit(int hp, UnitClass uclass, boolean p1Owner, Set<Card> equipment) {
 		super();
+		System.out.println(count++);
 		unitClass = uclass;
 		this.hp = hp;
 		this.equipment = equipment;
