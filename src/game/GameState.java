@@ -947,25 +947,21 @@ public class GameState {
 					}
 				}
 		p1Hand.clear();
-		for (final Card card : state.p1Hand)
-			p1Hand.add(card);
+		p1Hand.addAll(state.p1Hand);
 		p2Hand.clear();
-		for (final Card card : state.p2Hand)
-			p2Hand.add(card);
+		p2Hand.addAll(state.p2Hand);
 		p1Deck.clear();
-		for (final Card card : state.p1Deck)
-			p1Deck.add(card);
+		p1Deck.addAll(state.p1Deck);
 		p2Deck.clear();
-		for (final Card card : state.p2Deck)
-			p2Deck.add(card);
+		p2Deck.addAll(state.p2Deck);
 		isTerminal = state.isTerminal;
 		p1Turn = state.p1Turn;
 		turn = state.turn;
 		APLeft = state.APLeft;
 		map = state.map;
 		chainTargets.clear();
-		for (final Position pos : chainTargets)
-			chainTargets.add(pos);
+		//chainTargets.addAll(state.chainTargets); // NOT NECESSARY
+		
 	}
 	/*
 	@Override

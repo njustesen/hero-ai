@@ -3,6 +3,7 @@ package ai.movesearch;
 import java.util.ArrayList;
 import java.util.List;
 
+import model.HAMap;
 import model.Unit;
 
 import org.apache.commons.pool2.ObjectPool;
@@ -52,7 +53,7 @@ public class BestMoveSearch {
 			if (depth == 0){
 				System.out.println(i++ + "/" + actions.size());
 			}
-			GameState next = pool.borrowObject();
+			GameState next = borrowObject();
 			next.unitPool = unitPool;
 			next.imitate(state);
 			next.update(action);
@@ -71,9 +72,21 @@ public class BestMoveSearch {
 			}
 			//next.reset();
 			//next.returnUnits();
-			pool.returnObject(next);
+			if (pool != null)
+				pool.returnObject(next);
 		}
 		
+	}
+	
+	private GameState borrowObject(){
+		if (pool == null)
+			return new GameState(HAMap.mapA);
+		try {
+			return pool.borrowObject();
+		} catch (Exception e) {
+			e.printStackTrace();
+			return new GameState(HAMap.mapA);
+		}
 	}
 
 	private List<Action> clone(List<Action> move) {

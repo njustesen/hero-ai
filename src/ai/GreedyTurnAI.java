@@ -46,6 +46,8 @@ public class GreedyTurnAI implements AI {
 		System.out.println("GTAI: Searching for possible moves.");
 
 		actions = searcher.bestMove(state, pool, unitPool, heuristic);
+		//actions = searcher.bestMove(state, null, null, heuristic);
+		
 		System.out.println(actions);
 		
 		final Action action = actions.get(0);
