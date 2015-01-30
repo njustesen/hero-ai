@@ -1,35 +1,37 @@
 package ai.heuristic;
 
-import java.util.NoSuchElementException;
-
 import ai.AI;
-import game.Game;
 import game.GameState;
 
-public class RolloutEvalutation implements IHeuristic {
+public class RolloutEvaluation implements IHeuristic {
 
 	int rolls;
 	int depth;	// In turns
 	AI policy;
 	IHeuristic heuristic;
+	boolean copy;
 	
-	public RolloutEvalutation(int rolls, int depth, AI policy, IHeuristic heuristic) {
+	public RolloutEvaluation(int rolls, int depth, AI policy, IHeuristic heuristic, boolean copy) {
 		super();
 		this.rolls = rolls;
 		this.depth = depth;
 		this.heuristic = heuristic;
 		this.policy = policy;
+		this.copy = copy;
 	}
 	
 	@Override
 	public double eval(GameState state, boolean p1) {
+		
+		if (!copy)
+			return simulateGame(state, p1);
 		
 		double sum = 0;
 		for(int i = 0; i < rolls; i++){
 			sum += simulateGame(state.copy(), p1);
 		}
 		
-		return sum;
+		return sum / rolls;
 	}
 	
 	private double simulateGame(GameState state, boolean p1) {
