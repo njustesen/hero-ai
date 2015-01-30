@@ -28,6 +28,8 @@ public class Mcts implements AI {
 		MctsNode root = new MctsNode(null, null);
 		state.possibleActions(root.possible);
 		pruner.prune(root.possible, state);
+		if (root.possible.size()==1)
+			return root.possible.get(0);
 		GameState clone = state.copy();
 		int rolls = 0;
 		
@@ -51,11 +53,15 @@ public class Mcts implements AI {
 	}
 
 	private MctsNode treePolicy(MctsNode node, GameState clone) {
+		MctsNode next;
 		while(!clone.isTerminal){
 			if (!node.isFullyExpanded())
 				return expand(node, clone);
 			else {
-				node = bestChild(node, clone.p1Turn, true);
+				next = bestChild(node, clone.p1Turn, true);
+				if (next == null)
+					return node.parent;
+				node = next;
 				clone.update(node.action);
 			}
 		}
@@ -97,6 +103,11 @@ public class Mcts implements AI {
 				bestValue = value;
 				bestChild = child;
 			}
+		}
+		
+		if (bestChild == null){
+			int x = 0;
+			x++;
 		}
 		
 		return bestChild;

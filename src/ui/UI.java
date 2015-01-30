@@ -45,13 +45,14 @@ public class UI extends JComponent {
 	public Action action;
 	private final boolean humanP1;
 	private final boolean humanP2;
+	private int turn = 0;
 
 	public UI(GameState state, boolean humanP1, boolean humanP2) {
 		frame = new JFrame();
 		width = state.map.width * squareSize + squareSize * 2;
 		height = state.map.height * squareSize + squareSize * 2 + squareSize;
 		frame.setSize(width, height);
-		frame.setTitle("Hero Academy");
+		frame.setTitle("Hero AI");
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.getContentPane().add(this);
 		frame.setVisible(true);
@@ -74,6 +75,11 @@ public class UI extends JComponent {
 	protected void paintComponent(Graphics g) {
 		super.paintComponent(g);
 
+		if (state.turn != turn){
+			turn = state.turn;
+			frame.setTitle("Hero AI - Turn " + turn);
+		}
+		
 		if (state == null) {
 			System.out.println("State is NULL");
 			return;
@@ -270,15 +276,22 @@ public class UI extends JComponent {
 	}
 
 	private void paintWinScreen(Graphics g) {
-
+		boolean draw = false;
 		if (state.isTerminal) {
 			if (state.getWinner() == 1) {
 				g.setColor(Color.red);
-			} else {
+			} else if (state.getWinner() == 2) {
 				g.setColor(Color.blue);
+			} else {
+				g.setColor(Color.white);
+				draw = true;
 			}
 			g.setFont(new Font("Arial", Font.BOLD, 50));
-			g.drawString("PLAYER " + state.getWinner() + " WON!", 155, 200);
+		
+			if (!draw)
+				g.drawString("PLAYER " + state.getWinner() + " WON!", 155, 200);
+			else 
+				g.drawString("DRAW!", 265, 200);
 		}
 
 	}

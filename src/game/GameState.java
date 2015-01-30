@@ -33,6 +33,7 @@ public class GameState {
 	private static final int REQUIRED_UNITS = 3;
 	private static final int POTION_REVIVE = 100;
 	private static final int POTION_HEAL = 1000;
+	private static final int turnLimit = 100;
 
 	public HAMap map;
 	public boolean p1Turn;
@@ -813,6 +814,8 @@ public class GameState {
 		p1Turn = !p1Turn;
 		APLeft = 5;
 		turn++;
+		if (turn >= turnLimit)
+			isTerminal = true;
 	}
 	
 	public void dealCards(){
@@ -1056,6 +1059,25 @@ public class GameState {
 					unitPool.returnObject(units[x][y]);
 					units[x][y] = null;
 				}
+	}
+
+	public int hash() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + APLeft;
+		result = prime * result + (isTerminal ? 1231 : 1237);
+		result = prime * result + ((map == null) ? 0 : map.hashCode());
+		result = prime * result + ((p1Deck == null) ? 0 : p1Deck.hashCode());
+		result = prime * result + ((p1Hand == null) ? 0 : p1Hand.hashCode());
+		result = prime * result + (p1Turn ? 1231 : 1237);
+		result = prime * result + ((p2Deck == null) ? 0 : p2Deck.hashCode());
+		result = prime * result + ((p2Hand == null) ? 0 : p2Hand.hashCode());
+		for(int x = 0; x < map.width; x++)
+			for(int y = 0; y < map.height; y++)
+				if (units[x][y] != null)
+					result = prime * result + units[x][y].hash();
+		result = prime * result + turn;
+		return result;
 	}
 
 }

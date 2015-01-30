@@ -4,14 +4,17 @@ import game.GameState;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import lib.Card;
 import model.Position;
 import model.Unit;
 import action.Action;
 import action.DropAction;
+import action.UnitAction;
 
 public class ActionPruner {
 
@@ -41,7 +44,22 @@ public class ActionPruner {
 			if (spellTargets.get(spell).isEmpty()
 					|| sameOrBetterSpellEffect(spellTargets, spell))
 				pruned.add(spell);
-
+/*
+		Set<Integer> states = new HashSet<Integer>();
+		for (final Action action : actions){
+			GameState next = state.copy();
+			if (pruned.contains(action))
+				continue;
+			if (action instanceof UnitAction || action instanceof DropAction){
+				next.update(action);
+				if (states.contains(next.hash())){
+					pruned.add(action);
+				} else {
+					states.add(next.hash());
+				}
+			}
+		}
+	*/	
 		actions.removeAll(pruned);
 
 	}
