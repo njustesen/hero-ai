@@ -2,8 +2,9 @@ package ai.mcts;
 
 public class UCT implements ITreePolicy {
 
-	private static final double NO_VISIT_VAL = 0.5;
-	public static double C = 1 / Math.sqrt(2);
+	private static final double NO_VISIT_VAL = 0.0;
+	//public static double C = 1 / Math.sqrt(2);
+	public static double C = 0.5 / Math.sqrt(2);
 	
 	@Override
 	public double urgent(MctsNode node) {

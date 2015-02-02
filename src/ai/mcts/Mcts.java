@@ -1,9 +1,13 @@
 package ai.mcts;
 
+import java.util.Collections;
+
 import game.GameState;
 import action.Action;
+import action.EndTurnAction;
 import ai.AI;
 import ai.heuristic.IHeuristic;
+import ai.util.ActionComparator;
 import ai.util.ActionPruner;
 
 public class Mcts implements AI {
@@ -12,34 +16,45 @@ public class Mcts implements AI {
 	public ITreePolicy treePolicy;
 	public IHeuristic defaultPolicy;
 	private ActionPruner pruner;
+	private final ActionComparator comparator;
+	private MctsNode root;
 	
 	public Mcts(long budget, ITreePolicy treePolicy, IHeuristic defaultPolicy){
 		this.budget = budget;
 		this.treePolicy = treePolicy;
 		this.defaultPolicy = defaultPolicy;
 		this.pruner = new ActionPruner();
+		this.comparator = new ActionComparator();
 	}
 	
 	@Override
 	public Action act(GameState state, long ms) {
 		
 		long start = System.currentTimeMillis();
+		boolean save = false;
+		if (state.APLeft > 0){
+			save = true;
+		} else {
+			root = null;
+			return new EndTurnAction();
+		}
 		
-		MctsNode root = new MctsNode(null, null);
-		state.possibleActions(root.possible);
-		pruner.prune(root.possible, state);
-		if (root.possible.size()==1)
-			return root.possible.get(0);
+		if (root == null){
+			root = new MctsNode(null, null);
+			state.possibleActions(root.possible);
+			pruner.prune(root.possible, state);
+			comparator.state = state;
+			Collections.sort(root.possible, comparator);
+		}
 		GameState clone = state.copy();
 		int rolls = 0;
 		
-		//while(System.currentTimeMillis() < start + budget*10000){
 		while(System.currentTimeMillis() < start + budget){
 					
 			clone.imitate(state);
 			MctsNode node = treePolicy(root, clone);
 			double delta = defaultPolicy.eval(clone, state.p1Turn);;
-			backup(node, delta);
+			backupNegamax(node, delta);
 			rolls++;
 			
 		}
@@ -48,7 +63,14 @@ public class Mcts implements AI {
 			System.out.println(child);
 		
 		System.out.println("Rolls=" + rolls);
-		return bestChild(root, state.p1Turn, false).action;
+		MctsNode best = bestChild(root, state.p1Turn, false);
+
+		//System.out.println(root.toXml(0));
+		
+		if (save)
+			root = best;
+		
+		return best.action;
 		
 	}
 
@@ -71,18 +93,25 @@ public class Mcts implements AI {
 
 	private MctsNode expand(MctsNode node, GameState clone) {
 		Action next = node.possible.get(node.children.size());
+		boolean p1 = clone.p1Turn;
 		clone.update(next);
 		MctsNode child = new MctsNode(next, node);
+		child.p1 = p1;
 		node.children.add(child);
 		clone.possibleActions(child.possible);
 		pruner.prune(child.possible, clone);
+		comparator.state = clone;
+		Collections.sort(child.possible, comparator);
 		return child;
 	}
 	
-	private void backup(MctsNode node, double delta) {
+	private void backupNegamax(MctsNode node, double delta) {
 		while(node != null){
 			node.visits++;
-			node.value += delta;
+			if (node.p1)
+				node.value += delta;
+			else
+				node.value -= delta;
 			node = node.parent;
 		}
 	}
@@ -97,8 +126,8 @@ public class Mcts implements AI {
 				value = treePolicy.urgent(child);
 			else 
 				value = treePolicy.best(child);
-			if (!p1)
-				value = value * (-1);
+			//if (!p1)
+			//	value = value * (-1);
 			if (value > bestValue){
 				bestValue = value;
 				bestChild = child;

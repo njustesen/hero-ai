@@ -75,6 +75,9 @@ public class UI extends JComponent {
 	protected void paintComponent(Graphics g) {
 		super.paintComponent(g);
 
+		if (state == null)
+			return;
+		
 		if (state.turn != turn){
 			turn = state.turn;
 			frame.setTitle("Hero AI - Turn " + turn);

@@ -34,6 +34,14 @@ public class MaterialEvaluation implements IHeuristic {
 
 	public double eval(GameState state, boolean p1) {
 
+		if (state.isTerminal){
+			int winner = state.getWinner();
+			if (winner == 1 && p1 || winner == 2 && !p1)
+				return 12;
+			else
+				return -12;
+		}
+		
 		int matDif = matDif(state, p1);
 		
 		return matDif;

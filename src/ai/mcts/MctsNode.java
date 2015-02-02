@@ -13,6 +13,7 @@ public class MctsNode {
 	public List<MctsNode> children;
 	public int visits;
 	public double value;
+	public boolean p1;
 	
 	public MctsNode(Action action, MctsNode parent) {
 		this.action = action;
@@ -41,6 +42,23 @@ public class MctsNode {
 		return value / visits;
 	}
 
+	public String toXml(int depth){
+		String tabs = "";
+		for(int i = 0; i < depth; i++)
+			tabs += "\t";
+		String str = tabs;
+		if (children.isEmpty())
+			str += "<node p=\"" + (p1 ? 1 : 2) + "\" a=\"" + action + "\" vis=\"" + visits + "\" val=\"" + avgValue() + "\" />\n";
+		else {
+			str += "<node p=\"" + (p1 ? 1 : 2) + "\" a=\"" + action + "\" vis=\"" + visits + "\" val=\"" + avgValue() + "\">\n";
+			for(MctsNode child : children)
+				str += child.toXml(depth+1);
+			str += tabs + "</node>\n";
+		}
+		
+		return str;
+	}
+	
 	@Override
 	public String toString() {
 		return "MctsNode [action=" + action + ", visits=" + visits + ", value="
