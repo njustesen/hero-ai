@@ -104,7 +104,9 @@ public class Game {
 				}
 				if (args[a].toLowerCase().equals("mcts")){
 					a++;
-					players[p] = new Mcts(10000, new UCT(), new RolloutEvaluation(1, 10, new RandomAI(RAND_METHOD.TREE), new MaterialEvaluation(), false));
+					int t = Integer.parseInt(args[a]);
+					a++;
+					players[p] = new Mcts(t, new UCT(), new RolloutEvaluation(1, 10, new RandomAI(RAND_METHOD.TREE), new MaterialEvaluation(), false));
 				}
 				
 				p = -1;
