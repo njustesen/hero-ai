@@ -192,4 +192,16 @@ public class Unit {
 		return true;
 	}
 
+	public int hash() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result
+				+ ((equipment == null) ? 0 : equipment.hashCode());
+		result = prime * result + hp;
+		result = prime * result + (p1Owner ? 1231 : 1237);
+		result = prime * result
+				+ ((unitClass == null) ? 0 : unitClass.hashCode());
+		return result;
+	}
+
 }

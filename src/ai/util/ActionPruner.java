@@ -4,14 +4,18 @@ import game.GameState;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import lib.Card;
 import model.Position;
 import model.Unit;
 import action.Action;
 import action.DropAction;
+import action.SwapCardAction;
+import action.UnitAction;
 
 public class ActionPruner {
 
@@ -35,26 +39,50 @@ public class ActionPruner {
 				if (dropAction.type == Card.INFERNO)
 					spellTargets.put(((DropAction) action),
 							spellTargets(dropAction.to, state));
-			}
+			} else if (action instanceof SwapCardAction)
+				pruned.add(action);
 
 		for (final DropAction spell : spellTargets.keySet())
-			if (spellTargets.get(spell).isEmpty()
-					|| sameOrBetterSpellEffect(spellTargets, spell))
+			if (spellTargets.get(spell).isEmpty())
 				pruned.add(spell);
 
+		for (final DropAction spell : spellTargets.keySet())
+			if (!pruned.contains(spell))
+				if (sameOrBetterSpellEffect(spellTargets, spell, pruned))
+						pruned.add(spell);
+		
+		/*
+		Set<Integer> states = new HashSet<Integer>();
+		for (final Action action : actions){
+			GameState next = state.copy();
+			if (pruned.contains(action))
+				continue;
+			if (action instanceof UnitAction || action instanceof DropAction){
+				next.update(action);
+				if (states.contains(next.hash())){
+					pruned.add(action);
+				} else {
+					states.add(next.hash());
+				}
+			}
+		}
+	*/	
 		actions.removeAll(pruned);
 
 	}
 
-	private boolean sameOrBetterSpellEffect(
-			Map<DropAction, List<Position>> spellTargets, DropAction spell) {
+	private boolean sameOrBetterSpellEffect(Map<DropAction, List<Position>> spellTargets, DropAction spell, List<Action> pruned) {
 
+		int same = 0;
 		for (final Action action : spellTargets.keySet()) {
-			if (action.equals(spell))
+			if (action.equals(spell) || pruned.contains(action))
 				continue;
+			same = 0;
 			for (final Position pos : spellTargets.get(spell))
-				if (!spellTargets.get(action).contains(pos))
-					return true;
+				if (spellTargets.get(action).contains(pos))
+					same++;
+			if (same == spellTargets.get(spell).size())
+				return true;
 		}
 
 		return false;

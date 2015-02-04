@@ -1,6 +1,8 @@
 package game;
 
-import java.util.NoSuchElementException;
+import java.awt.Component;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Stack;
 
 import model.HAMap;
@@ -17,7 +19,10 @@ import ai.RandomAI;
 import ai.ScanRandomAI;
 import ai.HeuristicAI;
 import ai.heuristic.HeuristicEvaluation;
-import ai.heuristic.RolloutEvalutation;
+import ai.heuristic.MaterialEvaluation;
+import ai.heuristic.RolloutEvaluation;
+import ai.mcts.Mcts;
+import ai.mcts.UCT;
 import ai.util.RAND_METHOD;
 
 public class Game {
@@ -32,6 +37,7 @@ public class Game {
 	public AI player2;
 	private Stack<GameState> history;
 	private int lastTurn;
+	private Map<Integer, Integer> previous;
 
 	public static void main(String[] args) {
 
@@ -67,7 +73,7 @@ public class Game {
 						int rolls = Integer.parseInt(args[a]);
 						a++;
 						int depth = Integer.parseInt(args[a]);
-						players[p] = new NmSearchAI((p == 0), n, m, new RolloutEvalutation(rolls, depth, new RandomAI(RAND_METHOD.TREE), new HeuristicEvaluation()));
+						players[p] = new NmSearchAI((p == 0), n, m, new RolloutEvaluation(rolls, depth, new RandomAI(RAND_METHOD.TREE), new HeuristicEvaluation(), true));
 					}
 					
 				}
@@ -80,7 +86,7 @@ public class Game {
 						int rolls = Integer.parseInt(args[a]);
 						a++;
 						int depth = Integer.parseInt(args[a]);
-						players[p] = new GreedyActionAI(new RolloutEvalutation(rolls, depth, new RandomAI(RAND_METHOD.TREE), new HeuristicEvaluation()));
+						players[p] = new GreedyActionAI(new RolloutEvaluation(rolls, depth, new RandomAI(RAND_METHOD.TREE), new HeuristicEvaluation(), true));
 					}
 				}
 				if (args[a].toLowerCase().equals("greedyturn")){
@@ -92,11 +98,17 @@ public class Game {
 						int rolls = Integer.parseInt(args[a]);
 						a++;
 						int depth = Integer.parseInt(args[a]);
-						players[p] = new GreedyTurnAI(new RolloutEvalutation(rolls, depth, new RandomAI(RAND_METHOD.TREE), new HeuristicEvaluation()));
+						players[p] = new GreedyTurnAI(new RolloutEvaluation(rolls, depth, new RandomAI(RAND_METHOD.TREE), new HeuristicEvaluation(), true));
 					}
 						
 				}
-					
+				if (args[a].toLowerCase().equals("mcts")){
+					a++;
+					int t = Integer.parseInt(args[a]);
+					a++;
+					players[p] = new Mcts(t, new UCT(), new RolloutEvaluation(1, 10, new RandomAI(RAND_METHOD.TREE), new MaterialEvaluation(), false));
+				}
+				
 				p = -1;
 			} else if (args[a].toLowerCase().equals("sleep")) {
 				a++;
@@ -140,10 +152,11 @@ public class Game {
 					(this.player2 == null));
 
 		history = new Stack<GameState>();
+		previous = new HashMap<Integer, Integer>();
 
 	}
 
-	public void run() throws NoSuchElementException, IllegalStateException, Exception {
+	public void run() {
 
 		final int turnLimit = 1000;
 		CachedLines.load(HAMap.mapA);
@@ -151,16 +164,6 @@ public class Game {
 		state.init();
 		history.add(state.copy());
 		lastTurn = 5;
-
-		if (SLEEP >= 20 && ui != null) {
-			ui.state = state.copy();
-			ui.repaint();
-			try {
-				Thread.sleep(SLEEP);
-			} catch (final InterruptedException e) {
-				e.printStackTrace();
-			}
-		}
 
 		if (player1 != null)
 			player1.init(state, -1);
@@ -180,10 +183,8 @@ public class Game {
 			}
 
 			if (state.p1Turn && player1 != null)
-				// System.out.println("PLAYER 1 TURN");
 				act(player1, player2, state.copy());
 			else if (!state.p1Turn && player2 != null)
-				// System.out.println("PLAYER 2 TURN");
 				act(player2, player1, state.copy());
 			else if (ui.action != null) {
 
@@ -204,8 +205,10 @@ public class Game {
 
 			if (state.APLeft == 5) {
 				history.clear();
-				history.add(state.copy());
+				GameState copy = state.copy();
+				history.add(copy);
 				lastTurn = 5;
+				
 			}
 
 		}
@@ -216,7 +219,7 @@ public class Game {
 
 	}
 
-	private void act(AI p1, AI p2, GameState copy) throws NoSuchElementException, IllegalStateException, Exception {
+	private void act(AI p1, AI p2, GameState copy) {
 		Action action = p1.act(copy, TIME_LIMIT);
 		if (action == null)
 			action = SingletonAction.endTurnAction;
