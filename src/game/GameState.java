@@ -97,6 +97,8 @@ public class GameState {
 
 	public void possibleActions(List<Action> actions) {
 
+		actions.clear();
+		
 		if (APLeft == 0) {
 			actions.add(SingletonAction.endTurnAction);
 			return;
@@ -230,6 +232,11 @@ public class GameState {
 						actions.add(new UnitAction(from, to,
 								UnitActionType.MOVE));
 			}
+	}
+	
+	public void update(List<Action> actions) {
+		for(Action action : actions)
+			update(action);
 	}
 
 	public void update(Action action) {
@@ -929,26 +936,25 @@ public class GameState {
 	}
 
 	public void imitate(GameState state) {
-		for (int x = 0; x < map.width; x++)
-			for (int y = 0; y < map.height; y++)
-				if (state.units[x][y] != null){
-					if (unitPool == null)
-						units[x][y] = state.units[x][y].copy();
-					else {
-						try {
+		try {
+			for (int x = 0; x < map.width; x++)
+				for (int y = 0; y < map.height; y++)
+					if (state.units[x][y] != null){
+						if (unitPool == null)
+							units[x][y] = state.units[x][y].copy();
+						else {
 							units[x][y] = unitPool.borrowObject();
 							units[x][y].imitate(state.units[x][y]);
-						} catch (Exception e) {	
-							e.printStackTrace();
-							units[x][y] = state.units[x][y].copy();
+						}
+					}else{
+						if (units[x][y] != null){
+							returnUnit(units[x][y]);
+							units[x][y] = null;
 						}
 					}
-				}else{
-					if (units[x][y] != null){
-						returnUnit(units[x][y]);
-						units[x][y] = null;
-					}
-				}
+		} catch (Exception e) {	
+			e.printStackTrace();
+		}
 		p1Hand.clear();
 		p1Hand.addAll(state.p1Hand);
 		p2Hand.clear();

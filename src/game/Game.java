@@ -18,6 +18,7 @@ import ai.NmSearchAI;
 import ai.RandomAI;
 import ai.ScanRandomAI;
 import ai.HeuristicAI;
+import ai.evolution.RollingHorizonEvolution;
 import ai.heuristic.HeuristicEvaluation;
 import ai.heuristic.MaterialEvaluation;
 import ai.heuristic.RolloutEvaluation;
@@ -99,14 +100,15 @@ public class Game {
 						a++;
 						int depth = Integer.parseInt(args[a]);
 						players[p] = new GreedyTurnAI(new RolloutEvaluation(rolls, depth, new RandomAI(RAND_METHOD.TREE), new HeuristicEvaluation(), true));
-					}
-						
+					}	
 				}
 				if (args[a].toLowerCase().equals("mcts")){
 					a++;
 					int t = Integer.parseInt(args[a]);
-					a++;
 					players[p] = new Mcts(t, new UCT(), new RolloutEvaluation(1, 10, new RandomAI(RAND_METHOD.TREE), new MaterialEvaluation(), false));
+				}
+				if (args[a].toLowerCase().equals("evolution")){
+					players[p] = new RollingHorizonEvolution(20, 0.4, 0.5, 20, new RolloutEvaluation(20, 1, new RandomAI(RAND_METHOD.TREE), new HeuristicEvaluation(), false));
 				}
 				
 				p = -1;

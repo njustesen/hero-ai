@@ -26,23 +26,19 @@ public class RolloutEvaluation implements IHeuristic {
 		if (!copy)
 			return simulateGame(state, p1);
 		
+		GameState clone = new GameState(state.map);
 		double sum = 0;
 		for(int i = 0; i < rolls; i++){
-			sum += simulateGame(state.copy(), p1);
+			clone.imitate(state);
+			sum += simulateGame(clone, p1);
 		}
-		
 		return sum / rolls;
 	}
 	
 	private double simulateGame(GameState state, boolean p1) {
 		int turns = state.turn;
-		while (!state.isTerminal && state.turn < turns + depth){
-			if (state.p1Turn)
-				state.update(policy.act(state, -1));
-			else
-				state.update(policy.act(state, -1));
-			
-		}
+		while (!state.isTerminal && state.turn < turns + depth)
+			state.update(policy.act(state, -1));
 		return heuristic.eval(state, p1);
 	}
 
