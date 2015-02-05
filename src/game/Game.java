@@ -126,13 +126,8 @@ public class Game {
 		final Game game = new Game(null, GFX, players[0], players[1]);
 		// Game game = new Game(null, true, new EvaAI(true,1000,1000), null);
 
-		try {
-			game.run();
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-
+		game.run();
+		
 		// Game game = new Game(null, false, new RandomAI(true), new
 		// RandomAI(false));
 		// experiment(game, 100);

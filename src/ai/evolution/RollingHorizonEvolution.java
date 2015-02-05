@@ -3,6 +3,7 @@ package ai.evolution;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Random;
 
 import model.HAMap;
 import game.GameState;
@@ -20,6 +21,7 @@ public class RollingHorizonEvolution implements AI {
 	
 	private List<Genome> pop;
 	private List<Action> actions;
+	private Random random;
 	
 	public RollingHorizonEvolution(int popSize, double mutRate, double killRate, int generations, IHeuristic heuristic) {
 		super();
@@ -30,6 +32,7 @@ public class RollingHorizonEvolution implements AI {
 		this.killRate = killRate;
 		this.pop = new ArrayList<Genome>();
 		this.actions = new ArrayList<Action>();
+		this.random = new Random();
 	}
 
 	@Override
@@ -46,13 +49,14 @@ public class RollingHorizonEvolution implements AI {
 
 	private void search(GameState state) {
 
-		init(state);
+		setup(state);
 		
+		List<Genome> killed = new ArrayList<Genome>();
 		GameState clone = new GameState(HAMap.mapA);
 		
 		for(int g = 0; g < generations; g++){
 			
-			System.out.println("Generation=" + g);
+			System.out.println("Generation=" + g + " Pop size=" + pop.size());
 			
 			// Test pop
 			for (Genome genome : pop){
@@ -66,7 +70,7 @@ public class RollingHorizonEvolution implements AI {
 			
 			// Kill bad genomes
 			Collections.sort(pop);
-			List<Genome> killed = new ArrayList<Genome>();
+			killed.clear();
 			int idx = (int) Math.floor(pop.size() * killRate);
 			for(int i = idx; i < pop.size(); i++)
 				killed.add(pop.get(i));
@@ -74,10 +78,12 @@ public class RollingHorizonEvolution implements AI {
 			if (g != generations){
 				// Crossover new ones
 				for(Genome genome : killed){
-					int a = (int) (Math.random() * (idx - 1));
-					int b = a;
-					while(b != a)
-						b = (int) (Math.random() * (idx - 1));
+					int a = random.nextInt(idx);
+					int b = random.nextInt(idx);
+					while(b == a)
+						b = random.nextInt(idx);
+					if (a == b)
+						System.out.println("whuut!");
 					clone.imitate(state);
 					genome.crossover(pop.get(a), pop.get(b), clone);
 					// Mutation
@@ -85,21 +91,25 @@ public class RollingHorizonEvolution implements AI {
 						clone.imitate(state);
 						genome.mutate(clone);
 					}
+					clone.imitate(state);
+					if (!genome.isLegal(clone))
+						System.out.println("Not legal");
 				}
 			}
 			
 		}
 		
 		System.out.println("Best Genome: " + pop.get(0).actions);
-		System.out.println("Visits: " + pop.get(0).actions);
+		System.out.println("Visits: " + pop.get(0).visits);
 		System.out.println("Value: " + pop.get(0).avgValue());
 		
 		actions = pop.get(0).actions; 
 
 	}
 
-	private void init(GameState state) {
+	private void setup(GameState state) {
 		
+		pop.clear();
 		GameState clone = new GameState(HAMap.mapA);
 		
 		for(int i = 0; i < popSize; i++){

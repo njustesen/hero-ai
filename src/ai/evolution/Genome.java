@@ -28,29 +28,29 @@ public class Genome implements Comparable<Genome> {
 		actions.clear();
 		visits = 0;
 		value = 0;
+		boolean p1Turn = state.p1Turn;
 		state.possibleActions(possible);
-		while (!state.isTerminal){
-			int idx = (int) (Math.random() * possible.size());
-			actions.add(possible.get(idx));
-			state.update(possible.get(idx));
+		while (!state.isTerminal && p1Turn == state.p1Turn){
 			state.possibleActions(possible);
-			if (possible.isEmpty() || possible.get(0).equals(SingletonAction.endTurnAction)){
+			if (p1Turn == state.p1Turn && possible.isEmpty()){
 				actions.add(SingletonAction.endTurnAction);
 				break;
 			}
+			int idx = (int) (Math.random() * possible.size());
+			actions.add(possible.get(idx));
+			state.update(possible.get(idx));
 		}
+			
 	}
 
 	public void crossover(Genome a, Genome b, GameState state) {
 		actions.clear();
 		visits = 0;
 		value = 0;
-		double ab = 0;
 		ArrayList<Action> possible = new ArrayList<Action>();
 		for(int i = 0; i < a.actions.size(); i++){
-			ab = Math.random();
 			state.possibleActions(possible);
-			if (ab >= 0.5 && possible.contains(a.actions.get(i))){
+			if (random.nextBoolean() && possible.contains(a.actions.get(i))){
 				actions.add(a.actions.get(i));
 			} else if (possible.contains(b.actions.get(i))){
 				actions.add(b.actions.get(i));
@@ -61,24 +61,29 @@ public class Genome implements Comparable<Genome> {
 			}
 			state.update(actions.get(i));
 		}
-		
+		if (actions.contains(null))
+			System.out.println("null");
 	}
 	
 	public void mutate(GameState state){
 		
 		int mutIdx = random.nextInt(actions.size());
-		Action newAction = null;
+		List<Action> possible = new ArrayList<Action>();
 		
 		int i = 0;
 		for(Action action : actions){
 			if (i==mutIdx){
-				newAction = newAction(state, action);
-				break;
+				actions.set(mutIdx, newAction(state, action));
+			} else if (i > mutIdx){
+				state.possibleActions(possible);
+				if (!possible.contains(action))
+					actions.set(i, newAction(state, action));
 			}
-			state.update(action);
+			if (i < actions.size() - 1){
+				state.update(action);
+				i++;
+			}
 		}
-		
-		actions.set(mutIdx, newAction);
 		
 	}
 
@@ -111,6 +116,11 @@ public class Genome implements Comparable<Genome> {
 		if (visits == 0)
 			return 0;
 		return value / visits;
+	}
+
+	public boolean isLegal(GameState clone) {
+		// TODO : create
+		return false;
 	}
 	
 }

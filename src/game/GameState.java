@@ -240,154 +240,158 @@ public class GameState {
 	}
 
 	public void update(Action action) {
-
-		chainTargets.clear();
-
-		if (action instanceof EndTurnAction || APLeft <= 0)
-			endTurn();
-
-		if (action instanceof DropAction) {
-
-			final DropAction drop = (DropAction) action;
-
-			// Not a type in current players hand
-			if (!currentHand().contains(drop.type))
+		
+		try {
+			chainTargets.clear();
+			
+			if (action instanceof EndTurnAction || APLeft <= 0)
+				endTurn();
+	
+			if (action instanceof DropAction) {
+	
+				final DropAction drop = (DropAction) action;
+	
+				// Not a type in current players hand
+				if (!currentHand().contains(drop.type))
+					return;
+	
+				// Unit
+				if (drop.type.type == CardType.UNIT) {
+	
+					// Not current players deploy square
+					if (map.squares[drop.to.x][drop.to.y] == SquareType.DEPLOY_1
+							&& !p1Turn)
+						return;
+					if (map.squares[drop.to.x][drop.to.y] == SquareType.DEPLOY_2
+							&& p1Turn)
+						return;
+	
+					deploy(drop.type, drop.to, unitPool);
+	
+				}
+	
+				// Equipment
+				if (drop.type.type == CardType.ITEM) {
+	
+					// Not a unit square or crystal
+					if (units[drop.to.x][drop.to.y] == null
+							|| units[drop.to.x][drop.to.y].unitClass.card == Card.CRYSTAL)
+						return;
+	
+					if (units[drop.to.x][drop.to.y].p1Owner != p1Turn)
+						return;
+	
+					if (drop.type == Card.REVIVE_POTION
+							&& (units[drop.to.x][drop.to.y].unitClass.card == Card.CRYSTAL || units[drop.to.x][drop.to.y]
+									.fullHealth()))
+						return;
+					
+					if(drop.type != Card.REVIVE_POTION && units[drop.to.x][drop.to.y].hp == 0)
+						return;
+	
+					if (units[drop.to.x][drop.to.y].equipment
+							.contains(drop.type))
+						return;
+	
+					equip(drop.type, drop.to);
+	
+				}
+	
+				// Spell
+				if (drop.type.type == CardType.SPELL)
+					dropInferno(drop.to);
+	
 				return;
-
-			// Unit
-			if (drop.type.type == CardType.UNIT) {
-
-				// Not current players deploy square
-				if (map.squares[drop.to.x][drop.to.y] == SquareType.DEPLOY_1
-						&& !p1Turn)
-					return;
-				if (map.squares[drop.to.x][drop.to.y] == SquareType.DEPLOY_2
-						&& p1Turn)
-					return;
-
-				deploy(drop.type, drop.to, unitPool);
-
+	
 			}
-
-			// Equipment
-			if (drop.type.type == CardType.ITEM) {
-
-				// Not a unit square or crystal
-				if (units[drop.to.x][drop.to.y] == null
-						|| units[drop.to.x][drop.to.y].unitClass.card == Card.CRYSTAL)
+	
+			if (action instanceof UnitAction) {
+	
+				final UnitAction ua = (UnitAction) action;
+	
+				if (units[ua.from.x][ua.from.y] == null)
 					return;
-
-				if (units[drop.to.x][drop.to.y].p1Owner != p1Turn)
+	
+				final Unit unit = units[ua.from.x][ua.from.y];
+	
+				if (unit.p1Owner != p1Turn)
 					return;
-
-				if (drop.type == Card.REVIVE_POTION
-						&& (units[drop.to.x][drop.to.y].unitClass.card == Card.CRYSTAL || units[drop.to.x][drop.to.y]
-								.fullHealth()))
+	
+				if (unit.hp == 0)
 					return;
-				
-				if(drop.type != Card.REVIVE_POTION && units[drop.to.x][drop.to.y].hp == 0)
+	
+				// Move
+				if (units[ua.to.x][ua.to.y] == null
+						|| (unit.p1Owner == units[ua.to.x][ua.to.y].p1Owner
+								&& units[ua.to.x][ua.to.y].hp == 0 && unit.unitClass.heal == null)
+						|| (unit.p1Owner != units[ua.to.x][ua.to.y].p1Owner && units[ua.to.x][ua.to.y].hp == 0)) {
+	
+					if (ua.from.distance(ua.to) > units[ua.from.x][ua.from.y].unitClass.speed)
+						return;
+	
+					if (map.squares[ua.to.x][ua.to.y] == SquareType.DEPLOY_1
+							&& !unit.p1Owner)
+						return;
+	
+					if (map.squares[ua.to.x][ua.to.y] == SquareType.DEPLOY_2
+							&& unit.p1Owner)
+						return;
+	
+					move(unit, ua.from, ua.to);
 					return;
-
-				if (units[drop.to.x][drop.to.y].equipment
-						.contains(drop.type))
-					return;
-
-				equip(drop.type, drop.to);
-
-			}
-
-			// Spell
-			if (drop.type.type == CardType.SPELL)
-				dropInferno(drop.to);
-
-			return;
-
-		}
-
-		if (action instanceof UnitAction) {
-
-			final UnitAction ua = (UnitAction) action;
-
-			if (units[ua.from.x][ua.from.y] == null)
-				return;
-
-			final Unit unit = units[ua.from.x][ua.from.y];
-
-			if (unit.p1Owner != p1Turn)
-				return;
-
-			if (unit.hp == 0)
-				return;
-
-			// Move
-			if (units[ua.to.x][ua.to.y] == null
-					|| (unit.p1Owner == units[ua.to.x][ua.to.y].p1Owner
-							&& units[ua.to.x][ua.to.y].hp == 0 && unit.unitClass.heal == null)
-					|| (unit.p1Owner != units[ua.to.x][ua.to.y].p1Owner && units[ua.to.x][ua.to.y].hp == 0)) {
-
-				if (ua.from.distance(ua.to) > units[ua.from.x][ua.from.y].unitClass.speed)
-					return;
-
-				if (map.squares[ua.to.x][ua.to.y] == SquareType.DEPLOY_1
-						&& !unit.p1Owner)
-					return;
-
-				if (map.squares[ua.to.x][ua.to.y] == SquareType.DEPLOY_2
-						&& unit.p1Owner)
-					return;
-
-				move(unit, ua.from, ua.to);
-				return;
-
-			} else {
-
-				final Unit other = units[ua.to.x][ua.to.y];
-
-				// Swap and heal
-				if (unit.p1Owner == other.p1Owner) {
-					if (unit.unitClass.swap
-							&& units[ua.to.x][ua.to.y].unitClass.card != Card.CRYSTAL
-							&& units[ua.to.x][ua.to.y].hp != 0) {
-						swap(unit, ua.from, other, ua.to);
+	
+				} else {
+	
+					final Unit other = units[ua.to.x][ua.to.y];
+	
+					// Swap and heal
+					if (unit.p1Owner == other.p1Owner) {
+						if (unit.unitClass.swap
+								&& units[ua.to.x][ua.to.y].unitClass.card != Card.CRYSTAL
+								&& units[ua.to.x][ua.to.y].hp != 0) {
+							swap(unit, ua.from, other, ua.to);
+							return;
+						}
+						if (unit.unitClass.heal == null)
+							return;
+						if (ua.from.distance(ua.to) > unit.unitClass.heal.range)
+							return;
+						if (other.fullHealth())
+							return;
+						heal(unit, ua.from, other);
 						return;
 					}
-					if (unit.unitClass.heal == null)
+	
+					// Attack
+					final int distance = ua.from.distance(ua.to);
+					if (unit.unitClass.attack != null
+							&& distance > unit.unitClass.attack.range)
 						return;
-					if (ua.from.distance(ua.to) > unit.unitClass.heal.range)
+	
+					if (distance > 1 && losBlocked(p1Turn, ua.from, ua.to))
 						return;
-					if (other.fullHealth())
-						return;
-					heal(unit, ua.from, other);
+	
+					attack(unit, ua.from, other, ua.to);
 					return;
+	
 				}
-
-				// Attack
-				final int distance = ua.from.distance(ua.to);
-				if (unit.unitClass.attack != null
-						&& distance > unit.unitClass.attack.range)
-					return;
-
-				if (distance > 1 && losBlocked(p1Turn, ua.from, ua.to))
-					return;
-
-				attack(unit, ua.from, other, ua.to);
-				return;
-
 			}
-		}
-
-		if (action instanceof SwapCardAction) {
-
-			final Card card = ((SwapCardAction) action).card;
-
-			if (currentHand().contains(card)) {
-
-				currentDeck().add(card);
-				currentHand().remove(card);
-				APLeft--;
-
+	
+			if (action instanceof SwapCardAction) {
+	
+				final Card card = ((SwapCardAction) action).card;
+	
+				if (currentHand().contains(card)) {
+	
+					currentDeck().add(card);
+					currentHand().remove(card);
+					APLeft--;
+	
+				}
+	
 			}
-
+		} catch (Exception e){
+			e.printStackTrace();
 		}
 
 	}
@@ -419,7 +423,7 @@ public class GameState {
 
 	}
 
-	private void dropInferno(Position to) {
+	private void dropInferno(Position to) throws Exception {
 
 		for (int x = -1; x <= 1; x++)
 			for (int y = -1; y <= 1; y++) {
@@ -459,18 +463,14 @@ public class GameState {
 
 	}
 
-	private void returnUnit(Unit unit) {
+	private void returnUnit(Unit unit) throws Exception {
 		if (unitPool == null)
 			return;
-		try {
-			unitPool.returnObject(unit);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
+		unitPool.returnObject(unit);
 	}
 
 	private void attack(Unit attacker, Position attPos, Unit defender,
-			Position defPos) {
+			Position defPos) throws Exception {
 		if (defender.hp == 0) {
 			returnUnit(units[defPos.x][defPos.y]);
 			units[defPos.x][defPos.y] = null;
@@ -508,7 +508,7 @@ public class GameState {
 	}
 
 	private void chain(Unit attacker, Position attPos, Position from,
-			Direction dir, int jump) {
+			Direction dir, int jump) throws Exception {
 
 		if (jump >= 3)
 			return;
@@ -708,7 +708,7 @@ public class GameState {
 		return null;
 	}
 
-	private void push(Unit defender, Position attPos, Position defPos) {
+	private void push(Unit defender, Position attPos, Position defPos) throws Exception {
 
 		if (defender.unitClass.card == Card.CRYSTAL)
 			return;
@@ -772,7 +772,7 @@ public class GameState {
 		APLeft--;
 	}
 
-	private void move(Unit unit, Position from, Position to) {
+	private void move(Unit unit, Position from, Position to) throws Exception {
 		if (units[to.x][to.y] != null)
 			returnUnit(units[to.x][to.y]);
 		units[from.x][from.y] = null;
@@ -812,7 +812,7 @@ public class GameState {
 		}
 	}
 
-	private void endTurn() {
+	private void endTurn() throws Exception {
 		removeDying(p1Turn);
 		checkWinOnUnits(1);
 		checkWinOnUnits(2);
@@ -904,7 +904,7 @@ public class GameState {
 		return p2Deck;
 	}
 
-	public void removeDying(boolean p1) {
+	public void removeDying(boolean p1) throws Exception {
 		for (int x = 0; x < map.width; x++)
 			for (int y = 0; y < map.height; y++)
 				if (units[x][y] != null && units[x][y].p1Owner == p1 && units[x][y].hp == 0){
