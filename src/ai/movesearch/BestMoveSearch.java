@@ -2,6 +2,7 @@ package ai.movesearch;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.NoSuchElementException;
 
 import model.HAMap;
 import model.Unit;
@@ -78,15 +79,11 @@ public class BestMoveSearch {
 		
 	}
 	
-	private GameState borrowObject(){
+	private GameState borrowObject() throws NoSuchElementException, IllegalStateException, Exception{
 		if (pool == null)
 			return new GameState(HAMap.mapA);
-		try {
-			return pool.borrowObject();
-		} catch (Exception e) {
-			e.printStackTrace();
-			return new GameState(HAMap.mapA);
-		}
+		
+		return pool.borrowObject();
 	}
 
 	private List<Action> clone(List<Action> move) {

@@ -17,6 +17,7 @@ import ai.HeuristicAI;
 import ai.NmSearchAI;
 import ai.RandomAI;
 import ai.ScanRandomAI;
+import ai.evolution.RollingHorizonEvolution;
 import ai.heuristic.HeuristicEvaluation;
 import ai.heuristic.MaterialEvaluation;
 import ai.heuristic.RolloutEvaluation;
@@ -117,7 +118,11 @@ public class Game {
 							1, 10, new RandomAI(RAND_METHOD.TREE),
 							new MaterialEvaluation(), false));
 				}
-
+				if (args[a].toLowerCase().equals("evolution"))
+					players[p] = new RollingHorizonEvolution(20, 0.4, 0.5, 20,
+							new RolloutEvaluation(20, 1, new RandomAI(
+									RAND_METHOD.TREE),
+									new HeuristicEvaluation(), false));
 				p = -1;
 			} else if (args[a].toLowerCase().equals("sleep")) {
 				a++;
@@ -139,6 +144,7 @@ public class Game {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+		game.run();
 
 		// Game game = new Game(null, false, new RandomAI(true), new
 		// RandomAI(false));
