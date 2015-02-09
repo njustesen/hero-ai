@@ -15,96 +15,102 @@ public class Genome implements Comparable<Genome> {
 	public List<Action> actions;
 	public double value;
 	public int visits;
-	
+
 	public Genome() {
 		super();
-		this.actions = new ArrayList<Action>();
-		this.value = 0;
-		this.visits = 0;
+		actions = new ArrayList<Action>();
+		value = 0;
+		visits = 0;
 	}
-	
+
 	public void random(GameState state) {
-		List<Action> possible = new ArrayList<Action>();
+		final List<Action> possible = new ArrayList<Action>();
 		actions.clear();
 		visits = 0;
 		value = 0;
-		boolean p1Turn = state.p1Turn;
+		final boolean p1Turn = state.p1Turn;
 		state.possibleActions(possible);
-		while (!state.isTerminal && p1Turn == state.p1Turn){
+		while (!state.isTerminal && p1Turn == state.p1Turn) {
 			state.possibleActions(possible);
-			if (p1Turn == state.p1Turn && possible.isEmpty()){
+			if (p1Turn == state.p1Turn && possible.isEmpty()) {
 				actions.add(SingletonAction.endTurnAction);
 				break;
 			}
-			int idx = (int) (Math.random() * possible.size());
+			final int idx = (int) (Math.random() * possible.size());
 			actions.add(possible.get(idx));
 			state.update(possible.get(idx));
 		}
-			
+
 	}
 
 	public void crossover(Genome a, Genome b, GameState state) {
 		actions.clear();
 		visits = 0;
 		value = 0;
-		ArrayList<Action> possible = new ArrayList<Action>();
-		for(int i = 0; i < a.actions.size(); i++){
+		final ArrayList<Action> possible = new ArrayList<Action>();
+		for (int i = 0; i < a.actions.size(); i++) {
 			state.possibleActions(possible);
-			if (random.nextBoolean() && possible.contains(a.actions.get(i))){
+			if (random.nextBoolean() && hasMove(a, possible, i))
 				actions.add(a.actions.get(i));
-			} else if (possible.contains(b.actions.get(i))){
+			else if (hasMove(b, possible, i))
 				actions.add(b.actions.get(i));
-			} else if (possible.contains(a.actions.get(i))){
+			else if (hasMove(a, possible, i))
 				actions.add(a.actions.get(i));
-			} else {
-				System.out.println("Should not happen!");
-			}
+			else
+				actions.add(possible.get(random.nextInt(possible.size())));
 			state.update(actions.get(i));
 		}
 		if (actions.contains(null))
 			System.out.println("null");
 	}
-	
-	public void mutate(GameState state){
-		
-		int mutIdx = random.nextInt(actions.size());
-		List<Action> possible = new ArrayList<Action>();
-		
+
+	private boolean hasMove(Genome g, ArrayList<Action> possible, int i) {
+		if (g.actions.size() <= i)
+			return false;
+
+		if (possible.contains(g.actions.get(i)))
+			return true;
+
+		return false;
+	}
+
+	public void mutate(GameState state) {
+
+		final int mutIdx = random.nextInt(actions.size());
+		final List<Action> possible = new ArrayList<Action>();
 		int i = 0;
-		for(Action action : actions){
-			if (i==mutIdx){
+		for (final Action action : actions) {
+			if (i == mutIdx)
 				actions.set(mutIdx, newAction(state, action));
-			} else if (i > mutIdx){
+			else if (i > mutIdx) {
 				state.possibleActions(possible);
 				if (!possible.contains(action))
 					actions.set(i, newAction(state, action));
 			}
-			if (i < actions.size() - 1){
-				state.update(action);
-				i++;
-			}
+			state.update(actions.get(i));
+			i++;
 		}
-		
+
 	}
 
 	private Action newAction(GameState state, Action action) {
-		
-		List<Action> possibleActions = new ArrayList<Action>();
+
+		final List<Action> possibleActions = new ArrayList<Action>();
 		state.possibleActions(possibleActions);
 		possibleActions.remove(action);
-		
+
 		if (possibleActions.isEmpty())
-			return action;
-		
-		int idx = (int) (Math.random() * possibleActions.size());
-		
+			return SingletonAction.endTurnAction;
+
+		final int idx = (int) (Math.random() * possibleActions.size());
+
 		return possibleActions.get(idx);
 	}
 
 	@Override
 	public int compareTo(Genome other) {
-		double avg = avgValue();
-		double otherAvg = other.avgValue();
+		final double avg = avgValue() + visits * 100;
+		final double otherAvg = other.avgValue() + visits * 100;
 		if (avg == otherAvg)
 			return 0;
 		if (avg > otherAvg)
@@ -119,8 +125,14 @@ public class Genome implements Comparable<Genome> {
 	}
 
 	public boolean isLegal(GameState clone) {
-		// TODO : create
-		return false;
+		final ArrayList<Action> possible = new ArrayList<Action>();
+		for (final Action action : actions) {
+			clone.possibleActions(possible);
+			if (!possible.contains(action))
+				return false;
+			clone.update(action);
+		}
+		return true;
 	}
-	
+
 }
