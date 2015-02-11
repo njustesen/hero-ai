@@ -21,7 +21,7 @@ import ai.util.ActionPruner;
 
 public class BestMoveSearch {
 
-	Map<String, Integer> moves = new HashMap<String, Integer>();
+	Map<String, Integer> transTable = new HashMap<String, Integer>();
 
 	HeuristicEvaluation evalutator = new HeuristicEvaluation();
 	ActionPruner pruner = new ActionPruner();
@@ -38,7 +38,7 @@ public class BestMoveSearch {
 		this.unitPool = unitPool;
 		this.heuristic = heuristic;
 
-		moves.clear();
+		transTable.clear();
 		bestValue = -1000000;
 		bestMove = null;
 		try {
@@ -48,23 +48,31 @@ public class BestMoveSearch {
 			e.printStackTrace();
 		}
 
-		int c = 0;
-		int t = 0;
-		int tt = 0;
-		for (final String i : moves.keySet()) {
-			c += moves.get(i);
-			if (moves.get(i) > 1) {
-				t++;
-				tt += moves.get(i);
-			}
-		}
-		System.out.println("States=" + c);
-		System.out.println("Unique states=" + moves.keySet().size());
-		System.out.println("Unique transposition=" + t);
-		System.out.println("Transpositions=" + tt);
+		printStats();
 
 		return bestMove;
 
+	}
+
+	private void printStats() {
+		int c = 0;
+		int t = 0;
+		int tt = 0;
+		for (final String i : transTable.keySet()) {
+			c += transTable.get(i);
+			if (transTable.get(i) > 1) {
+				t++;
+				tt += transTable.get(i);
+			}
+		}
+		/*
+		 * System.out.println("States=" + c);
+		 * System.out.println("Unique states=" + transTable.keySet().size());
+		 * System.out.println("Unique transposition=" + t);
+		 * System.out.println("Transpositions=" + tt);
+		 */
+		System.out.println(c + ";" + transTable.keySet().size() + ";" + t + ";"
+				+ tt + ";");
 	}
 
 	private void addMoves(GameState state, List<Action> move, int depth)
@@ -74,10 +82,11 @@ public class BestMoveSearch {
 		final List<Action> actions = new ArrayList<Action>();
 		state.possibleActions(actions);
 		pruner.prune(actions, state);
-		int i = 0;
+		final int i = 0;
 		for (final Action action : actions) {
 			if (depth == 0)
-				System.out.println(i++ + "/" + actions.size());
+				System.out.print("|");
+			// System.out.println(i++ + "/" + actions.size());
 			final GameState next = borrowObject();
 			next.unitPool = unitPool;
 			next.imitate(state);
@@ -89,12 +98,13 @@ public class BestMoveSearch {
 			nextMove.add(action);
 			if (depth < 5 && !(action instanceof EndTurnAction)) {
 				final String hash = next.hash();
-				if (moves.containsKey(hash))
-					moves.put(hash, moves.get(hash) + 1);
+				if (transTable.containsKey(hash))
+					transTable.put(hash, transTable.get(hash) + 1);
 				else {
-					moves.put(hash, 1);
+					transTable.put(hash, 1);
 					addMoves(next, nextMove, depth + 1);
 				}
+				// addMoves(next, nextMove, depth + 1);
 			} else {
 				final double value = heuristic.eval(next, state.p1Turn);
 				if (value > bestValue) {
