@@ -1,4 +1,4 @@
-package lib;
+package model;
 
 public enum CardType {
 	UNIT, 

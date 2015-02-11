@@ -3,7 +3,7 @@ package action;
 import java.util.HashMap;
 import java.util.Map;
 
-import lib.Card;
+import model.Card;
 
 public class SingletonAction {
 

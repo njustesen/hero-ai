@@ -1,7 +1,5 @@
-package lib;
+package model;
 
-import model.Attack;
-import model.Heal;
 
 public class UnitClass {
 

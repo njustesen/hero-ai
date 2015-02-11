@@ -6,8 +6,8 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import lib.Card;
-import lib.CardType;
+import model.Card;
+import model.CardType;
 import model.Position;
 import model.SquareType;
 import action.Action;

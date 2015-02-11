@@ -1,6 +1,6 @@
 package action;
 
-import lib.Card;
+import model.Card;
 
 public class SwapCardAction extends Action {
 

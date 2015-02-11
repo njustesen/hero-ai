@@ -3,8 +3,6 @@ package model;
 import java.util.ArrayList;
 import java.util.List;
 
-import lib.Card;
-
 public class HAMap {
 
 	public static HAMap mapA = HAMap.getMap();

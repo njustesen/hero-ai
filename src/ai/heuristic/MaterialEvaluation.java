@@ -4,8 +4,8 @@ import java.util.HashMap;
 import java.util.Map;
 
 import game.GameState;
-import lib.Card;
-import lib.CardType;
+import model.Card;
+import model.CardType;
 
 public class MaterialEvaluation implements IHeuristic {
 

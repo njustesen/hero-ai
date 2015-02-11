@@ -15,9 +15,11 @@ import org.apache.commons.pool2.ObjectPool;
 
 import action.Action;
 import action.EndTurnAction;
+import action.SingletonAction;
 import ai.heuristic.HeuristicEvaluation;
 import ai.heuristic.IHeuristic;
 import ai.util.ActionPruner;
+import ai.util.GameStateHasher;
 
 public class BestMoveSearch {
 
@@ -30,12 +32,11 @@ public class BestMoveSearch {
 	List<Action> bestMove = new ArrayList<Action>();
 	double bestValue;
 	private IHeuristic heuristic;
-
+	private GameStateHasher hasher = new GameStateHasher();
+	
 	public List<Action> bestMove(GameState state, ObjectPool<GameState> pool,
 			ObjectPool<Unit> unitPool, IHeuristic heuristic) {
 
-		this.pool = pool;
-		this.unitPool = unitPool;
 		this.heuristic = heuristic;
 
 		transTable.clear();
@@ -44,7 +45,6 @@ public class BestMoveSearch {
 		try {
 			addMoves(state, new ArrayList<Action>(), 0);
 		} catch (final Exception e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 
@@ -65,12 +65,7 @@ public class BestMoveSearch {
 				tt += transTable.get(i);
 			}
 		}
-		/*
-		 * System.out.println("States=" + c);
-		 * System.out.println("Unique states=" + transTable.keySet().size());
-		 * System.out.println("Unique transposition=" + t);
-		 * System.out.println("Transpositions=" + tt);
-		 */
+		
 		System.out.println(c + ";" + transTable.keySet().size() + ";" + t + ";"
 				+ tt + ";");
 	}
@@ -79,53 +74,45 @@ public class BestMoveSearch {
 			throws IllegalStateException, UnsupportedOperationException,
 			Exception {
 
+		// End turn
+		if (state.APLeft == 0){
+			final double value = heuristic.eval(state, state.p1Turn);
+			if (value > bestValue) {
+				bestValue = value;
+				final List<Action> nextMove = clone(move);
+				nextMove.add(SingletonAction.endTurnAction);
+				bestMove = nextMove;
+			}
+			return;
+		}
+		
+		// Possible actions
 		final List<Action> actions = new ArrayList<Action>();
 		state.possibleActions(actions);
 		pruner.prune(actions, state);
-		final int i = 0;
+		GameState next = state.copy();
+		
+		int i = 0;
 		for (final Action action : actions) {
 			if (depth == 0)
 				System.out.print("|");
-			// System.out.println(i++ + "/" + actions.size());
-			final GameState next = borrowObject();
-			next.unitPool = unitPool;
-			next.imitate(state);
+			
+			if (i>0)
+				next.imitate(state);
 			next.update(action);
-
-			// if (next.APLeft == state.APLeft)
-			// continue; // Nothing happened
-			final List<Action> nextMove = clone(move);
-			nextMove.add(action);
-			if (depth < 5 && !(action instanceof EndTurnAction)) {
-				final String hash = next.hash();
-				if (transTable.containsKey(hash))
-					transTable.put(hash, transTable.get(hash) + 1);
-				else {
-					transTable.put(hash, 1);
-					addMoves(next, nextMove, depth + 1);
-				}
-				// addMoves(next, nextMove, depth + 1);
-			} else {
-				final double value = heuristic.eval(next, state.p1Turn);
-				if (value > bestValue) {
-					bestValue = value;
-					bestMove = nextMove;
-				}
+			
+			final String hash = hasher.hash(next);
+			if (transTable.containsKey(hash))
+				transTable.put(hash, transTable.get(hash) + 1);
+			else {
+				transTable.put(hash, 1);
+				final List<Action> nextMove = clone(move);
+				nextMove.add(action);
+				addMoves(next, nextMove, depth + 1);
 			}
-			// next.reset();
-			// next.returnUnits();
-			if (pool != null)
-				pool.returnObject(next);
+			i++;
 		}
 
-	}
-
-	private GameState borrowObject() throws NoSuchElementException,
-			IllegalStateException, Exception {
-		if (pool == null)
-			return new GameState(HAMap.mapA);
-
-		return pool.borrowObject();
 	}
 
 	private List<Action> clone(List<Action> move) {

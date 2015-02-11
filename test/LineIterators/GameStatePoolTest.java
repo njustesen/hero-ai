@@ -5,7 +5,7 @@ import java.util.List;
 import java.util.Random;
 
 import game.GameState;
-import lib.Card;
+import model.Card;
 import model.HAMap;
 import model.Unit;
 

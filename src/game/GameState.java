@@ -4,13 +4,15 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
+
 import org.apache.commons.pool2.ObjectPool;
+
 import java.util.Map;
 import java.util.Set;
 
-import lib.Card;
-import lib.CardType;
 import model.AttackType;
+import model.Card;
+import model.CardType;
 import model.Direction;
 import model.HAMap;
 import model.Position;
@@ -979,19 +981,6 @@ public class GameState {
 
 	}
 
-	/*
-	 * @Override public int hashCode() { final int prime = 31; int result = 1;
-	 * result = prime * result + APLeft; result = prime * result + (isTerminal ?
-	 * 1231 : 1237); result = prime * result + ((map == null) ? 0 :
-	 * map.hashCode()); result = prime * result + ((p1Deck == null) ? 0 :
-	 * p1Deck.hashCode()); result = prime * result + ((p1Hand == null) ? 0 :
-	 * p1Hand.hashCode()); result = prime * result + (p1Turn ? 1231 : 1237);
-	 * result = prime * result + ((p2Deck == null) ? 0 : p2Deck.hashCode());
-	 * result = prime * result + ((p2Hand == null) ? 0 : p2Hand.hashCode());
-	 * result = prime * result + Arrays.hashCode(units); result = prime * result
-	 * + turn; return result; }
-	 */
-
 	@Override
 	public boolean equals(Object obj) {
 		if (this == obj)
@@ -1068,43 +1057,5 @@ public class GameState {
 				}
 	}
 
-	public String hash() {
-		String hash = APLeft + "-" + (isTerminal ? 1 : 0) + "-"
-				+ hashCards(p1Deck) + "-" + hashCards(p1Hand) + "-"
-				+ hashCards(p2Deck) + "-" + hashCards(p2Hand) + "-" + turn
-				+ "-";
-
-		for (int x = 0; x < map.width; x++)
-			for (int y = 0; y < map.height; y++)
-				if (units[x][y] != null)
-					hash += x + "-" + y + "-" + hashUnit(units[x][y]) + "-";
-
-		return hash;
-	}
-
-	private String hashUnit(Unit unit) {
-		return unit.unitClass.card.name() + "-" + unit.hp + "-"
-				+ (unit.p1Owner ? 1 : 2) + "-" + hashEquipment(unit.equipment);
-	}
-
-	private String hashEquipment(Set<Card> cards) {
-		String hash = "";
-		for (final Card card : cards)
-			hash += card.name() + "-";
-		return hash;
-	}
-
-	private String hashCards(List<Card> cards) {
-		final Map<Card, Integer> map = new HashMap<Card, Integer>();
-		for (final Card card : cards)
-			if (map.keySet().contains(card))
-				map.put(card, map.get(card) + 1);
-			else
-				map.put(card, 1);
-		String hash = "cards-";
-		for (final Card card : map.keySet())
-			hash += card.name() + "-" + map.get(card) + "-";
-		return hash;
-	}
 
 }

@@ -6,7 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.NoSuchElementException;
 
-import lib.Card;
+import model.Card;
 import action.Action;
 import action.EndTurnAction;
 import ai.heuristic.HeuristicEvaluation;
