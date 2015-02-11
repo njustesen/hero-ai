@@ -82,18 +82,18 @@ public class BestMoveSearch {
 		final List<Action> actions = new ArrayList<Action>();
 		state.possibleActions(actions);
 		pruner.prune(actions, state);
-		final int i = 0;
+		final GameState next = state.copy();
+
+		int i = 0;
 		for (final Action action : actions) {
 			if (depth == 0)
 				System.out.print("|");
-			// System.out.println(i++ + "/" + actions.size());
-			final GameState next = borrowObject();
-			next.unitPool = unitPool;
-			next.imitate(state);
+
+			if (i != 0)
+				next.imitate(state);
+
 			next.update(action);
 
-			// if (next.APLeft == state.APLeft)
-			// continue; // Nothing happened
 			final List<Action> nextMove = clone(move);
 			nextMove.add(action);
 			if (depth < 5 && !(action instanceof EndTurnAction)) {
@@ -104,7 +104,6 @@ public class BestMoveSearch {
 					transTable.put(hash, 1);
 					addMoves(next, nextMove, depth + 1);
 				}
-				// addMoves(next, nextMove, depth + 1);
 			} else {
 				final double value = heuristic.eval(next, state.p1Turn);
 				if (value > bestValue) {
@@ -112,10 +111,7 @@ public class BestMoveSearch {
 					bestMove = nextMove;
 				}
 			}
-			// next.reset();
-			// next.returnUnits();
-			if (pool != null)
-				pool.returnObject(next);
+			i++;
 		}
 
 	}
