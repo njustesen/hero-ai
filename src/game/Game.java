@@ -119,10 +119,10 @@ public class Game {
 							new MaterialEvaluation(), false));
 				}
 				if (args[a].toLowerCase().equals("evolution"))
-					players[p] = new RollingHorizonEvolution(20, 0.4, 0.5, 20,
-							new RolloutEvaluation(20, 1, new RandomAI(
+					players[p] = new RollingHorizonEvolution(64, 0.4, 0.5, 200,
+							new RolloutEvaluation(50, 1, new RandomAI(
 									RAND_METHOD.TREE),
-									new HeuristicEvaluation(), false));
+									new HeuristicEvaluation(), true));
 				p = -1;
 			} else if (args[a].toLowerCase().equals("sleep")) {
 				a++;
@@ -144,7 +144,6 @@ public class Game {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		game.run();
 
 		// Game game = new Game(null, false, new RandomAI(true), new
 		// RandomAI(false));
@@ -175,8 +174,6 @@ public class Game {
 
 	public void run() {
 
-		final int turnLimit = 1000;
-
 		state.init();
 		history.add(state.copy());
 		lastTurn = 5;
@@ -186,7 +183,7 @@ public class Game {
 		if (player2 != null)
 			player2.init(state, -1);
 
-		while (!state.isTerminal && state.turn < turnLimit) {
+		while (!state.isTerminal) {
 
 			if (SLEEP >= 20 && ui != null) {
 				ui.state = state.copy();

@@ -19,8 +19,8 @@ public class Unit {
 
 	public Unit(Card type, boolean p1Owner) {
 		super();
-		//System.out.println(count++);
-		if (type != null){
+		// System.out.println(count++);
+		if (type != null) {
 			unitClass = UnitClassLib.lib.get(type);
 			hp = unitClass.maxHP;
 		}
@@ -30,7 +30,7 @@ public class Unit {
 
 	public Unit(int hp, Unit type, boolean p1Owner, Set<Card> equipment) {
 		super();
-		//System.out.println(count++);
+		// System.out.println(count++);
 		unitClass = UnitClassLib.lib.get(type);
 		this.hp = hp;
 		this.equipment = equipment;
@@ -39,15 +39,15 @@ public class Unit {
 
 	public Unit(int hp, UnitClass uclass, boolean p1Owner, Set<Card> equipment) {
 		super();
-		//System.out.println(count++);
+		// System.out.println(count++);
 		unitClass = uclass;
 		this.hp = hp;
 		this.equipment = equipment;
 		this.p1Owner = p1Owner;
 	}
-	
+
 	public void init(Card type, boolean p1Owner) {
-		if (type != null){
+		if (type != null) {
 			unitClass = UnitClassLib.lib.get(type);
 			hp = unitClass.maxHP;
 		}
@@ -151,11 +151,11 @@ public class Unit {
 	}
 
 	public void imitate(Unit unit) {
-		this.hp = unit.hp;
-		this.unitClass = unit.unitClass;
-		this.p1Owner = unit.p1Owner;
-		this.equipment.clear();
-		this.equipment.addAll(unit.equipment);
+		hp = unit.hp;
+		unitClass = unit.unitClass;
+		p1Owner = unit.p1Owner;
+		equipment.clear();
+		equipment.addAll(unit.equipment);
 	}
 
 	public Unit copy() {
@@ -165,7 +165,7 @@ public class Unit {
 
 		return new Unit(hp, unitClass, p1Owner, eq);
 	}
-	
+
 	@Override
 	public boolean equals(Object obj) {
 		if (this == obj)
