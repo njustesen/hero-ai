@@ -2,8 +2,10 @@ package ai.mcts;
 
 import game.GameState;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import action.Action;
@@ -16,6 +18,8 @@ import ai.util.ActionPruner;
 
 public class Mcts implements AI {
 
+	private static final boolean REUSING = false;
+
 	Map<String, MctsNode> transTable = new HashMap<String, MctsNode>();
 
 	public long budget;
@@ -23,7 +27,7 @@ public class Mcts implements AI {
 	public IHeuristic defaultPolicy;
 	private final ActionPruner pruner;
 	private final ActionComparator comparator;
-	private MctsNode root;
+	private AbstractMctsNode root;
 
 	public Mcts(long budget, ITreePolicy treePolicy, IHeuristic defaultPolicy) {
 		this.budget = budget;
@@ -40,19 +44,20 @@ public class Mcts implements AI {
 		transTable.clear();
 
 		boolean save = false;
-		if (state.APLeft > 0)
-			save = true;
-		else {
+		if (state.APLeft > 0){
+			if (REUSING)
+				save = true;
+		}else {
 			root = null;
 			return new EndTurnAction();
 		}
 
 		if (root == null) {
 			root = new MctsNode(null, null);
-			state.possibleActions(root.possible);
-			pruner.prune(root.possible, state);
+			state.possibleActions(root.getPossibleActions());
+			pruner.prune(root.getPossibleActions(), state);
 			comparator.state = state;
-			Collections.sort(root.possible, comparator);
+			Collections.sort(root.getPossibleActions(), comparator);
 		}
 		final GameState clone = state.copy();
 		int rolls = 0;
@@ -60,22 +65,26 @@ public class Mcts implements AI {
 		while (System.currentTimeMillis() < start + budget) {
 
 			clone.imitate(state);
-			final MctsNode node = treePolicy(root, clone);
+			final AbstractMctsNode node = treePolicy(root, clone);
 			final double delta = defaultPolicy.eval(clone, state.p1Turn);
 			backupNegaMultiMax(node, delta, state.p1Turn);
 			rolls++;
-
+			
 		}
 
-		for (final MctsNode child : root.children)
+		for (final AbstractMctsNode child : root.getChildren())
 			System.out.println(child);
 
 		System.out.println("Rolls=" + rolls);
-		final MctsNode best = bestChild(root, state.p1Turn, false);
+		final AbstractMctsNode best = bestChild(root, state.p1Turn, false);
 
-		// System.out.println(root.toXml(0));
-		if (save)
-			root = best;
+		if (save){
+			System.out.println("Reusing");
+			reuseSubTree(best);
+			System.out.println("Done reusing");
+		} else {
+			root = null;
+		}
 		
 		if (best == null)
 			return SingletonAction.endTurnAction;
@@ -84,8 +93,41 @@ public class Mcts implements AI {
 
 	}
 
-	private MctsNode treePolicy(MctsNode node, GameState clone) {
-		MctsNode next;
+	private void reuseSubTree(AbstractMctsNode subTreeRoot) {
+		
+		root = subTreeRoot;
+		root.getParents().clear();
+		List<AbstractMctsNode> survivors = new ArrayList<AbstractMctsNode>();
+		addSubTreeNodes(root, survivors);
+		List<AbstractMctsNode> killedNodes = new ArrayList<AbstractMctsNode>();
+		List<String> removedHashes = new ArrayList<String>();
+		for(String hash : transTable.keySet()){
+			if (!survivors.contains(transTable.get(hash))){
+				killedNodes.add(transTable.get(hash));
+				removedHashes.add(hash);
+			}
+		}
+		removeParents(root, killedNodes);
+		for(String hash : removedHashes)
+			transTable.remove(hash);
+	}
+
+	private void removeParents(AbstractMctsNode node, List<AbstractMctsNode> killedNodes) {
+		for(int i = 0; i < node.getParents().size(); i++){
+			if (killedNodes.contains(node.getParents().get(i)))
+				node.getParents().remove(i);
+			i--;
+		}
+	}
+
+	private void addSubTreeNodes(AbstractMctsNode subTreeRoot, List<AbstractMctsNode> survivors) {
+		survivors.add(subTreeRoot);
+		for(AbstractMctsNode child : subTreeRoot.getChildren())
+			addSubTreeNodes(child, survivors);
+	}
+
+	private AbstractMctsNode treePolicy(AbstractMctsNode node, GameState clone) {
+		AbstractMctsNode next;
 		while (!clone.isTerminal)
 			if (!node.isFullyExpanded())
 				return expand(node, clone);
@@ -100,26 +142,26 @@ public class Mcts implements AI {
 		return node;
 	}
 
-	private MctsNode expand(MctsNode node, GameState clone) {
-		final Action next = node.possible.get(node.children.size());
+	private AbstractMctsNode expand(AbstractMctsNode node, GameState clone) {
+		final Action next = node.getPossibleActions().get(node.getChildren().size());
 		final boolean p1 = clone.p1Turn;
 		clone.update(next);
 		final String hash = clone.hash();
-		MctsNode child = null;
+		AbstractMctsNode child = null;
 		if (transTable.containsKey(hash)) {
-			child = transTable.get(hash);
-			if (!child.parents.contains(node))
-				child.parents.add(node);
+			child = new MctsTransNode(next, transTable.get(hash));
+			if (!child.getParents().contains(node))
+				child.getParents().add(node);
 		} else {
 			child = new MctsNode(next, node);
-			child.p1 = p1;
-			clone.possibleActions(child.possible);
-			pruner.prune(child.possible, clone);
+			child.setP1(p1);
+			clone.possibleActions(child.getPossibleActions());
+			pruner.prune(child.getPossibleActions(), clone);
 			comparator.state = clone;
-			Collections.sort(child.possible, comparator);
-			transTable.put(hash, child);
+			Collections.sort(child.getPossibleActions(), comparator);
+			transTable.put(hash, ((MctsNode)child));
 		}
-		node.children.add(child);
+		node.getChildren().add(child);
 		return child;
 	}
 
@@ -136,22 +178,24 @@ public class Mcts implements AI {
 	}
 	*/
 
-	private void backupNegaMultiMax(MctsNode node, double delta, boolean p1) {
-		node.visits++;
-		if (node.p1 == p1)
-			node.value += delta;
+	private void backupNegaMultiMax(AbstractMctsNode node, double delta, boolean p1) {
+		node.setVisits(node.getVisits() + 1);
+		if (node.isP1() == p1)
+			node.setValue(node.getValue() + delta);
 		else
-			node.value -= delta;
-		System.out.println("P=" + node.parents.size());
-		for (final MctsNode parent : node.parents)
+			node.setValue(node.getValue() - delta);
+		//System.out.println("P=" + node.parents.size());
+		for (final AbstractMctsNode parent : node.getParents()){
+			//System.out.println(node.hashCode() + " -> " + parent.hashCode());
 			backupNegaMultiMax(parent, delta, p1);
+		}
 	}
 
-	private MctsNode bestChild(MctsNode node, boolean p1, boolean urgent) {
+	private AbstractMctsNode bestChild(AbstractMctsNode node, boolean p1, boolean urgent) {
 
 		double bestValue = -1000000;
-		MctsNode bestChild = null;
-		for (final MctsNode child : node.children) {
+		AbstractMctsNode bestChild = null;
+		for (final AbstractMctsNode child : node.getChildren()) {
 			double value = 0;
 			if (urgent)
 				value = treePolicy.urgent(child, node);

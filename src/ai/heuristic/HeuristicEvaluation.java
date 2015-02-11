@@ -8,7 +8,6 @@ import model.SquareType;
 
 public class HeuristicEvaluation implements IHeuristic {
 
-	private static final boolean pos = true;
 	private static final double MAX_VAL = 20000;
 	
 	public HeuristicEvaluation() {
@@ -30,17 +29,17 @@ public class HeuristicEvaluation implements IHeuristic {
 		for (int x = 0; x < state.map.width; x++){
 			for (int y = 0; y < state.map.height; y++){
 				if (state.units[x][y] != null){
-					up = 0;
-					if (state.units[x][y].hp > 0)
-						up = 1;
+					up = 1;
+					if (state.units[x][y].hp <= 0)
+						up = 0;
 					if (state.units[x][y].p1Owner)
 						p1Units += state.units[x][y].hp
-								+ state.units[x][y].unitClass.maxHP * (2 * up)
-								+ squareVal(state.map.squares[x][y]);
+								+ state.units[x][y].unitClass.maxHP * (1 + up)
+								+ squareVal(state.map.squares[x][y]) * up;
 					else
 						p2Units += state.units[x][y].hp
-								+ state.units[x][y].unitClass.maxHP * (2 * up)
-								+ squareVal(state.map.squares[x][y]);
+								+ state.units[x][y].unitClass.maxHP * (1 + up)
+								+ squareVal(state.map.squares[x][y]) * up;
 				}
 			}
 		}
