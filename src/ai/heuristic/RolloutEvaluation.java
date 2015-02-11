@@ -28,10 +28,17 @@ public class RolloutEvaluation implements IHeuristic {
 		
 		GameState clone = new GameState(state.map);
 		double sum = 0;
+		//List<Double> vals = new ArrayList<Double>();
+		
 		for(int i = 0; i < rolls; i++){
 			clone.imitate(state);
-			sum += simulateGame(clone, p1);
+			double d = simulateGame(clone, p1);
+			//vals.add(d);
+			sum += d;
 		}
+		
+		//System.out.println(Statistics.avg(vals) + ";" + Statistics.stdDev(vals) + ";");
+		
 		return sum / rolls;
 	}
 	
@@ -40,6 +47,11 @@ public class RolloutEvaluation implements IHeuristic {
 		while (!state.isTerminal && state.turn < turns + depth)
 			state.update(policy.act(state, -1));
 		return heuristic.eval(state, p1);
+	}
+
+	@Override
+	public double normalize(double delta) {
+		return heuristic.normalize(delta);
 	}
 
 }

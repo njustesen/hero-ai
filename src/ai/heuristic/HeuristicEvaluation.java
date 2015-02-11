@@ -9,6 +9,7 @@ import model.SquareType;
 public class HeuristicEvaluation implements IHeuristic {
 
 	private static final boolean pos = true;
+	private static final double MAX_VAL = 20000;
 	
 	public HeuristicEvaluation() {
 
@@ -75,5 +76,10 @@ public class HeuristicEvaluation implements IHeuristic {
 		
 		return 0;
 		
+	}
+
+	@Override
+	public double normalize(double delta) {
+		return (MAX_VAL + delta) / 2;
 	}
 }

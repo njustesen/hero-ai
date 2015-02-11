@@ -3,7 +3,6 @@ package game;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.NoSuchElementException;
 
 import org.apache.commons.pool2.ObjectPool;
 
@@ -33,7 +32,7 @@ public class GameState {
 	private static final int REQUIRED_UNITS = 3;
 	private static final int POTION_REVIVE = 100;
 	private static final int POTION_HEAL = 1000;
-	private static final int turnLimit = 100;
+	private static final int turnLimit = 100000;
 
 	public HAMap map;
 	public boolean p1Turn;

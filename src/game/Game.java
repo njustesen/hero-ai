@@ -168,13 +168,14 @@ public class Game {
 
 		history = new Stack<GameState>();
 		previous = new HashMap<Integer, Integer>();
+		if (CachedLines.posMap.isEmpty())
+			CachedLines.load(HAMap.mapA);
 
 	}
 
 	public void run() {
 
 		final int turnLimit = 1000;
-		CachedLines.load(HAMap.mapA);
 
 		state.init();
 		history.add(state.copy());

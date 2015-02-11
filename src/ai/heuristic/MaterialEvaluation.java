@@ -6,11 +6,10 @@ import java.util.Map;
 import game.GameState;
 import lib.Card;
 import lib.CardType;
-import lib.UnitClassLib;
-import model.SquareType;
 
 public class MaterialEvaluation implements IHeuristic {
 
+	private static final double MAX_VAL = 32;
 	private static Map<Card, Double> values;
 	static {
 		values = new HashMap<Card, Double>();
@@ -37,9 +36,9 @@ public class MaterialEvaluation implements IHeuristic {
 		if (state.isTerminal){
 			int winner = state.getWinner();
 			if (winner == 1 && p1 || winner == 2 && !p1)
-				return 12;
+				return MAX_VAL;
 			else
-				return -12;
+				return -MAX_VAL;
 		}
 		
 		int matDif = matDif(state, p1);
@@ -78,6 +77,11 @@ public class MaterialEvaluation implements IHeuristic {
 		if (p1)
 			return p1Units - p2Units;
 		return p2Units - p1Units;
+	}
+
+	@Override
+	public double normalize(double delta) {
+		return delta / MAX_VAL;
 	}
 
 }

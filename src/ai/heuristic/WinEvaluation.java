@@ -31,4 +31,9 @@ public class WinEvaluation implements IHeuristic {
 		
 	}
 
+	@Override
+	public double normalize(double delta) {
+		return delta;
+	}
+
 }

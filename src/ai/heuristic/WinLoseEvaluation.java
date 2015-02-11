@@ -31,4 +31,9 @@ public class WinLoseEvaluation implements IHeuristic {
 		
 	}
 
+	@Override
+	public double normalize(double delta) {
+		return (delta+1)/2;
+	}
+
 }

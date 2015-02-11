@@ -5,6 +5,7 @@ import java.util.Collections;
 import game.GameState;
 import action.Action;
 import action.EndTurnAction;
+import action.SingletonAction;
 import ai.AI;
 import ai.heuristic.IHeuristic;
 import ai.util.ActionComparator;
@@ -49,26 +50,30 @@ public class Mcts implements AI {
 		GameState clone = state.copy();
 		int rolls = 0;
 		
-		while(System.currentTimeMillis() < start + budget){
-					
+		do {
 			clone.imitate(state);
 			MctsNode node = treePolicy(root, clone);
-			double delta = defaultPolicy.eval(clone, state.p1Turn);;
-			backupNegamax(node, delta);
+			double delta = defaultPolicy.eval(clone, state.p1Turn);
+			delta = defaultPolicy.normalize(delta);
+			backupNegamax(node, delta, state.p1Turn);
 			rolls++;
 			
-		}
+		} while(System.currentTimeMillis() < start + budget);
 		
+		/*
 		for(MctsNode child : root.children)
 			System.out.println(child);
-		
-		System.out.println("Rolls=" + rolls);
+		*/
+		//System.out.println("Rolls=" + rolls);
 		MctsNode best = bestChild(root, state.p1Turn, false);
 
 		//System.out.println(root.toXml(0));
 		
 		if (save)
 			root = best;
+		
+		if (best == null)
+			return SingletonAction.endTurnAction;
 		
 		return best.action;
 		
@@ -105,10 +110,10 @@ public class Mcts implements AI {
 		return child;
 	}
 	
-	private void backupNegamax(MctsNode node, double delta) {
+	private void backupNegamax(MctsNode node, double delta, boolean p1) {
 		while(node != null){
 			node.visits++;
-			if (node.p1)
+			if (node.p1 == p1)
 				node.value += delta;
 			else
 				node.value -= delta;
@@ -132,11 +137,6 @@ public class Mcts implements AI {
 				bestValue = value;
 				bestChild = child;
 			}
-		}
-		
-		if (bestChild == null){
-			int x = 0;
-			x++;
 		}
 		
 		return bestChild;
