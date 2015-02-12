@@ -2,7 +2,10 @@ import model.HAMap;
 import game.Game;
 import game.GameState;
 import ai.AI;
+import ai.GreedyTurnAI;
+import ai.HeuristicAI;
 import ai.RandomAI;
+import ai.heuristic.HeuristicEvaluation;
 import ai.heuristic.MaterialEvaluation;
 import ai.heuristic.RolloutEvaluation;
 import ai.mcts.Mcts;
@@ -13,10 +16,10 @@ public class AiComparison {
 
 	public static void main(String[] args){
 		
-		AI p1 = new Mcts(50, new UCT(), new RolloutEvaluation(1, 1, new RandomAI(RAND_METHOD.TREE), new MaterialEvaluation(), true));
-		AI p2 = new Mcts(50, new UCT(), new RolloutEvaluation(1, 5, new RandomAI(RAND_METHOD.TREE), new MaterialEvaluation(), true));
+		AI p1 = new Mcts(5000, new UCT(), new RolloutEvaluation(1, 5, new RandomAI(RAND_METHOD.TREE), new MaterialEvaluation(), true));
+		AI p2 = new GreedyTurnAI(new HeuristicEvaluation());
 		compare(p1, p2, 10);
-		
+		/*
 		p1 = new Mcts(250, new UCT(), new RolloutEvaluation(1, 1, new RandomAI(RAND_METHOD.TREE), new MaterialEvaluation(), true));
 		p2 = new Mcts(250, new UCT(), new RolloutEvaluation(1, 5, new RandomAI(RAND_METHOD.TREE), new MaterialEvaluation(), true));
 		compare(p1, p2, 10);
@@ -24,7 +27,7 @@ public class AiComparison {
 		p1 = new Mcts(500, new UCT(), new RolloutEvaluation(1, 1, new RandomAI(RAND_METHOD.TREE), new MaterialEvaluation(), true));
 		p2 = new Mcts(500, new UCT(), new RolloutEvaluation(1, 5, new RandomAI(RAND_METHOD.TREE), new MaterialEvaluation(), true));
 		compare(p1, p2, 10);
-		
+		*/
 	}
 
 	private static void compare(AI p1, AI p2, int games) {
