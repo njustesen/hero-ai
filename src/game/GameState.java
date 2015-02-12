@@ -40,7 +40,7 @@ public class GameState {
 	private static final int REQUIRED_UNITS = 3;
 	private static final int POTION_REVIVE = 100;
 	private static final int POTION_HEAL = 1000;
-	private static final int turnLimit = 100000;
+	private static final int TURN_LIMIT = 100;
 
 	public HAMap map;
 	public boolean p1Turn;
@@ -651,6 +651,9 @@ public class GameState {
 	}
 
 	public int getWinner() {
+		
+		if (turn >= TURN_LIMIT)
+			return 0;
 
 		boolean p1Alive = true;
 		boolean p2Alive = true;
@@ -835,7 +838,7 @@ public class GameState {
 		checkWinOnUnits(1);
 		checkWinOnUnits(2);
 		checkWinOnCrystals(p1Turn ? 2 : 1);
-		if (turn >= turnLimit)
+		if (turn >= TURN_LIMIT)
 			isTerminal = true;
 		if (!isTerminal) {
 			drawCards();

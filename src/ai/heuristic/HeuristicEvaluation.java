@@ -1,5 +1,6 @@
 package ai.heuristic;
 
+import ai.util.NormUtil;
 import game.GameState;
 import lib.UnitClassLib;
 import model.Card;
@@ -79,6 +80,6 @@ public class HeuristicEvaluation implements IHeuristic {
 
 	@Override
 	public double normalize(double delta) {
-		return (MAX_VAL + delta) / 2;
+		return NormUtil.normalize(delta, -MAX_VAL, MAX_VAL, 1, 0);
 	}
 }

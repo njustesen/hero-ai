@@ -21,8 +21,10 @@ import ai.evolution.RollingHorizonEvolution;
 import ai.heuristic.HeuristicEvaluation;
 import ai.heuristic.MaterialEvaluation;
 import ai.heuristic.RolloutEvaluation;
+import ai.heuristic.WinLoseEvaluation;
 import ai.mcts.Mcts;
 import ai.mcts.UCT;
+import ai.mcts.collapse.CollapsedMcts;
 import ai.util.RAND_METHOD;
 
 public class Game {
@@ -115,6 +117,13 @@ public class Game {
 					a++;
 					final int t = Integer.parseInt(args[a]);
 					players[p] = new Mcts(t, new UCT(), new RolloutEvaluation(
+							1, 10, new RandomAI(RAND_METHOD.TREE),
+							new MaterialEvaluation(), false));
+				}
+				if (args[a].toLowerCase().equals("collapsedmcts")) {
+					a++;
+					final int t = Integer.parseInt(args[a]);
+					players[p] = new CollapsedMcts(t, new UCT(), new RolloutEvaluation(
 							1, 10, new RandomAI(RAND_METHOD.TREE),
 							new MaterialEvaluation(), false));
 				}

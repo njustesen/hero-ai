@@ -3,13 +3,14 @@ package ai.heuristic;
 import java.util.HashMap;
 import java.util.Map;
 
+import ai.util.NormUtil;
 import game.GameState;
 import model.Card;
 import model.CardType;
 
 public class MaterialEvaluation implements IHeuristic {
 
-	private static final double MAX_VAL = 32;
+	private static final double MAX_VAL = 4;
 	private static Map<Card, Double> values;
 	static {
 		values = new HashMap<Card, Double>();
@@ -17,12 +18,12 @@ public class MaterialEvaluation implements IHeuristic {
 		values.put(Card.CLERIC, 1.2);
 		values.put(Card.CRYSTAL, 4.0);
 		values.put(Card.DRAGONSCALE, .3);
-		values.put(Card.INFERNO, .5);
+		values.put(Card.INFERNO, 0.8);
 		values.put(Card.KNIGHT, 1.0);
 		values.put(Card.NINJA, 1.5);
 		values.put(Card.REVIVE_POTION, .3);
 		values.put(Card.RUNEMETAL, .3);
-		values.put(Card.SCROLL, .3);
+		values.put(Card.SCROLL, .5);
 		values.put(Card.SHINING_HELM, .2);
 		values.put(Card.WIZARD, 1.1);
 	}
@@ -36,9 +37,9 @@ public class MaterialEvaluation implements IHeuristic {
 		if (state.isTerminal){
 			int winner = state.getWinner();
 			if (winner == 1 && p1 || winner == 2 && !p1)
-				return MAX_VAL;
+				return matDif(state, p1) * 2;
 			else
-				return -MAX_VAL;
+				return -matDif(state, p1) * 2;
 		}
 		
 		int matDif = matDif(state, p1);
@@ -81,7 +82,7 @@ public class MaterialEvaluation implements IHeuristic {
 
 	@Override
 	public double normalize(double delta) {
-		return delta / MAX_VAL;
+		return NormUtil.normalize(delta, -MAX_VAL, MAX_VAL, 1, 0);
 	}
 
 }
