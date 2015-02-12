@@ -3,7 +3,7 @@ package model.team;
 import java.util.ArrayList;
 import java.util.List;
 
-import lib.Card;
+import model.Card;
 
 public class Council {
 

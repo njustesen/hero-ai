@@ -5,8 +5,6 @@ import game.GameState;
 import java.util.HashSet;
 import java.util.Set;
 
-import lib.Card;
-import lib.UnitClass;
 import lib.UnitClassLib;
 
 public class Unit {

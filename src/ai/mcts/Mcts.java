@@ -15,6 +15,7 @@ import ai.AI;
 import ai.heuristic.IHeuristic;
 import ai.util.ActionComparator;
 import ai.util.ActionPruner;
+import ai.util.GameStateHasher;
 
 public class Mcts implements AI {
 
@@ -28,6 +29,7 @@ public class Mcts implements AI {
 	private final ActionPruner pruner;
 	private final ActionComparator comparator;
 	private AbstractMctsNode root;
+	private GameStateHasher hasher;
 
 	public Mcts(long budget, ITreePolicy treePolicy, IHeuristic defaultPolicy) {
 		this.budget = budget;
@@ -35,6 +37,7 @@ public class Mcts implements AI {
 		this.defaultPolicy = defaultPolicy;
 		pruner = new ActionPruner();
 		comparator = new ActionComparator();
+		this.hasher = new GameStateHasher();
 	}
 
 	@Override
@@ -146,7 +149,7 @@ public class Mcts implements AI {
 		final Action next = node.getPossibleActions().get(node.getChildren().size());
 		final boolean p1 = clone.p1Turn;
 		clone.update(next);
-		final String hash = clone.hash();
+		final String hash = hasher.hash(clone);
 		AbstractMctsNode child = null;
 		if (transTable.containsKey(hash)) {
 			child = new MctsTransNode(next, transTable.get(hash));

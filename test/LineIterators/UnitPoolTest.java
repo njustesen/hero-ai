@@ -2,7 +2,8 @@ package LineIterators;
 
 import java.util.ArrayList;
 import java.util.List;
-import lib.Card;
+
+import model.Card;
 import model.Unit;
 
 import org.apache.commons.pool2.ObjectPool;

@@ -6,7 +6,7 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 
-import lib.Card;
+import model.Card;
 import model.Position;
 import model.SquareType;
 import model.Unit;

@@ -1,9 +1,9 @@
 package ai.heuristic;
 
 import game.GameState;
-import lib.Card;
-import lib.CardType;
 import lib.UnitClassLib;
+import model.Card;
+import model.CardType;
 import model.SquareType;
 
 public class HeuristicEvaluation implements IHeuristic {

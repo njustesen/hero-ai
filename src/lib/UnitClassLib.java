@@ -4,7 +4,9 @@ import java.util.HashMap;
 
 import model.Attack;
 import model.AttackType;
+import model.Card;
 import model.Heal;
+import model.UnitClass;
 
 public class UnitClassLib {
 

@@ -1,6 +1,6 @@
 package action;
 
-import lib.Card;
+import model.Card;
 import model.Position;
 
 public class DropAction extends Action {

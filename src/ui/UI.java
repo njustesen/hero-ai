@@ -17,11 +17,11 @@ import java.util.List;
 import javax.swing.JComponent;
 import javax.swing.JFrame;
 
-import lib.Card;
-import lib.CardType;
 import lib.ImageLib;
 import lib.UnitClassLib;
 import model.AttackType;
+import model.Card;
+import model.CardType;
 import model.Position;
 import model.SquareType;
 import model.Unit;

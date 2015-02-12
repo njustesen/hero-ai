@@ -9,7 +9,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import lib.Card;
+import model.Card;
 import model.Position;
 import model.Unit;
 import action.Action;
