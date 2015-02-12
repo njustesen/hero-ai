@@ -2,6 +2,7 @@ package game;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 
@@ -39,7 +40,7 @@ public class GameState {
 	private static final int REQUIRED_UNITS = 3;
 	private static final int POTION_REVIVE = 100;
 	private static final int POTION_HEAL = 1000;
-	private static final int turnLimit = 100000;
+	private static final int TURN_LIMIT = 100;
 
 	public HAMap map;
 	public boolean p1Turn;
@@ -90,6 +91,7 @@ public class GameState {
 	}
 
 	public void init() {
+		shuffleDecks();
 		dealCards();
 		for (final Position pos : map.p1Crystals) {
 			units[pos.x][pos.y] = borrowUnit(Card.CRYSTAL, true);
@@ -99,6 +101,15 @@ public class GameState {
 			units[pos.x][pos.y] = borrowUnit(Card.CRYSTAL, false);
 			units[pos.x][pos.y].init(Card.CRYSTAL, false);
 		}
+	}
+
+	private void shuffleDecks() {
+		for (final Card type : Council.deck){
+			p1Deck.add(type);
+			p2Deck.add(type);
+		}
+		Collections.shuffle(p1Deck);
+		Collections.shuffle(p2Deck);
 	}
 
 	public void possibleActions(List<Action> actions) {
@@ -640,6 +651,9 @@ public class GameState {
 	}
 
 	public int getWinner() {
+		
+		if (turn >= TURN_LIMIT)
+			return 0;
 
 		boolean p1Alive = true;
 		boolean p2Alive = true;
@@ -666,7 +680,7 @@ public class GameState {
 	private boolean aliveOnCrystals(int player) {
 
 		for (final Position pos : crystals(player))
-			if (units[pos.x][pos.y] != null && units[pos.x][pos.y].hp > 0)
+			if (units[pos.x][pos.y] != null && units[pos.x][pos.y].unitClass.card == Card.CRYSTAL && units[pos.x][pos.y].hp > 0)
 				return true;
 
 		return false;
@@ -824,7 +838,7 @@ public class GameState {
 		checkWinOnUnits(1);
 		checkWinOnUnits(2);
 		checkWinOnCrystals(p1Turn ? 2 : 1);
-		if (turn >= turnLimit)
+		if (turn >= TURN_LIMIT)
 			isTerminal = true;
 		if (!isTerminal) {
 			drawCards();
@@ -844,21 +858,15 @@ public class GameState {
 
 	private void dealCards(int player) {
 		if (player == 1) {
-			p1Deck.clear();
+			p1Deck.addAll(p1Hand);
 			p1Hand.clear();
-			for (final Card type : Council.deck)
-				p1Deck.add(type);
-
+			Collections.shuffle(p1Deck);
 			drawHandFrom(p1Deck, p1Hand);
-
 		} else if (player == 2) {
-			p2Deck.clear();
+			p2Deck.addAll(p2Hand);
 			p2Hand.clear();
-			for (final Card type : Council.deck)
-				p2Deck.add(type);
-
+			Collections.shuffle(p2Hand);
 			drawHandFrom(p2Deck, p2Hand);
-
 		}
 
 	}
@@ -893,7 +901,8 @@ public class GameState {
 	private void drawCards() {
 
 		while (currentHand().size() < 6 && !currentDeck().isEmpty()) {
-			final int idx = (int) (Math.random() * currentDeck().size());
+			//final int idx = (int) (Math.random() * currentDeck().size());
+			int idx = 0;
 			final Card card = currentDeck().get(idx);
 			currentDeck().remove(idx);
 			currentHand().add(card);
@@ -946,23 +955,13 @@ public class GameState {
 	}
 
 	public void imitate(GameState state) {
-		try {
 			for (int x = 0; x < map.width; x++)
 				for (int y = 0; y < map.height; y++)
-					if (state.units[x][y] != null) {
-						if (unitPool == null)
+					if (state.units[x][y] != null)
 							units[x][y] = state.units[x][y].copy();
-						else {
-							units[x][y] = unitPool.borrowObject();
-							units[x][y].imitate(state.units[x][y]);
-						}
-					} else if (units[x][y] != null) {
-						returnUnit(units[x][y]);
-						units[x][y] = null;
-					}
-		} catch (final Exception e) {
-			e.printStackTrace();
-		}
+						else
+							units[x][y] = null;
+					
 		p1Hand.clear();
 		p1Hand.addAll(state.p1Hand);
 		p2Hand.clear();
@@ -976,7 +975,7 @@ public class GameState {
 		turn = state.turn;
 		APLeft = state.APLeft;
 		map = state.map;
-		chainTargets.clear();
+		//chainTargets.clear();
 		// chainTargets.addAll(state.chainTargets); // NOT NECESSARY
 
 	}
