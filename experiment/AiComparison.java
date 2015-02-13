@@ -4,27 +4,41 @@ import model.HAMap;
 import ai.AI;
 import ai.GreedyActionAI;
 import ai.GreedyTurnAI;
-import ai.RandomAI;
 import ai.heuristic.HeuristicEvaluation;
-import ai.util.RAND_METHOD;
 
 public class AiComparison {
 
 	public static void main(String[] args) {
-		AI p1 = new RandomAI(RAND_METHOD.TREE);
-		AI p2 = new GreedyActionAI(new HeuristicEvaluation());
-		System.out.println("P1: random");
-		System.out.println("P2: greedyaction heuristc");
-		compare(p1, p2, 100);
 
-		p1 = new GreedyTurnAI(new HeuristicEvaluation());
-		p2 = new GreedyActionAI(new HeuristicEvaluation());
+		final AI p1 = new GreedyTurnAI(new HeuristicEvaluation());
+		final AI p2 = new GreedyActionAI(new HeuristicEvaluation());
 		System.out.println("P1: greedyturn heuristic");
-		System.out.println("P2: greedyaction heuristc");
+		System.out.println("P2: greedyaction heuristic");
 		compare(p1, p2, 20);
-
 		/*
 		 * p1 = new Mcts(3000, new UCT(), new RolloutEvaluation(1, 10, new
+		 * RandomAI(RAND_METHOD.TREE), new HeuristicEvaluation(), true)); p2 =
+		 * new Mcts(3000, new UCT(), new RolloutEvaluation(1, 10, new
+		 * RandomAI(RAND_METHOD.TREE), new MaterialEvaluation(), true));
+		 * System.out.println("P1: mcts 10 heuristic");
+		 * System.out.println("P2: mcts 10 material"); compare(p1, p2, 20);
+		 * 
+		 * p1 = new Mcts(3000, new UCT(), new RolloutEvaluation(1, 50, new
+		 * RandomAI(RAND_METHOD.TREE), new MaterialEvaluation(), true)); p2 =
+		 * new Mcts(3000, new UCT(), new RolloutEvaluation(1, 10, new
+		 * RandomAI(RAND_METHOD.TREE), new MaterialEvaluation(), true));
+		 * System.out.println("P1: mcts 50 material");
+		 * System.out.println("P2: mcts 10 material"); compare(p1, p2, 20);
+		 * 
+		 * p1 = new Mcts(3000, new UCT(), new RolloutEvaluation(1, 10, new
+		 * RandomAI(RAND_METHOD.TREE), new MaterialEvaluation(), true)); p2 =
+		 * new Mcts(3000, new UCT(), new RolloutEvaluation(1, 5, new
+		 * RandomAI(RAND_METHOD.TREE), new MaterialEvaluation(), true));
+		 * System.out.println("P1: mcts 10 material");
+		 * System.out.println("P2: mcts 5 material"); >>>>>>>
+		 * 5c57b6b2d01a41c4ae9bb2b41112259efa8647a0 compare(p1, p2, 20);
+		 * 
+		 * /* p1 = new Mcts(3000, new UCT(), new RolloutEvaluation(1, 10, new
 		 * RandomAI(RAND_METHOD.TREE), new HeuristicEvaluation(), true)); p2 =
 		 * new Mcts(3000, new UCT(), new RolloutEvaluation(1, 10, new
 		 * RandomAI(RAND_METHOD.TREE), new MaterialEvaluation(), true));
