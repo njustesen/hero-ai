@@ -8,7 +8,7 @@ import game.GameState;
 import model.Card;
 import model.CardType;
 
-public class MaterialEvaluation implements IHeuristic {
+public class MaterialBalanceEvaluation implements IHeuristic {
 
 	private static final double MAX_VAL = 21;
 	private static Map<Card, Double> values;
@@ -16,7 +16,6 @@ public class MaterialEvaluation implements IHeuristic {
 		values = new HashMap<Card, Double>();
 		values.put(Card.ARCHER, 1.1);
 		values.put(Card.CLERIC, 1.2);
-		values.put(Card.CRYSTAL, 4.0);
 		values.put(Card.DRAGONSCALE, .3);
 		values.put(Card.INFERNO, 0.8);
 		values.put(Card.KNIGHT, 1.0);
@@ -28,7 +27,7 @@ public class MaterialEvaluation implements IHeuristic {
 		values.put(Card.WIZARD, 1.1);
 	}
 	
-	public MaterialEvaluation() {
+	public MaterialBalanceEvaluation() {
 
 	}
 
@@ -41,19 +40,28 @@ public class MaterialEvaluation implements IHeuristic {
 		}
 		
 		return matDif(state, p1);
-
+		
 	}
 
-	private int matDif(GameState state, boolean p1) {
+	private double matDif(GameState state, boolean p1) {
 		int p1Units = 0;
+		int p1Crystals = 0;
 		int p2Units = 0;
+		int p2Crystals = 0;
 		for (int x = 0; x < state.map.width; x++){
 			for (int y = 0; y < state.map.height; y++){
 				if (state.units[x][y] != null){
-					if (state.units[x][y].p1Owner)
-						p1Units += values.get(state.units[x][y].unitClass.card);
-					else
-						p2Units += values.get(state.units[x][y].unitClass.card);
+					if (state.units[x][y].p1Owner){
+						if (state.units[x][y].unitClass.card == Card.CRYSTAL)
+							p1Crystals += state.units[x][y].hp / 1000;
+						else
+							p1Units += values.get(state.units[x][y].unitClass.card);
+					} else {
+						if (state.units[x][y].unitClass.card == Card.CRYSTAL)
+							p2Crystals += state.units[x][y].hp / 1000;
+						else
+							p2Units += values.get(state.units[x][y].unitClass.card);
+					}
 				}
 			}
 		}
@@ -71,9 +79,12 @@ public class MaterialEvaluation implements IHeuristic {
 			if (card.type == CardType.UNIT)
 				p2Units += values.get(card);
 
+		double p1Val = (double)p1Units * (double)p1Crystals * 0.2;
+		double p2Val = (double)p2Units * (double)p2Crystals * 0.2;
+		
 		if (p1)
-			return p1Units - p2Units;
-		return p2Units - p1Units;
+			return p1Val - p2Val;
+		return p2Val - p1Val;
 	}
 
 	@Override

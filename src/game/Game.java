@@ -19,6 +19,8 @@ import ai.RandomAI;
 import ai.ScanRandomAI;
 import ai.evolution.RollingHorizonEvolution;
 import ai.heuristic.HeuristicEvaluation;
+import ai.heuristic.IHeuristic;
+import ai.heuristic.MaterialBalanceEvaluation;
 import ai.heuristic.MaterialEvaluation;
 import ai.heuristic.RolloutEvaluation;
 import ai.heuristic.WinLoseEvaluation;
@@ -118,14 +120,14 @@ public class Game {
 					final int t = Integer.parseInt(args[a]);
 					players[p] = new Mcts(t, new UCT(), new RolloutEvaluation(
 							1, 10, new RandomAI(RAND_METHOD.TREE),
-							new MaterialEvaluation(), false));
+							new MaterialBalanceEvaluation(), false));
 				}
 				if (args[a].toLowerCase().equals("collapsedmcts")) {
 					a++;
 					final int t = Integer.parseInt(args[a]);
-					players[p] = new CollapsedMcts(t, new UCT(), new RolloutEvaluation(
-							1, 10, new RandomAI(RAND_METHOD.TREE),
-							new MaterialEvaluation(), false));
+					IHeuristic rollA = new RolloutEvaluation(1, 2, new RandomAI(RAND_METHOD.TREE), new MaterialEvaluation(), false);
+					IHeuristic rollB = new RolloutEvaluation(1, 10, new RandomAI(RAND_METHOD.TREE), new MaterialEvaluation(), false);
+					players[p] = new CollapsedMcts(t, new UCT(), rollA, rollB);
 				}
 				if (args[a].toLowerCase().equals("evolution"))
 					players[p] = new RollingHorizonEvolution(64, 0.4, 0.5, 200,
