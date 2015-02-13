@@ -19,20 +19,13 @@ public class GreedyTurnAI implements AI {
 
 	private final BestMoveSearch searcher = new BestMoveSearch();
 	private List<Action> actions = new ArrayList<Action>();
-	private final GenericObjectPool<Unit> unitPool = new GenericObjectPool<Unit>(
-			new UnitFactory());
-	private final GenericObjectPool<GameState> pool = new GenericObjectPool<GameState>(
-			new GameStateFactory());
 	private final IHeuristic heuristic;
+	private List<Action> lastMove;
 
 	public GreedyTurnAI(IHeuristic heuristic) {
 		super();
 		this.heuristic = heuristic;
-		pool.setBlockWhenExhausted(false);
-		pool.setMaxTotal(1000000);
-		unitPool.setBlockWhenExhausted(false);
-		unitPool.setMaxTotal(1000000);
-		unitPool.setMaxIdle(1000000);
+		this.lastMove = new ArrayList<Action>();
 	}
 
 	@Override
@@ -49,8 +42,9 @@ public class GreedyTurnAI implements AI {
 
 		// actions = searcher.bestMove(state, pool, unitPool, heuristic);
 		// actions = searcher.bestMove(state, pool, null, heuristic);
-		actions = searcher.bestMove(state, null, null, heuristic);
-
+		actions = searcher.bestMove(state, null, null, heuristic, lastMove);
+		lastMove.clear();
+		lastMove.addAll(actions);
 		// System.out.println(actions);
 
 		final Action action = actions.get(0);

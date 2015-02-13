@@ -32,7 +32,7 @@ public class BestMoveSearch {
 	private final GameStateHasher hasher = new GameStateHasher();
 
 	public List<Action> bestMove(GameState state, ObjectPool<GameState> pool,
-			ObjectPool<Unit> unitPool, IHeuristic heuristic) {
+			ObjectPool<Unit> unitPool, IHeuristic heuristic, List<Action> lastMove) {
 
 		this.heuristic = heuristic;
 
@@ -40,7 +40,7 @@ public class BestMoveSearch {
 		bestValue = -1000000;
 		bestMove = null;
 		try {
-			addMoves(state, new ArrayList<Action>(), 0);
+			addMoves(state, new ArrayList<Action>(), 0, lastMove);
 		} catch (final Exception e) {
 			e.printStackTrace();
 		}
@@ -67,18 +67,20 @@ public class BestMoveSearch {
 				+ tt + ";");
 	}
 
-	private void addMoves(GameState state, List<Action> move, int depth)
+	private void addMoves(GameState state, List<Action> move, int depth, List<Action> lastMove)
 			throws IllegalStateException, UnsupportedOperationException,
 			Exception {
 
 		// End turn
 		if (state.APLeft == 0) {
 			final double value = heuristic.eval(state, state.p1Turn);
-			if (value > bestValue) {
-				bestValue = value;
+			if (value > bestValue){
 				final List<Action> nextMove = clone(move);
 				nextMove.add(SingletonAction.endTurnAction);
-				bestMove = nextMove;
+				if (!sameMove(nextMove, lastMove)) {
+					bestValue = value;
+					bestMove = nextMove;
+				}
 			}
 			return;
 		}
@@ -105,11 +107,27 @@ public class BestMoveSearch {
 				transTable.put(hash, 1);
 				final List<Action> nextMove = clone(move);
 				nextMove.add(action);
-				addMoves(next, nextMove, depth + 1);
+				addMoves(next, nextMove, depth + 1, lastMove);
 			}
 			i++;
 		}
 
+	}
+
+	private boolean sameMove(List<Action> a, List<Action> b) {
+		if (a==b)
+			return true;
+		if (a == null || b == null)
+			return false;
+		if (a.size() != b.size())
+			return false;
+		int i = 0;
+		for(Action action : a){
+			if (!action.equals(b.get(i)))
+				return false;
+			i++;
+		}
+		return true;
 	}
 
 	private List<Action> clone(List<Action> move) {

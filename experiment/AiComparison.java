@@ -3,6 +3,7 @@ import game.GameState;
 import model.HAMap;
 import ai.AI;
 import ai.GreedyActionAI;
+import ai.GreedyTurnAI;
 import ai.HeuristicAI;
 import ai.RandomAI;
 import ai.heuristic.HeuristicEvaluation;
@@ -17,8 +18,8 @@ public class AiComparison {
 
 	public static void main(String[] args) {
 
-		AI p1 = new GreedyActionAI(new HeuristicEvaluation());
-		AI p2 = new HeuristicAI();
+		AI p1 = new GreedyTurnAI(new HeuristicEvaluation());
+		AI p2 = new GreedyActionAI(new HeuristicEvaluation());
 		System.out.println("P1: greedyaction heuristic");
 		System.out.println("P2: heuristic");
 		compare(p1, p2, 20);
@@ -63,11 +64,11 @@ public class AiComparison {
 			clone.imitate(state);
 			game.state = clone;
 			if (p1Starting){
-				game.player1 = p2;
-				game.player2 = p1;
-			}else{
 				game.player1 = p1;
 				game.player2 = p2;
+			}else{
+				game.player1 = p2;
+				game.player2 = p1;
 			}
 				game.run();
 
