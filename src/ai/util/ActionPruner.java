@@ -4,10 +4,8 @@ import game.GameState;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 import model.Card;
 import model.Position;
@@ -15,7 +13,6 @@ import model.Unit;
 import action.Action;
 import action.DropAction;
 import action.SwapCardAction;
-import action.UnitAction;
 
 public class ActionPruner {
 
@@ -40,7 +37,8 @@ public class ActionPruner {
 					spellTargets.put(((DropAction) action),
 							spellTargets(dropAction.to, state));
 			} else if (action instanceof SwapCardAction)
-				pruned.add(action);
+				if (onlyCard(state, ((SwapCardAction)action).card))
+					pruned.add(action);
 
 		for (final DropAction spell : spellTargets.keySet())
 			if (spellTargets.get(spell).isEmpty())
@@ -69,6 +67,27 @@ public class ActionPruner {
 	*/	
 		actions.removeAll(pruned);
 
+	}
+
+	private boolean onlyCard(GameState state, Card card) {
+		
+		int count = 0;
+		if (state.p1Turn){
+			for(Card c : state.p1Hand){
+				if (c.equals(card))
+					count++;
+			}	
+		} else {
+			for(Card c : state.p2Hand){
+				if (c.equals(card))
+					count++;
+			}	
+		}
+		
+		if (count >= 2)
+			return false;
+	
+		return true;
 	}
 
 	private boolean sameOrBetterSpellEffect(Map<DropAction, List<Position>> spellTargets, DropAction spell, List<Action> pruned) {
