@@ -24,8 +24,6 @@ public class BestMoveSearch {
 
 	HeuristicEvaluation evalutator = new HeuristicEvaluation();
 	ActionPruner pruner = new ActionPruner();
-	ObjectPool<GameState> pool;
-	ObjectPool<Unit> unitPool;
 	List<Action> bestMove = new ArrayList<Action>();
 	double bestValue;
 	private IHeuristic heuristic;
