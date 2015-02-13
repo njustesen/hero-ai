@@ -28,6 +28,7 @@ public class Mcts implements AI {
 	private AbstractMctsNode root;
 	private GameStateHasher hasher;
 	private List<Action> move;
+	private int ends;
 
 	public Mcts(long budget, ITreePolicy treePolicy, IHeuristic defaultPolicy) {
 		this.budget = budget;
@@ -37,6 +38,7 @@ public class Mcts implements AI {
 		this.comparator = new ActionComparator();
 		this.hasher = new GameStateHasher();
 		this.move = new ArrayList<Action>();
+		this.ends = 0;
 	}
 
 	@Override
@@ -60,17 +62,43 @@ public class Mcts implements AI {
 		int rolls = 0;
 		List<AbstractMctsNode> traversal = new ArrayList<AbstractMctsNode>();
 		double delta = 0;
-		while (System.currentTimeMillis() < start + budget) {
+		boolean collapsed = false;
+		int startAp = state.APLeft;
+		int ap = startAp;
+		long time = (start + budget) - System.currentTimeMillis();
+		while (time > 0) {
+			/*
+			if (!collapsed && ends >= 100){
+				System.out.println("COLLAPSE!");
+				collapse(root);
+				collapsed = true;
+				//System.out.println(root.toXml(0));
+			}
+			*/
+			
+			if (time < (budget/startAp)*(ap-1)){
+				//System.out.println(root.toXml(0));
+				cut(root, 0, startAp-ap);
+				System.out.println("Cut");
+				//System.out.println(root.toXml(0));
+				ap--;
+			}
+			
 			traversal.clear();
+			
 			clone.imitate(state);
 			// SELECTION + EXPANSION
 			treePolicy(traversal, root, clone);					
 			// SIMULATION
 			delta = defaultPolicy.eval(clone, state.p1Turn);
-			delta = defaultPolicy.normalize(delta);
+			//delta = defaultPolicy.normalize(delta);
 			// BACKPROPAGATION
 			backupNegaMax(traversal, delta, state.p1Turn);
 			rolls++;
+			
+			//if (rolls % 100 == 0)
+			//	System.out.println(root.toXml(0));
+			time = (start + budget) - System.currentTimeMillis();
 		}
 
 		//System.out.println("Rolls=" + rolls);
@@ -84,8 +112,48 @@ public class Mcts implements AI {
 		// Reset search
 		root = null;
 		transTable.clear();
+		this.ends = 0;
 		
 		return action;
+		
+	}
+
+	private void cut(AbstractMctsNode node, int depth, int cut) {
+		if (depth == cut){
+			AbstractMctsNode best = bestChild(node, node.isP1(), false);
+			node.getChildren().clear();
+			node.getChildren().add(best);
+			node.getPossibleActions().clear();
+		} else {	
+			for(AbstractMctsNode child : node.getChildren()){
+				cut(child, depth+1, cut);	
+			}
+		}
+	}
+
+	private boolean collapse(AbstractMctsNode node) {
+		
+		List<AbstractMctsNode> remove = new ArrayList<AbstractMctsNode>();
+		boolean end = false;
+		
+		for(AbstractMctsNode child : node.getChildren()){
+			if (child.action == SingletonAction.endTurnAction)
+				return true;
+			if (node.isLeaf())
+				remove.add(child);
+			else {
+				boolean cEnd = collapse(child);
+				if (!cEnd)
+					remove.add(child);
+				else
+					end = true;
+			}
+		}
+		
+		node.getPossibleActions().clear();
+		node.getChildren().removeAll(remove);
+		
+		return end;
 		
 	}
 
@@ -121,6 +189,8 @@ public class Mcts implements AI {
 				child.getParents().add(node);
 		} else {
 			child = new MctsNode(next, node);
+			if (child.getAction() == SingletonAction.endTurnAction)
+				ends++;
 			child.setP1(p1);
 			addActions(child, clone);
 			transTable.put(hash, ((MctsNode)child));
@@ -159,7 +229,6 @@ public class Mcts implements AI {
 
 	}
 	
-
 	private void addActions(AbstractMctsNode node, GameState state) {
 		state.possibleActions(node.getPossibleActions());
 		pruner.prune(node.getPossibleActions(), state);

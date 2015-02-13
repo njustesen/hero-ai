@@ -30,7 +30,7 @@ public abstract class AbstractMctsNode {
 	}
 
 	public boolean isFullyExpanded(){
-		return getPossibleActions().size() == getChildren().size();
+		return getChildren().size() >= getPossibleActions().size();
 	}
 
 	public double avgValue(){
