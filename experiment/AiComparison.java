@@ -14,7 +14,7 @@ public class AiComparison {
 		final AI p2 = new GreedyActionAI(new HeuristicEvaluation());
 		System.out.println("P1: greedyturn heuristic");
 		System.out.println("P2: greedyaction heuristic");
-		compare(p1, p2, 20);
+		compare(p1, p2, 16);
 		/*
 		 * p1 = new Mcts(3000, new UCT(), new RolloutEvaluation(1, 10, new
 		 * RandomAI(RAND_METHOD.TREE), new HeuristicEvaluation(), true)); p2 =
