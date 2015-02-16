@@ -10,21 +10,32 @@ import model.CardType;
 
 public class MaterialBalanceEvaluation implements IHeuristic {
 
-	private static final double MAX_VAL = 21;
+	private static int MAX_VAL = 0;
 	private static Map<Card, Double> values;
 	static {
 		values = new HashMap<Card, Double>();
 		values.put(Card.ARCHER, 1.1);
+		MAX_VAL += 1.1*3;
 		values.put(Card.CLERIC, 1.2);
-		values.put(Card.DRAGONSCALE, .3);
-		values.put(Card.INFERNO, 0.8);
+		MAX_VAL += 1.2*3;
+		values.put(Card.DRAGONSCALE, .4);
+		MAX_VAL += .4*3;
+		values.put(Card.INFERNO, 1.2);
+		MAX_VAL += 1.2*2;
 		values.put(Card.KNIGHT, 1.0);
+		MAX_VAL += 1*3;
 		values.put(Card.NINJA, 1.5);
-		values.put(Card.REVIVE_POTION, .3);
-		values.put(Card.RUNEMETAL, .3);
-		values.put(Card.SCROLL, .5);
-		values.put(Card.SHINING_HELM, .2);
+		MAX_VAL += 1.5;
+		values.put(Card.REVIVE_POTION, .9);
+		MAX_VAL += .9*2;
+		values.put(Card.RUNEMETAL, .4);
+		MAX_VAL += .4*3;
+		values.put(Card.SCROLL, .9);
+		MAX_VAL += .9*2;
+		values.put(Card.SHINING_HELM, .4);
+		MAX_VAL += .4*3;
 		values.put(Card.WIZARD, 1.1);
+		MAX_VAL += 1.1*3;
 	}
 	
 	public MaterialBalanceEvaluation() {
@@ -44,23 +55,29 @@ public class MaterialBalanceEvaluation implements IHeuristic {
 	}
 
 	private double matDif(GameState state, boolean p1) {
-		int p1Units = 0;
-		int p1Crystals = 0;
-		int p2Units = 0;
-		int p2Crystals = 0;
+		double p1Units = 0;
+		double p1Crystals = 0;
+		double p2Units = 0;
+		double p2Crystals = 0;
 		for (int x = 0; x < state.map.width; x++){
 			for (int y = 0; y < state.map.height; y++){
 				if (state.units[x][y] != null){
 					if (state.units[x][y].p1Owner){
 						if (state.units[x][y].unitClass.card == Card.CRYSTAL)
-							p1Crystals += state.units[x][y].hp / 1500;
-						else
+							p1Crystals += (double)state.units[x][y].hp / (double)(state.units[x][y].unitClass.maxHP * state.map.p1Crystals.size());
+						else{
 							p1Units += values.get(state.units[x][y].unitClass.card);
+							for(Card card : state.units[x][y].equipment)
+								p1Units += values.get(card);
+						}
 					} else {
 						if (state.units[x][y].unitClass.card == Card.CRYSTAL)
-							p2Crystals += state.units[x][y].hp / 1500;
-						else
+							p2Crystals += (double)state.units[x][y].hp / (double)(state.units[x][y].unitClass.maxHP * state.map.p1Crystals.size());
+						else {
 							p2Units += values.get(state.units[x][y].unitClass.card);
+							for(Card card : state.units[x][y].equipment)
+								p2Units += values.get(card);
+						}
 					}
 				}
 			}
@@ -81,8 +98,12 @@ public class MaterialBalanceEvaluation implements IHeuristic {
 
 		//double p1Val = (double)p1Units * (double)p1Crystals * 0.2;
 		//double p2Val = (double)p2Units * (double)p2Crystals * 0.2;
-		double p1Val = (double)p1Units;
-		double p2Val = (double)p2Units;
+		p1Crystals = MAX_VAL * p1Crystals;
+		p2Crystals = MAX_VAL * p2Crystals;
+		//double p1Val = Math.min(p1Units, p1Crystals) + Math.max(p1Units, p1Crystals) * (Math.min(p1Units, p1Crystals) / MAX_VAL);
+		//double p2Val = Math.min(p2Units, p2Crystals) + Math.max(p2Units, p2Crystals) * (Math.min(p2Units, p2Crystals) / MAX_VAL);
+		double p1Val = Math.min(p1Units, p1Crystals) + Math.max(p1Units, p1Crystals);
+		double p2Val = Math.min(p2Units, p2Crystals) + Math.max(p2Units, p2Crystals);
 		
 		if (p1)
 			return p1Val - p2Val;

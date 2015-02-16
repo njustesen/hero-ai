@@ -117,7 +117,7 @@ public class Game {
 				if (args[a].toLowerCase().equals("mcts")) {
 					a++;
 					final int t = Integer.parseInt(args[a]);
-					players[p] = new Mcts(t, 1 / Math.sqrt(2), new RolloutEvaluation(
+					players[p] = new Mcts(t, new RolloutEvaluation(
 							1, 20, new RandomHeuristicAI(new ComplexActionComparator()),
 							new MaterialBalanceEvaluation(), false));
 				}

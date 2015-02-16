@@ -30,8 +30,10 @@ public class Mcts implements AI {
 	private GameStateHasher hasher;
 	private List<Action> move;
 	private int ends;
+	public boolean cut;
+	public boolean collapse;
 
-	public Mcts(long budget, double c, IHeuristic defaultPolicy) {
+	public Mcts(long budget, IHeuristic defaultPolicy) {
 		this.budget = budget;
 		this.defaultPolicy = defaultPolicy;
 		this.pruner = new ActionPruner();
@@ -39,7 +41,9 @@ public class Mcts implements AI {
 		this.hasher = new GameStateHasher();
 		this.move = new ArrayList<Action>();
 		this.ends = 0;
-		this.c = c;
+		this.c = 1 / Math.sqrt(2);
+		this.cut = false;
+		this.collapse = true;
 	}
 
 	@Override
@@ -70,17 +74,15 @@ public class Mcts implements AI {
 		while (time > 0) {
 			
 			// COLLAPSE
-			/*
-			if (!collapsed && ends >= 100){
-				System.out.println("COLLAPSE!");
+			if (collapse && !collapsed && ends >= 20 * ((double)budget / 1000.0) * 1.6){
+				System.out.println("COLLAPSE! " + ends + " endpoints.");
 				collapse(root);
 				collapsed = true;
 				//System.out.println(root.toXml(0));
 			}
-			*/
 			
 			// CUT
-			if (time < (budget/startAp)*(ap-1)){
+			if (cut && time < (budget/startAp)*(ap-1)){
 				//System.out.println(root.toXml(0));
 				cut(root, null, 0, startAp-ap);
 				System.out.println("Cut");
@@ -113,8 +115,9 @@ public class Mcts implements AI {
 			rolls++;
 		}
 
-		System.out.println("Rolls=" + rolls);
-		//System.out.println(root.toXml(0));
+		System.out.println("Rolls=" + rolls + ", ends=" + ends);
+		if (ends == 0)
+		System.out.println(root.toXml(0));
 		
 		// Save best move
 
@@ -140,13 +143,17 @@ public class Mcts implements AI {
 			MctsEdge best = best(node, false);
 			node.out.clear();
 			node.possible.clear();
-			node.out.add(best);
+			if (best != null)
+				node.out.add(best);
 			node.in.clear();
 			if (from != null)
 				node.in.add(from);
 		} else {	
-			for(MctsEdge edge : node.out)
-				cut(edge.to, edge, depth+1, cut);	
+			for(MctsEdge edge : node.out){
+				if (edge == null || edge.to == null)
+					System.out.println("NULL");
+				cut(edge.to, edge, depth+1, cut);
+			}
 		}
 	}
 
@@ -154,6 +161,8 @@ public class Mcts implements AI {
 		double bestVal = -100000;
 		MctsEdge bestEdge = null;
 		for(MctsEdge edge : node.out){
+			if (edge == null)
+				System.out.println("NULL");
 			double val = uct(edge, node, urgent);
 			if (val > bestVal){
 				bestVal = val;

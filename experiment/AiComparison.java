@@ -16,37 +16,78 @@ import ai.util.RAND_METHOD;
 public class AiComparison {
 
 	public static void main(String[] args) {
-
+		/*
 		AI p1 = new GreedyTurnAI(new HeuristicEvaluation());
 		AI p2 = new GreedyActionAI(new HeuristicEvaluation());
 		System.out.println("P1: greedyaction heuristic");
 		System.out.println("P2: heuristic");
 		compare(p1, p2, 20);
+		*/
+		
+		AI p1 = new Mcts(25, new RolloutEvaluation(1, 10, new RandomAI(RAND_METHOD.TREE), new MaterialEvaluation(), true));
+		AI p2 = new GreedyActionAI(new HeuristicEvaluation());
+		System.out.println("P1: mcts 10 material [25 ms]");
+		System.out.println("P2: greedyaction heuristc");
+		compare(p1, p2, 100);
+		
+		p1 = new Mcts(75, new RolloutEvaluation(1, 10, new RandomAI(RAND_METHOD.TREE), new MaterialEvaluation(), true));
+		p2 = new GreedyActionAI(new HeuristicEvaluation());
+		System.out.println("P1: mcts 10 material [75 ms]");
+		System.out.println("P2: greedyaction heuristc");
+		compare(p1, p2, 100);
+		
+		p1 = new Mcts(225, new RolloutEvaluation(1, 10, new RandomAI(RAND_METHOD.TREE), new MaterialEvaluation(), true));
+		p2 = new GreedyActionAI(new HeuristicEvaluation());
+		System.out.println("P1: mcts 10 material [225 ms]");
+		System.out.println("P2: greedyaction heuristc");
+		compare(p1, p2, 100);
+		
+		
+		// CUT
+		p1 = new Mcts(25, new RolloutEvaluation(1, 10, new RandomAI(RAND_METHOD.TREE), new MaterialEvaluation(), true));
+		((Mcts)p1).cut = true;
+		p2 = new GreedyActionAI(new HeuristicEvaluation());
+		System.out.println("P1: mcts 10 material [25 ms] cut");
+		System.out.println("P2: greedyaction heuristc");
+		compare(p1, p2, 100);
+		
+		p1 = new Mcts(75, new RolloutEvaluation(1, 10, new RandomAI(RAND_METHOD.TREE), new MaterialEvaluation(), true));
+		((Mcts)p1).cut = true;
+		p2 = new GreedyActionAI(new HeuristicEvaluation());
+		System.out.println("P1: mcts 10 material [75 ms] cut");
+		System.out.println("P2: greedyaction heuristc");
+		compare(p1, p2, 100);
+		
+		p1 = new Mcts(225, new RolloutEvaluation(1, 10, new RandomAI(RAND_METHOD.TREE), new MaterialEvaluation(), true));
+		((Mcts)p1).cut = true;
+		p2 = new GreedyActionAI(new HeuristicEvaluation());
+		System.out.println("P1: mcts 10 material [225 ms] cut");
+		System.out.println("P2: greedyaction heuristc");
+		compare(p1, p2, 100);
+		
+		// COLLAPSE
 		/*
-		p1 = new Mcts(3000, new UCT(), new RolloutEvaluation(1, 10, new RandomAI(RAND_METHOD.TREE), new HeuristicEvaluation(), true));
-		p2 = new Mcts(3000, new UCT(), new RolloutEvaluation(1, 10, new RandomAI(RAND_METHOD.TREE), new MaterialEvaluation(), true));
-		System.out.println("P1: mcts 10 heuristic");
-		System.out.println("P2: mcts 10 material");
-		compare(p1, p2, 20);
-
-		p1 = new Mcts(3000, new UCT(), new RolloutEvaluation(1, 50, new RandomAI(RAND_METHOD.TREE), new MaterialEvaluation(), true));
-		p2 = new Mcts(3000, new UCT(), new RolloutEvaluation(1, 10, new RandomAI(RAND_METHOD.TREE), new MaterialEvaluation(), true));
-		System.out.println("P1: mcts 50 material");
-		System.out.println("P2: mcts 10 material");
-		compare(p1, p2, 20);
-
-		p1 = new Mcts(3000, new UCT(), new RolloutEvaluation(1, 10, new RandomAI(RAND_METHOD.TREE), new MaterialEvaluation(), true));
-		p2 = new Mcts(3000, new UCT(), new RolloutEvaluation(1, 5, new RandomAI(RAND_METHOD.TREE), new MaterialEvaluation(), true));
-		System.out.println("P1: mcts 10 material");
-		System.out.println("P2: mcts 5 material");
-		compare(p1, p2, 20);
-
-		p1 = new Mcts(3000, new UCT(), new RolloutEvaluation(1, 1, new RandomAI(RAND_METHOD.TREE), new MaterialEvaluation(), true));
-		p2 = new Mcts(3000, new UCT(), new RolloutEvaluation(1, 5, new RandomAI(RAND_METHOD.TREE), new MaterialEvaluation(), true));
-		System.out.println("P1: mcts 1 material");
-		System.out.println("P2: mcts 5 material");
-		compare(p1, p2, 20);
-	*/
+		p1 = new Mcts(25, new RolloutEvaluation(1, 10, new RandomAI(RAND_METHOD.TREE), new MaterialEvaluation(), true));
+		((Mcts)p1).collapse = true;
+		p2 = new GreedyActionAI(new HeuristicEvaluation());
+		System.out.println("P1: mcts 10 material [25 ms] cut");
+		System.out.println("P2: greedyaction heuristc");
+		compare(p1, p2, 100);
+		
+		p1 = new Mcts(75, new RolloutEvaluation(1, 10, new RandomAI(RAND_METHOD.TREE), new MaterialEvaluation(), true));
+		((Mcts)p1).collapse = true;
+		p2 = new GreedyActionAI(new HeuristicEvaluation());
+		System.out.println("P1: mcts 10 material [75 ms] cut");
+		System.out.println("P2: greedyaction heuristc");
+		compare(p1, p2, 100);
+		
+		p1 = new Mcts(225, new RolloutEvaluation(1, 10, new RandomAI(RAND_METHOD.TREE), new MaterialEvaluation(), true));
+		((Mcts)p1).collapse = true;
+		p2 = new GreedyActionAI(new HeuristicEvaluation());
+		System.out.println("P1: mcts 10 material [225 ms] cut");
+		System.out.println("P2: greedyaction heuristc");
+		compare(p1, p2, 100);
+		*/
 	}
 
 	private static void compare(AI p1, AI p2, int games) {
