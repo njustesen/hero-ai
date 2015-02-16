@@ -43,7 +43,7 @@ public class Mcts implements AI {
 		this.ends = 0;
 		this.c = 1 / Math.sqrt(2);
 		this.cut = false;
-		this.collapse = true;
+		this.collapse = false;
 	}
 
 	@Override
@@ -115,9 +115,9 @@ public class Mcts implements AI {
 			rolls++;
 		}
 
-		System.out.println("Rolls=" + rolls + ", ends=" + ends);
-		if (ends == 0)
-		System.out.println(root.toXml(0));
+		//System.out.println("Rolls=" + rolls + ", ends=" + ends);
+		//if (ends == 0)
+		//System.out.println(root.toXml(0));
 		
 		// Save best move
 
