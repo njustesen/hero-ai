@@ -12,6 +12,7 @@ public class WinLoseEvaluation implements IHeuristic {
 	public double eval(GameState state, boolean p1) {
 		
 		if (state.isTerminal){
+			int i = 0;
 			int winner = state.getWinner();
 			if (winner == 1)
 				if (p1)

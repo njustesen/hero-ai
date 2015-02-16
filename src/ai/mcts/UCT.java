@@ -7,23 +7,27 @@ public class UCT implements ITreePolicy {
 	public static double C = 0.15 / Math.sqrt(2);
 
 	@Override
-	public double urgent(AbstractMctsNode node, AbstractMctsNode parent) {
+	public double urgent(MctsEdge edge, MctsEdge from) {
 
-		if (node.getVisits() == 0)
+		if (edge.visits == 0)
 			return NO_VISIT_VAL;
-
-		return node.avgValue() + 2 * C
-				* Math.sqrt((2 * Math.log(parent.getVisits())) / (node.getVisits()));
-
+		
+		if (from == null)
+			return edge.avg() + 
+				2 * C * Math.sqrt((2 * Math.log(0)) / (edge.visits));
+		else	
+			return edge.avg() + 
+				2 * C * Math.sqrt((2 * Math.log(from.visits)) / (edge.visits));
+		
 	}
 
 	@Override
-	public double best(AbstractMctsNode node) {
+	public double best(MctsEdge edge) {
 
-		if (node.getVisits() == 0)
+		if (edge.visits == 0)
 			return NO_VISIT_VAL;
 
-		return node.avgValue();
+		return edge.avg();
 
 	}
 

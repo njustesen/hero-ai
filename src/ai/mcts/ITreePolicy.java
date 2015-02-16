@@ -2,8 +2,8 @@ package ai.mcts;
 
 public interface ITreePolicy {
 
-	public double urgent(AbstractMctsNode node, AbstractMctsNode parent);
+	public double urgent(MctsEdge node, MctsEdge parent);
 
-	public double best(AbstractMctsNode node);
+	public double best(MctsEdge node);
 
 }

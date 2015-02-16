@@ -5,69 +5,56 @@ import java.util.List;
 
 import action.Action;
 
-public class MctsNode extends AbstractMctsNode {
+public class MctsNode {
 
-	public List<Action> possible;
-	public List<AbstractMctsNode> parents;
-	public List<AbstractMctsNode> children;
+	public List<MctsEdge> in;
+	public List<MctsEdge> out;
+	List<Action> possible;
 	public int visits;
-	public double value;
-	public boolean p1;
+	
+	public MctsNode(List<Action> possible) {
+		out = new ArrayList<MctsEdge>();
+		in = new ArrayList<MctsEdge>();
+		this.possible = possible;
+		this.visits = 0;
+	}
 
-	public MctsNode(Action action, AbstractMctsNode parent) {
-		this.action = action;
-		parents = new ArrayList<AbstractMctsNode>();
-		if (parent != null)
-			parents.add(parent);
-		possible = new ArrayList<Action>();
-		children = new ArrayList<AbstractMctsNode>();
-		visits = 0;
-		value = 0;
+	public MctsEdge nextEdge(boolean p1) {
+		return new MctsEdge(this, null, possible.get(out.size()), p1);
+	}
+	
+	public boolean isFullyExpanded(){
+		return out.size() == possible.size();
+	}
+
+	public boolean isRoot() {
+		return in.isEmpty();
+	}
+	
+	public boolean isLeaf() {
+		return out.size() == 0;
+	}
+	
+	public String toXml(int depth){
+		String str = "";
+		String tabs = "";
+		for(int i = 0; i < depth; i++)
+			tabs += "\t";
+		if (out.isEmpty())
+			str += tabs + "<node h='"+hashCode()+"' vis='"+visits+"' />\n";
+		else {
+			str += tabs + "<node h='"+hashCode()+"' vis='"+visits+"' >\n";
+			for (final MctsEdge edge : out)
+				if (edge.to != null)
+					str += edge.toXml(depth+1);
+			str += tabs + "</node>\n";
+		}
+		return str;
 	}
 
 	@Override
-	public List<AbstractMctsNode> getChildren() {
-		return children;
+	public String toString() {
+		return "MctsNode [in=" + in.size() + ", out=" + out.size() + "]";
 	}
-
-	@Override
-	public List<AbstractMctsNode> getParents() {
-		return parents;
-	}
-
-	@Override
-	public List<Action> getPossibleActions() {
-		return possible;
-	}
-
-	@Override
-	public int getVisits() {
-		return visits;
-	}
-
-	@Override
-	public double getValue() {
-		return value;
-	}
-
-	@Override
-	public boolean isP1() {
-		return p1;
-	}
-
-	@Override
-	public void setValue(double value) {
-		this.value = value;
-	}
-
-	@Override
-	public void setVisits(int visits) {
-		this.visits = visits;
-	}
-
-	@Override
-	public void setP1(boolean p1) {
-		this.p1 = p1;
-	}
-
+	
 }

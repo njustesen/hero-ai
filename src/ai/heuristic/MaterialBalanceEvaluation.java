@@ -53,12 +53,12 @@ public class MaterialBalanceEvaluation implements IHeuristic {
 				if (state.units[x][y] != null){
 					if (state.units[x][y].p1Owner){
 						if (state.units[x][y].unitClass.card == Card.CRYSTAL)
-							p1Crystals += state.units[x][y].hp / 1000;
+							p1Crystals += state.units[x][y].hp / 1500;
 						else
 							p1Units += values.get(state.units[x][y].unitClass.card);
 					} else {
 						if (state.units[x][y].unitClass.card == Card.CRYSTAL)
-							p2Crystals += state.units[x][y].hp / 1000;
+							p2Crystals += state.units[x][y].hp / 1500;
 						else
 							p2Units += values.get(state.units[x][y].unitClass.card);
 					}
