@@ -10,21 +10,21 @@ import model.Card;
 import model.Position;
 import action.Action;
 import action.SingletonAction;
+import ai.util.ActionComparator;
 import ai.util.RAND_METHOD;
 
-public class RandomAI implements AI {
+public class RandomHeuristicAI implements AI {
 
 	private static final double PROP_HAND = 0.25;
-	public RAND_METHOD randMethod;
 	private final List<Integer> heightOrder;
 	private final List<Integer> widthOrder;
 	private final List<Integer> handOrder;
 	private final List<Action> actions;
 	private final List<Position> positions;
 	private final List<Integer> idxs;
+	private final ActionComparator comparator;
 
-	public RandomAI(RAND_METHOD randMethod) {
-		this.randMethod = randMethod;
+	public RandomHeuristicAI(ActionComparator comparator) {
 		positions = new ArrayList<Position>();
 		actions = new ArrayList<Action>();
 		idxs = new ArrayList<Integer>();
@@ -39,33 +39,12 @@ public class RandomAI implements AI {
 			heightOrder.add(y);
 		for (int h = 0; h < 6; h++)
 			handOrder.add(h);
+		this.comparator = comparator;
 	}
 
 	@Override
 	public Action act(GameState state, long ms) {
-		Action selected = null;
-		switch (randMethod) {
-		case BRUTE:
-			selected = getActionBrute(state);
-			break;
-		case TREE:
-			selected = getActionLazy(state);
-			break;
-		case SCAN:
-			break; // NOT IMPLEMENTED HERE
-		}
-		return selected;
-	}
-
-	private Action getActionBrute(GameState state) {
-		actions.clear();
-		state.possibleActions(actions);
-		if (actions.isEmpty())
-			return SingletonAction.endTurnAction;
-
-		final int idx = (int) (Math.random() * actions.size());
-		final Action selected = actions.get(idx);
-		return selected;
+		return getActionLazy(state);
 	}
 
 	public Action getActionLazy(GameState state) {
@@ -98,8 +77,10 @@ public class RandomAI implements AI {
 				actions.clear();
 				state.possibleActions(state.units[pos.x][pos.y], pos,
 						actions);
-				if (!actions.isEmpty())
-					return actions.get((int) (Math.random() * actions.size()));
+				if (!actions.isEmpty()){
+					comparator.sort(actions, state);
+					return semiRandom(actions);
+				}
 			}
 		} else {
 			positions.clear();
@@ -115,9 +96,10 @@ public class RandomAI implements AI {
 				actions.clear();
 				state.possibleActions(state.units[pos.x][pos.y], pos,
 						actions);
-				
-				if (!actions.isEmpty())
-					return actions.get((int) (Math.random() * actions.size()));
+				if (!actions.isEmpty()){
+					comparator.sort(actions, state);
+					return semiRandom(actions);
+				}
 			}
 			Collections.shuffle(idxs);
 			for (final Integer i : idxs) {
@@ -131,6 +113,14 @@ public class RandomAI implements AI {
 		}
 
 		return SingletonAction.endTurnAction;
+	}
+
+	private Action semiRandom(List<Action> actions) {
+		while(true){
+			for(int i = 0; i < actions.size(); i++)
+				if (Math.random() < 1.5 / i)
+					return actions.get(i);
+		}
 	}
 
 	@Override

@@ -4,7 +4,10 @@ import game.Game;
 import ai.AI;
 import ai.HeuristicAI;
 import ai.RandomAI;
+import ai.RandomHeuristicAI;
+import ai.util.ComplexActionComparator;
 import ai.util.RAND_METHOD;
+import ai.util.SimpleActionComparator;
 
 public class RolloutPerformance {
 
@@ -36,16 +39,26 @@ public class RolloutPerformance {
 		simulateGame(1000, p1, p2);
 		System.out.println("Done");
 */
-		System.out.println("## Random AI SIM TREE ##");
-		p1 = new RandomAI(RAND_METHOD.TREE);
-		p2 = new RandomAI(RAND_METHOD.TREE);
-		simulateGame(10000, p1, p2);
+		
+		System.out.println("## Random Heuristic AI SIMPLE ##");
+		p1 = new RandomHeuristicAI(new SimpleActionComparator());
+		simulateGame(1000, p1, p1);
 		System.out.println("Done");
 
+		System.out.println("## Random Heuristic AI Complex ##");
+		p1 = new RandomHeuristicAI(new ComplexActionComparator());
+		simulateGame(1000, p1, p1);
+		System.out.println("Done");
+		
 		System.out.println("## Random AI SIM TREE ##");
-		p1 = new HeuristicAI();
-		p2 = new HeuristicAI();
-		simulateGame(10, p1, p2);
+		p1 = new RandomAI(RAND_METHOD.TREE);
+		simulateGame(1000, p1, p1);
+		System.out.println("Done");
+
+		System.out.println("## Heuristic AI ##");
+		p1 = new HeuristicAI(new ComplexActionComparator());
+		p2 = new HeuristicAI(new ComplexActionComparator());
+		simulateGame(1000, p1, p2);
 		System.out.println("Done");
 	
 		/*
@@ -73,6 +86,7 @@ public class RolloutPerformance {
 			turns += game.state.turn;
 		}
 		System.out.println("// Sim //");
+		System.out.println("Turns avg. per game: " + (turns / n));
 		System.out.println("Time (ns) avg. per game: " + (ns / n));
 		System.out
 				.println("Time (ns) avg. per turn: " + (ns / n / (turns / n)));

@@ -14,6 +14,7 @@ import ai.AI;
 import ai.heuristic.IHeuristic;
 import ai.util.ActionComparator;
 import ai.util.ActionPruner;
+import ai.util.ComplexActionComparator;
 import ai.util.GameStateHasher;
 
 public class Mcts implements AI {
@@ -34,7 +35,7 @@ public class Mcts implements AI {
 		this.budget = budget;
 		this.defaultPolicy = defaultPolicy;
 		this.pruner = new ActionPruner();
-		this.comparator = new ActionComparator();
+		this.comparator = new ComplexActionComparator();
 		this.hasher = new GameStateHasher();
 		this.move = new ArrayList<Action>();
 		this.ends = 0;
@@ -79,15 +80,13 @@ public class Mcts implements AI {
 			*/
 			
 			// CUT
-			/*
 			if (time < (budget/startAp)*(ap-1)){
 				//System.out.println(root.toXml(0));
-				cut(root, 0, startAp-ap);
+				cut(root, null, 0, startAp-ap);
 				System.out.println("Cut");
 				//System.out.println(root.toXml(0));
 				ap--;
 			}
-			*/
 			
 			traversal.clear();
 			//if (rolls%1000==0)
@@ -114,7 +113,7 @@ public class Mcts implements AI {
 			rolls++;
 		}
 
-		//System.out.println("Rolls=" + rolls);
+		System.out.println("Rolls=" + rolls);
 		//System.out.println(root.toXml(0));
 		
 		// Save best move
@@ -134,16 +133,20 @@ public class Mcts implements AI {
 		
 	}
 
-	private void cut(MctsNode node, int depth, int cut) {
+	private void cut(MctsNode node, MctsEdge from, int depth, int cut) {
 		if (node == null)
 			return;
 		if (depth == cut){
 			MctsEdge best = best(node, false);
 			node.out.clear();
+			node.possible.clear();
 			node.out.add(best);
+			node.in.clear();
+			if (from != null)
+				node.in.add(from);
 		} else {	
 			for(MctsEdge edge : node.out)
-				cut(edge.to, depth+1, cut);	
+				cut(edge.to, edge, depth+1, cut);	
 		}
 	}
 

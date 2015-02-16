@@ -16,16 +16,14 @@ import ai.GreedyTurnAI;
 import ai.HeuristicAI;
 import ai.NmSearchAI;
 import ai.RandomAI;
+import ai.RandomHeuristicAI;
 import ai.ScanRandomAI;
 import ai.evolution.RollingHorizonEvolution;
 import ai.heuristic.HeuristicEvaluation;
-import ai.heuristic.IHeuristic;
 import ai.heuristic.MaterialBalanceEvaluation;
-import ai.heuristic.MaterialEvaluation;
 import ai.heuristic.RolloutEvaluation;
-import ai.heuristic.WinLoseEvaluation;
 import ai.mcts.Mcts;
-import ai.mcts.UCT;
+import ai.util.ComplexActionComparator;
 import ai.util.RAND_METHOD;
 
 public class Game {
@@ -59,8 +57,10 @@ public class Game {
 					players[p] = null;
 				else if (args[a].toLowerCase().equals("random"))
 					players[p] = new RandomAI(RAND_METHOD.TREE);
+				else if (args[a].toLowerCase().equals("randomheuristic"))
+					players[p] = new RandomHeuristicAI(new ComplexActionComparator());
 				else if (args[a].toLowerCase().equals("heuristic"))
-					players[p] = new HeuristicAI();
+					players[p] = new HeuristicAI(new ComplexActionComparator());
 				else if (args[a].toLowerCase().equals("scanrandom"))
 					players[p] = new ScanRandomAI((p == 0));
 				else if (args[a].toLowerCase().equals("nmsearch")) {
@@ -117,8 +117,8 @@ public class Game {
 				if (args[a].toLowerCase().equals("mcts")) {
 					a++;
 					final int t = Integer.parseInt(args[a]);
-					players[p] = new Mcts(t, 0.15, new RolloutEvaluation(
-							1, 20, new RandomAI(RAND_METHOD.TREE),
+					players[p] = new Mcts(t, 1 / Math.sqrt(2), new RolloutEvaluation(
+							1, 20, new RandomHeuristicAI(new ComplexActionComparator()),
 							new MaterialBalanceEvaluation(), false));
 				}
 				if (args[a].toLowerCase().equals("evolution"))

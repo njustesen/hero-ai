@@ -79,8 +79,10 @@ public class MaterialBalanceEvaluation implements IHeuristic {
 			if (card.type == CardType.UNIT)
 				p2Units += values.get(card);
 
-		double p1Val = (double)p1Units * (double)p1Crystals * 0.2;
-		double p2Val = (double)p2Units * (double)p2Crystals * 0.2;
+		//double p1Val = (double)p1Units * (double)p1Crystals * 0.2;
+		//double p2Val = (double)p2Units * (double)p2Crystals * 0.2;
+		double p1Val = (double)p1Units;
+		double p2Val = (double)p2Units;
 		
 		if (p1)
 			return p1Val - p2Val;

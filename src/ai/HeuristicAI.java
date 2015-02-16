@@ -17,10 +17,10 @@ public class HeuristicAI implements AI {
 	private final ActionComparator comparator;
 	ActionPruner pruner;
 
-	public HeuristicAI() {
-		actions = new ArrayList<Action>();
-		pruner = new ActionPruner();
-		comparator = new ActionComparator();
+	public HeuristicAI(ActionComparator comparator) {
+		this.actions = new ArrayList<Action>();
+		this.pruner = new ActionPruner();
+		this.comparator = comparator;
 	}
 
 	@Override
@@ -35,8 +35,6 @@ public class HeuristicAI implements AI {
 
 		comparator.state = state;
 		Collections.sort(actions, comparator);
-
-		comparator.state = null;
 
 		return actions.get(0);
 

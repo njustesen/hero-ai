@@ -11,7 +11,6 @@ import ai.heuristic.MaterialEvaluation;
 import ai.heuristic.RolloutEvaluation;
 import ai.heuristic.WinLoseEvaluation;
 import ai.mcts.Mcts;
-import ai.mcts.UCT;
 import ai.util.RAND_METHOD;
 
 public class AiComparison {

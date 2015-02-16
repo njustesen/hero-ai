@@ -24,7 +24,7 @@ public class MctsNode {
 	}
 	
 	public boolean isFullyExpanded(){
-		return out.size() == possible.size();
+		return out.size() >= possible.size();
 	}
 
 	public boolean isRoot() {
