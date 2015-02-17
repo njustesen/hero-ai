@@ -32,7 +32,7 @@ public class GameStateHasher {
 		for (int x = 0; x < state.map.width; x++)
 			for (int y = 0; y < state.map.height; y++)
 				if (state.units[x][y] != null){
-					sb.append("x").append(x).append("y").append(y);
+					sb.append(x).append(y);
 					hashUnit(state.units[x][y], sb);
 				}
 
@@ -40,13 +40,13 @@ public class GameStateHasher {
 	}
 
 	private void hashUnit(Unit unit, StringBuilder sb) {
-		sb.append(unit.unitClass.card.name().substring(0, 2)).append(unit.hp).append("-").append(unit.p1Owner ? 1 : 2);
+		sb.append(unit.p1Owner ? "a" : "b").append(unit.unitClass.card.ordinal()).append(unit.hp);
 		for (final Card card : unit.equipment)
-			sb.append(card.name().substring(0, 2));
-		sb.append("-");
+			sb.append(card.ordinal());
 	}
 	
 	private void hashCards(List<Card> cards, StringBuilder sb) {
+		/*
 		map.clear();
 		for (final Card card : cards)
 			if (map.keySet().contains(card))
@@ -54,9 +54,10 @@ public class GameStateHasher {
 			else
 				map.put(card, 1);
 		sb.append("|");
-		for (final Card card : map.keySet())
-			sb.append(card.name().substring(0, 2)).append(map.get(card));
-		sb.append("|");
+		*/
+		sb.append("c");
+		for (final Card card : cards)
+			sb.append(card.ordinal());
 	}
 	
 }

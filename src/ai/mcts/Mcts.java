@@ -75,7 +75,7 @@ public class Mcts implements AI {
 			
 			// COLLAPSE
 			if (collapse && !collapsed && ends >= 20 * ((double)budget / 1000.0) * 1.6){
-				System.out.println("COLLAPSE! " + ends + " endpoints.");
+				//System.out.println("COLLAPSE! " + ends + " endpoints.");
 				collapse(root);
 				collapsed = true;
 				//System.out.println(root.toXml(0));
@@ -85,7 +85,7 @@ public class Mcts implements AI {
 			if (cut && time < (budget/startAp)*(ap-1)){
 				//System.out.println(root.toXml(0));
 				cut(root, null, 0, startAp-ap);
-				System.out.println("Cut");
+				//System.out.println("Cut");
 				//System.out.println(root.toXml(0));
 				ap--;
 			}

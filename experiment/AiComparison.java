@@ -23,7 +23,7 @@ public class AiComparison {
 		System.out.println("P2: heuristic");
 		compare(p1, p2, 20);
 		*/
-		
+		/*
 		AI p1 = new Mcts(25, new RolloutEvaluation(1, 10, new RandomAI(RAND_METHOD.TREE), new MaterialEvaluation(), true));
 		AI p2 = new GreedyActionAI(new HeuristicEvaluation());
 		System.out.println("P1: mcts 10 material [25 ms]");
@@ -41,9 +41,10 @@ public class AiComparison {
 		System.out.println("P1: mcts 10 material [225 ms]");
 		System.out.println("P2: greedyaction heuristc");
 		compare(p1, p2, 100);
-		
+		*/
 		
 		// CUT
+		/*
 		p1 = new Mcts(25, new RolloutEvaluation(1, 10, new RandomAI(RAND_METHOD.TREE), new MaterialEvaluation(), true));
 		((Mcts)p1).cut = true;
 		p2 = new GreedyActionAI(new HeuristicEvaluation());
@@ -62,6 +63,13 @@ public class AiComparison {
 		((Mcts)p1).cut = true;
 		p2 = new GreedyActionAI(new HeuristicEvaluation());
 		System.out.println("P1: mcts 10 material [225 ms] cut");
+		System.out.println("P2: greedyaction heuristc");
+		compare(p1, p2, 100);
+		*/
+		AI p1 = new GreedyTurnAI(new HeuristicEvaluation());
+		//((Mcts)p1).cut = true;
+		AI p2 = new GreedyActionAI(new HeuristicEvaluation());
+		System.out.println("P1: greedyturn heuristic");
 		System.out.println("P2: greedyaction heuristc");
 		compare(p1, p2, 100);
 		
@@ -98,7 +106,7 @@ public class AiComparison {
 
 		final GameState state = new GameState(HAMap.mapA);
 		final GameState clone = new GameState(HAMap.mapA);
-		Game game = new Game(state, true, p1, p2);
+		Game game = new Game(state, false, p1, p2);
 		for (int i = 0; i < games; i++) {
 			final boolean p1Starting = (i < games / 2);
 			clone.imitate(state);
