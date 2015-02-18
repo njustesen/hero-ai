@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Random;
 
 import action.Action;
+import action.EndTurnAction;
 import action.SingletonAction;
 
 public class Genome implements Comparable<Genome> {
@@ -50,6 +51,10 @@ public class Genome implements Comparable<Genome> {
 		final ArrayList<Action> possible = new ArrayList<Action>();
 		for (int i = 0; i < a.actions.size(); i++) {
 			state.possibleActions(possible);
+			if (possible.isEmpty()){
+				actions.add(new EndTurnAction());
+				break;
+			}
 			if (random.nextBoolean() && hasMove(a, possible, i))
 				actions.add(a.actions.get(i));
 			else if (hasMove(b, possible, i))
@@ -109,13 +114,17 @@ public class Genome implements Comparable<Genome> {
 
 	@Override
 	public int compareTo(Genome other) {
-		final double avg = avgValue() + visits * 100;
-		final double otherAvg = other.avgValue() + visits * 100;
+		final double avg = fitness();
+		final double otherAvg = other.fitness();
 		if (avg == otherAvg)
 			return 0;
 		if (avg > otherAvg)
 			return -1;
 		return 1;
+	}
+
+	public double fitness() {
+		return avgValue() * Math.sqrt(visits)/2;
 	}
 
 	public double avgValue() {

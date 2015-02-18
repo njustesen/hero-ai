@@ -98,12 +98,6 @@ public class Mcts implements AI {
 			node = treePolicy(root, clone, traversal);					
 			// SIMULATION
 			delta = defaultPolicy.eval(clone, state.p1Turn);
-			if (delta > 0)
-				delta = 1;
-			else if (delta < 0)
-				delta = 0;
-			else if (delta == 0)
-				delta = 0.5;
 			
 			//delta = defaultPolicy.normalize(delta);
 			// BACKPROPAGATION

@@ -37,20 +37,46 @@ public class MaterialBalanceEvaluation implements IHeuristic {
 		values.put(Card.WIZARD, 1.1);
 		MAX_VAL += 1.1*3;
 	}
-	
-	public MaterialBalanceEvaluation() {
 
+	private boolean winVal;
+	
+	public MaterialBalanceEvaluation(boolean winVal) {
+		this.winVal = winVal;
 	}
 
 	public double eval(GameState state, boolean p1) {
 
 		if (state.isTerminal){
-			if (state.getWinner() == 0)
+			int winner = state.getWinner();
+			if (winner == 0){
+				if (winVal)
+					return 0.5;
 				return 0;
+			} else if (winVal){
+				if (winner == 1)
+					if (p1)
+						return 1;
+					else
+						return 0;
+				else
+					if (p1)
+						return 0;
+					else
+						return 1;
+			}
 			return matDif(state, p1) * 2;
 		}
 		
-		return matDif(state, p1);
+		if (!winVal)
+			return matDif(state, p1);
+		
+		double delta = matDif(state, p1);
+		if (delta == 0)
+			delta = 0.5;
+		else if (delta > 0)
+			return 1;
+		
+		return 0;
 		
 	}
 

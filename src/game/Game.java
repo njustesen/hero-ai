@@ -119,7 +119,7 @@ public class Game {
 					final int t = Integer.parseInt(args[a]);
 					players[p] = new Mcts(t, new RolloutEvaluation(
 							1, 20, new RandomHeuristicAI(new ComplexActionComparator()),
-							new MaterialBalanceEvaluation(), false));
+							new MaterialBalanceEvaluation(true), false));
 				}
 				if (args[a].toLowerCase().equals("evolution"))
 					players[p] = new RollingHorizonEvolution(64, 0.4, 0.5, 200,
