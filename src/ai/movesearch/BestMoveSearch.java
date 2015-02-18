@@ -61,8 +61,7 @@ public class BestMoveSearch {
 			}
 		}
 
-		System.out.println(c + ";" + transTable.keySet().size() + ";" + t + ";"
-				+ tt + ";");
+		//System.out.println(c + ";" + transTable.keySet().size() + ";" + t + ";" + tt + ";");
 	}
 
 	private void addMoves(GameState state, List<Action> move, int depth, List<Action> lastMove)
@@ -91,8 +90,8 @@ public class BestMoveSearch {
 
 		int i = 0;
 		for (final Action action : actions) {
-			if (depth == 0)
-				System.out.print("|");
+			//if (depth == 0)
+			//	System.out.print("|");
 
 			if (i > 0)
 				next.imitate(state);

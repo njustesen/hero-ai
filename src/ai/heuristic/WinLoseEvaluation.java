@@ -18,17 +18,17 @@ public class WinLoseEvaluation implements IHeuristic {
 				if (p1)
 					return 1;
 				else
-					return -1;
+					return 0;
 			else if (winner == 2)
 				if (p1)
-					return -1;
+					return 0;
 				else
 					return 1;
 			else
-				return 0;
+				return 0.5;
 		}
 		
-		return 0;
+		return 0.5;
 		
 	}
 

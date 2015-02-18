@@ -57,7 +57,7 @@ public class RollingHorizonEvolution implements AI {
 
 		for (int g = 0; g < generations; g++) {
 
-			System.out.println("Generation=" + g + " Pop size=" + pop.size());
+			//System.out.println("Generation=" + g + " Pop size=" + pop.size());
 
 			// Test pop
 			for (final Genome genome : pop) {
@@ -97,9 +97,9 @@ public class RollingHorizonEvolution implements AI {
 
 		}
 
-		System.out.println("Best Genome: " + pop.get(0).actions);
-		System.out.println("Visits: " + pop.get(0).visits);
-		System.out.println("Value: " + pop.get(0).avgValue());
+		//System.out.println("Best Genome: " + pop.get(0).actions);
+		//System.out.println("Visits: " + pop.get(0).visits);
+		//System.out.println("Value: " + pop.get(0).avgValue());
 
 		actions = pop.get(0).actions;
 

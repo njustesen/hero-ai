@@ -94,18 +94,13 @@ public class Mcts implements AI {
 			// if (rolls%1000==0)
 			// System.out.println(root.toXml(0));
 			clone.imitate(state);
+
 			// SELECTION + EXPANSION
 			node = treePolicy(root, clone, traversal);
+
 			// SIMULATION
 			delta = defaultPolicy.eval(clone, state.p1Turn);
-			if (delta > 0)
-				delta = 1;
-			else if (delta < 0)
-				delta = 0;
-			else if (delta == 0)
-				delta = 0.5;
 
-			// delta = defaultPolicy.normalize(delta);
 			// BACKPROPAGATION
 			backupNegaMax(traversal, delta, state.p1Turn);
 

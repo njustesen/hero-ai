@@ -10,38 +10,73 @@ import model.CardType;
 
 public class MaterialEvaluation implements IHeuristic {
 
-	private static final double MAX_VAL = 21;
+	private static int MAX_VAL = 0;
 	private static Map<Card, Double> values;
 	static {
 		values = new HashMap<Card, Double>();
 		values.put(Card.ARCHER, 1.1);
+		MAX_VAL += 1.1*3;
 		values.put(Card.CLERIC, 1.2);
-		values.put(Card.CRYSTAL, 4.0);
-		values.put(Card.DRAGONSCALE, .3);
-		values.put(Card.INFERNO, 0.8);
+		MAX_VAL += 1.2*3;
+		values.put(Card.DRAGONSCALE, .4);
+		MAX_VAL += .4*3;
+		values.put(Card.INFERNO, 1.2);
+		MAX_VAL += 1.2*2;
 		values.put(Card.KNIGHT, 1.0);
+		MAX_VAL += 1*3;
 		values.put(Card.NINJA, 1.5);
-		values.put(Card.REVIVE_POTION, .3);
-		values.put(Card.RUNEMETAL, .3);
-		values.put(Card.SCROLL, .5);
-		values.put(Card.SHINING_HELM, .2);
+		MAX_VAL += 1.5;
+		values.put(Card.REVIVE_POTION, .9);
+		MAX_VAL += .9*2;
+		values.put(Card.RUNEMETAL, .4);
+		MAX_VAL += .4*3;
+		values.put(Card.SCROLL, .9);
+		MAX_VAL += .9*2;
+		values.put(Card.SHINING_HELM, .4);
+		MAX_VAL += .4*3;
 		values.put(Card.WIZARD, 1.1);
+		MAX_VAL += 1.1*3;
 	}
-	
-	public MaterialEvaluation() {
 
+	private boolean winVal;
+	
+	public MaterialEvaluation(boolean winVal) {
+		this.winVal = winVal;
 	}
 
 	public double eval(GameState state, boolean p1) {
 
 		if (state.isTerminal){
-			if (state.getWinner() == 0)
+			int winner = state.getWinner();
+			if (winner == 0){
+				if (winVal)
+					return 0.5;
 				return 0;
+			} else if (winVal){
+				if (winner == 1)
+					if (p1)
+						return 1;
+					else
+						return 0;
+				else
+					if (p1)
+						return 0;
+					else
+						return 1;
+			}
 			return matDif(state, p1) * 2;
 		}
 		
-		return matDif(state, p1);
-
+		if (!winVal)
+			return matDif(state, p1);
+		
+		double delta = matDif(state, p1);
+		if (delta == 0)
+			delta = 0.5;
+		else if (delta > 0)
+			return 1;
+		
+		return 0;
 	}
 
 	private int matDif(GameState state, boolean p1) {
