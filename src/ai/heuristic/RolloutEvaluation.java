@@ -5,11 +5,21 @@ import game.GameState;
 
 public class RolloutEvaluation implements IHeuristic {
 
-	int rolls;
-	int depth;	// In turns
-	AI policy;
-	IHeuristic heuristic;
-	boolean copy;
+	public int rolls;
+	public int depth;	// In turns
+	public AI policy;
+	public IHeuristic heuristic;
+	public boolean copy;
+	public boolean worst;
+	
+	public RolloutEvaluation(int rolls, int depth, AI policy, IHeuristic heuristic) {
+		super();
+		this.rolls = rolls;
+		this.depth = depth;
+		this.heuristic = heuristic;
+		this.policy = policy;
+		this.copy = false;
+	}
 	
 	public RolloutEvaluation(int rolls, int depth, AI policy, IHeuristic heuristic, boolean copy) {
 		super();
@@ -18,6 +28,17 @@ public class RolloutEvaluation implements IHeuristic {
 		this.heuristic = heuristic;
 		this.policy = policy;
 		this.copy = copy;
+		this.worst = false;
+	}
+	
+	public RolloutEvaluation(int rolls, int depth, AI policy, IHeuristic heuristic, boolean copy, boolean worst) {
+		super();
+		this.rolls = rolls;
+		this.depth = depth;
+		this.heuristic = heuristic;
+		this.policy = policy;
+		this.copy = copy;
+		this.worst = worst;
 	}
 	
 	@Override
@@ -28,6 +49,7 @@ public class RolloutEvaluation implements IHeuristic {
 		
 		GameState clone = new GameState(state.map);
 		double sum = 0;
+		double w = 1000000;
 		//List<Double> vals = new ArrayList<Double>();
 		
 		for(int i = 0; i < rolls; i++){
@@ -35,11 +57,15 @@ public class RolloutEvaluation implements IHeuristic {
 			double d = simulateGame(clone, p1);
 			//vals.add(d);
 			sum += d;
+			if (d < w)
+				w = d;
 		}
 		
 		//System.out.println(Statistics.avg(vals) + ";" + Statistics.stdDev(vals) + ";");
-		
-		return sum / rolls;
+		if (!worst)
+			return sum / rolls;
+		return w;
+			
 	}
 	
 	private double simulateGame(GameState state, boolean p1) {

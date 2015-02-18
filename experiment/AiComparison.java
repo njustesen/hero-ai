@@ -1,39 +1,55 @@
+import java.util.List;
+
+import util.Statistics;
 import game.Game;
 import game.GameState;
 import model.HAMap;
 import ai.AI;
 import ai.GreedyActionAI;
-import ai.GreedyTurnAI;
-import ai.HeuristicAI;
-import ai.RandomAI;
 import ai.RandomHeuristicAI;
 import ai.evolution.RollingHorizonEvolution;
 import ai.heuristic.HeuristicEvaluation;
 import ai.heuristic.MaterialBalanceEvaluation;
-import ai.heuristic.MaterialEvaluation;
 import ai.heuristic.RolloutEvaluation;
 import ai.heuristic.WinLoseEvaluation;
 import ai.mcts.Mcts;
 import ai.util.ComplexActionComparator;
-import ai.util.RAND_METHOD;
-import ai.util.SimpleActionComparator;
 
 public class AiComparison {
 
+	private static final boolean GFX = true;
+
 	public static void main(String[] args) {
 		//Rolling Horizon 50 .5 .35 50 heuristic
-		AI p1 = new RollingHorizonEvolution(100, .5, .35, 100, new HeuristicEvaluation());
+		AI p1 = new RollingHorizonEvolution(40, .5, .35, 500, new RolloutEvaluation(5, 1, new RandomHeuristicAI(new ComplexActionComparator()),  new HeuristicEvaluation(), true, true));
 		AI p2 = new GreedyActionAI(new HeuristicEvaluation());
-		System.out.println("P1: rollinghorizon 100 .5 .35 100 heuristic");
+		
+		System.out.println("P1: rollinghorizon 100 .5 .35 100 rollout 5 1 randomheuristic heuristic");
 		System.out.println("P2: greedyaction heuristic");
-		compare(p1, p2, 100);
+		compare(p1, p2, 90);
+		
+		System.out.println("Avg. found in:");
+		System.out.println(Statistics.avgInteger(RollingHorizonEvolution.foundIn));
+		System.out.println("Avg. best genome visits:");
+		System.out.println(Statistics.avgInteger(RollingHorizonEvolution.bestG));
+		System.out.println();
+		System.out.println("Best fitness / avg:");
+		for (int d = 0; d < RollingHorizonEvolution.bestFitness.size(); d++){
+			for(int i = 0; i < RollingHorizonEvolution.bestFitness.get(d).size(); i++)
+				System.out.println(i+"\t"+RollingHorizonEvolution.bestHash.get(d).get(i)+"\t"+RollingHorizonEvolution.bestVals.get(d).get(i)+"\t"+RollingHorizonEvolution.bestFitness.get(d).get(i)+"\t"+RollingHorizonEvolution.bestVisits.get(d).get(i));
+			System.out.println();
+		}
+		
 		/*
-		p1 = new Mcts(2025, new RolloutEvaluation(1, 1000, new RandomHeuristicAI(new ComplexActionComparator()), new WinLoseEvaluation(), false));
-		p2 = new Mcts(2025, new RolloutEvaluation(1, 20, new RandomHeuristicAI(new ComplexActionComparator()), new MaterialBalanceEvaluation(true), false));
-		System.out.println("P1: greedyaction heuristic");
-		System.out.println("P2: heuristic");
-		compare(p1, p2, 100);
-		*/
+		 * p1 = new Mcts(2025, new RolloutEvaluation(1, 1000, new
+		 * RandomHeuristicAI(new ComplexActionComparator()), new
+		 * WinLoseEvaluation(), false)); p2 = new Mcts(2025, new
+		 * RolloutEvaluation(1, 20, new RandomHeuristicAI(new
+		 * ComplexActionComparator()), new MaterialBalanceEvaluation(true),
+		 * false)); System.out.println("P1: greedyaction heuristic");
+		 * System.out.println("P2: heuristic"); compare(p1, p2, 100);
+		 */
+
 	}
 
 	private static void compare(AI p1, AI p2, int games) {
@@ -44,19 +60,23 @@ public class AiComparison {
 
 		final GameState state = new GameState(HAMap.mapA);
 		final GameState clone = new GameState(HAMap.mapA);
-		Game game = new Game(state, true, p1, p2);
+		final Game game = new Game(state, GFX, p1, p2);
+		boolean p1Starting;
 		for (int i = 0; i < games; i++) {
-			final boolean p1Starting = (i < games / 2);
+			if (games == 1)
+				p1Starting = true;
+			else
+				p1Starting = (i < games / 2);
 			clone.imitate(state);
 			game.state = clone;
-			if (p1Starting){
+			if (p1Starting) {
 				game.player1 = p1;
 				game.player2 = p2;
-			}else{
+			} else {
 				game.player1 = p2;
 				game.player2 = p1;
 			}
-				game.run();
+			game.run();
 
 			final int winner = clone.getWinner();
 			if (winner == 1 && p1Starting || winner == 2 && !p1Starting)

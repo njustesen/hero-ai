@@ -27,7 +27,7 @@ public class Mcts implements AI {
 	private final ActionPruner pruner;
 	private final ActionComparator comparator;
 	private MctsNode root;
-	private GameStateHasher hasher;
+	private final GameStateHasher hasher;
 	private List<Action> move;
 	private int ends;
 	public boolean cut;
@@ -36,14 +36,14 @@ public class Mcts implements AI {
 	public Mcts(long budget, IHeuristic defaultPolicy) {
 		this.budget = budget;
 		this.defaultPolicy = defaultPolicy;
-		this.pruner = new ActionPruner();
-		this.comparator = new ComplexActionComparator();
-		this.hasher = new GameStateHasher();
-		this.move = new ArrayList<Action>();
-		this.ends = 0;
-		this.c = 1 / Math.sqrt(2);
-		this.cut = false;
-		this.collapse = false;
+		pruner = new ActionPruner();
+		comparator = new ComplexActionComparator();
+		hasher = new GameStateHasher();
+		move = new ArrayList<Action>();
+		ends = 0;
+		c = 1 / Math.sqrt(2);
+		cut = false;
+		collapse = false;
 	}
 
 	@Override
@@ -52,89 +52,90 @@ public class Mcts implements AI {
 		final long start = System.currentTimeMillis();
 
 		// If move already found return next action
-		if (!move.isEmpty()){
-			Action action = move.get(0);
+		if (!move.isEmpty()) {
+			final Action action = move.get(0);
 			move.remove(0);
 			return action;
 		}
 
 		// Create root
 		root = new MctsNode(actions(state));
-		
+
 		// Start search
 		final GameState clone = state.copy();
 		int rolls = 0;
-		List<MctsEdge> traversal = new ArrayList<MctsEdge>();
+		final List<MctsEdge> traversal = new ArrayList<MctsEdge>();
 		MctsNode node = null;
 		double delta = 0;
 		boolean collapsed = false;
-		int startAp = state.APLeft;
+		final int startAp = state.APLeft;
 		int ap = startAp;
 		long time = (start + budget) - System.currentTimeMillis();
 		while (time > 0) {
-			
+
 			// COLLAPSE
-			if (collapse && !collapsed && ends >= 20 * ((double)budget / 1000.0) * 1.6){
-				//System.out.println("COLLAPSE! " + ends + " endpoints.");
+			if (collapse && !collapsed && ends >= 20 * (budget / 1000.0)) {
+				// System.out.println("COLLAPSE! " + ends + " endpoints.");
 				collapse(root);
 				collapsed = true;
-				//System.out.println(root.toXml(0));
+				// System.out.println(root.toXml(0));
 			}
-			
+
 			// CUT
-			if (cut && time < (budget/startAp)*(ap-1)){
-				//System.out.println(root.toXml(0));
-				cut(root, null, 0, startAp-ap);
-				//System.out.println("Cut");
-				//System.out.println(root.toXml(0));
+			if (cut && time < (budget / startAp) * (ap - 1)) {
+				// System.out.println(root.toXml(0));
+				cut(root, null, 0, startAp - ap);
+				// System.out.println("Cut");
+				// System.out.println(root.toXml(0));
 				ap--;
 			}
-			
+
 			traversal.clear();
-			//if (rolls%1000==0)
-			//	System.out.println(root.toXml(0));
+			// if (rolls%1000==0)
+			// System.out.println(root.toXml(0));
 			clone.imitate(state);
+
 			// SELECTION + EXPANSION
-			node = treePolicy(root, clone, traversal);					
+			node = treePolicy(root, clone, traversal);
+
 			// SIMULATION
 			delta = defaultPolicy.eval(clone, state.p1Turn);
-			
-			//delta = defaultPolicy.normalize(delta);
+
 			// BACKPROPAGATION
 			backupNegaMax(traversal, delta, state.p1Turn);
-			
-			//if (rolls % 100 == 0)
-			//	System.out.println(root.toXml(0));
+
+			// if (rolls % 100 == 0)
+			// System.out.println(root.toXml(0));
 			time = (start + budget) - System.currentTimeMillis();
 			rolls++;
 		}
 
-		//System.out.println("Rolls=" + rolls + ", ends=" + ends);
-		//if (ends == 0)
-		//System.out.println(root.toXml(0));
-		
+		// System.out.println("Rolls=" + rolls + ", ends=" + ends);
+		// if (ends == 0)
+		// System.out.println(root.toXml(0));
+
 		// Save best move
 
-		//System.out.println(root.toXml(0));
-		
+		// System.out.println(root.toXml(0));
+
 		move = bestMove(state, rolls);
-		Action action = move.get(0);
+		final Action action = move.get(0);
 		move.remove(0);
-		
+
 		// Reset search
 		root = null;
 		transTable.clear();
-		this.ends = 0;
-		
+		ends = 0;
+
 		return action;
-		
+
 	}
 
 	private void cut(MctsNode node, MctsEdge from, int depth, int cut) {
 		if (node == null)
 			return;
-		if (depth == cut){
-			MctsEdge best = best(node, false);
+		if (depth == cut) {
+			final MctsEdge best = best(node, false);
 			node.out.clear();
 			node.possible.clear();
 			if (best != null)
@@ -142,70 +143,69 @@ public class Mcts implements AI {
 			node.in.clear();
 			if (from != null)
 				node.in.add(from);
-		} else {	
-			for(MctsEdge edge : node.out){
+		} else
+			for (final MctsEdge edge : node.out) {
 				if (edge == null || edge.to == null)
 					System.out.println("NULL");
-				cut(edge.to, edge, depth+1, cut);
+				cut(edge.to, edge, depth + 1, cut);
 			}
-		}
 	}
 
 	private MctsEdge best(MctsNode node, boolean urgent) {
 		double bestVal = -100000;
 		MctsEdge bestEdge = null;
-		for(MctsEdge edge : node.out){
+		for (final MctsEdge edge : node.out) {
 			if (edge == null)
 				System.out.println("NULL");
-			double val = uct(edge, node, urgent);
-			if (val > bestVal){
+			final double val = uct(edge, node, urgent);
+			if (val > bestVal) {
 				bestVal = val;
 				bestEdge = edge;
 			}
 		}
-		
+
 		return bestEdge;
 	}
 
 	private double uct(MctsEdge edge, MctsNode node, boolean urgent) {
-		
-		if (urgent){
-			return edge.avg() + 
-					2 * c * Math.sqrt((2 * Math.log(node.visits)) / (edge.visits));
-		}
+
+		if (urgent)
+			return edge.avg() + 2 * c
+					* Math.sqrt((2 * Math.log(node.visits)) / (edge.visits));
 		return edge.avg();
-		
+
 	}
 
 	private boolean collapse(MctsNode node) {
-		
-		List<MctsEdge> remove = new ArrayList<MctsEdge>();
+
+		final List<MctsEdge> remove = new ArrayList<MctsEdge>();
 		boolean end = false;
-		
-		for(MctsEdge edge : node.out){
+
+		for (final MctsEdge edge : node.out) {
 			if (edge.action == SingletonAction.endTurnAction)
 				return true;
 			if (edge.to != null || edge.to.isLeaf())
 				remove.add(edge);
 			else {
-				boolean resultsInEnd = collapse(edge.to);
+				final boolean resultsInEnd = collapse(edge.to);
 				if (!resultsInEnd)
 					remove.add(edge);
 				else
 					end = true;
 			}
 		}
-		
+
 		node.out.removeAll(remove);
-		
+
 		return end;
-		
+
 	}
 
-	private MctsNode treePolicy(MctsNode node, GameState clone, List<MctsEdge> traversal) {
+	private MctsNode treePolicy(MctsNode node, GameState clone,
+			List<MctsEdge> traversal) {
 		MctsEdge edge = null;
-		while (!clone.isTerminal){
-			if (!node.isFullyExpanded()){
+		while (!clone.isTerminal)
+			if (!node.isFullyExpanded()) {
 				// EXPANSION
 				edge = expand(node, clone);
 				traversal.add(edge);
@@ -218,19 +218,18 @@ public class Mcts implements AI {
 				traversal.add(edge);
 				clone.update(edge.action);
 			}
-		}
 		return node;
 	}
 
 	private MctsEdge expand(MctsNode node, GameState clone) {
-		MctsEdge edge = node.nextEdge(clone.p1Turn);
+		final MctsEdge edge = node.nextEdge(clone.p1Turn);
 		node.out.add(edge);
 		clone.update(edge.action);
 		final String hash = hasher.hash(clone);
 		MctsNode result = null;
-		if (transTable.containsKey(hash)) {
+		if (transTable.containsKey(hash))
 			result = transTable.get(hash);
-		} else {
+		else {
 			result = new MctsNode(actions(clone));
 			if (edge.action == SingletonAction.endTurnAction)
 				ends++;
@@ -241,8 +240,9 @@ public class Mcts implements AI {
 		return edge;
 	}
 
-	private void backupNegaMax(List<MctsEdge> traversal, double delta, boolean p1) {
-		for(MctsEdge edge : traversal){
+	private void backupNegaMax(List<MctsEdge> traversal, double delta,
+			boolean p1) {
+		for (final MctsEdge edge : traversal) {
 			edge.visits++;
 			if (edge.to != null)
 				edge.to.visits++;
@@ -253,16 +253,13 @@ public class Mcts implements AI {
 			else
 				edge.value += (1 - delta);
 			/*
-			if (edge.p1 == p1)
-				edge.value += delta;
-			else
-				edge.value -= delta;
-			*/
+			 * if (edge.p1 == p1) edge.value += delta; else edge.value -= delta;
+			 */
 		}
 	}
-	
+
 	private List<Action> actions(GameState state) {
-		List<Action> actions = new ArrayList<Action>();
+		final List<Action> actions = new ArrayList<Action>();
 		state.possibleActions(actions);
 		pruner.prune(actions, state);
 		comparator.state = state;
@@ -272,12 +269,12 @@ public class Mcts implements AI {
 
 	private List<Action> bestMove(GameState state, int rolls) {
 		MctsEdge edge = best(root, false);
-		List<Action> move = new ArrayList<Action>();
-		if (edge == null){
+		final List<Action> move = new ArrayList<Action>();
+		if (edge == null) {
 			move.add(SingletonAction.endTurnAction);
 			return move;
 		}
-		while(edge.action != SingletonAction.endTurnAction){
+		while (edge.action != SingletonAction.endTurnAction) {
 			move.add(edge.action);
 			if (edge.isLeaf())
 				break;
@@ -288,7 +285,7 @@ public class Mcts implements AI {
 		move.add(SingletonAction.endTurnAction);
 		return move;
 	}
-	
+
 	@Override
 	public Action init(GameState state, long ms) {
 		// TODO Auto-generated method stub

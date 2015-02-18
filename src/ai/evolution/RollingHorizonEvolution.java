@@ -14,6 +14,13 @@ import ai.heuristic.IHeuristic;
 
 public class RollingHorizonEvolution implements AI {
 
+	public static List<Integer> foundIn = new ArrayList<Integer>(); 
+	public static List<List<Integer>> bestHash = new ArrayList<List<Integer>>(); 
+	public static List<List<Double>> bestFitness = new ArrayList<List<Double>>(); 
+	public static List<List<Double>> bestVals = new ArrayList<List<Double>>();
+	public static List<Integer> bestG = new ArrayList<Integer>();
+	public static List<List<Integer>> bestVisits = new ArrayList<List<Integer>>(); 
+	
 	public int popSize;
 	public int generations;
 	public double killRate;
@@ -23,6 +30,7 @@ public class RollingHorizonEvolution implements AI {
 	private final List<Genome> pop;
 	private List<Action> actions;
 	private final Random random;
+	private Genome bestGenome;
 
 	public RollingHorizonEvolution(int popSize, double mutRate,
 			double killRate, int generations, IHeuristic heuristic) {
@@ -54,7 +62,14 @@ public class RollingHorizonEvolution implements AI {
 
 		final List<Genome> killed = new ArrayList<Genome>();
 		final GameState clone = new GameState(HAMap.mapA);
-
+		clone.imitate(state);
+		final double stateVal = heuristic.eval(clone, state.p1Turn);
+		
+		int found = 0;
+		List<Double> fitness = new ArrayList<Double>();
+		List<Double> vals = new ArrayList<Double>();
+		List<Integer> hash = new ArrayList<Integer>();
+		List<Integer> visits = new ArrayList<Integer>();
 		for (int g = 0; g < generations; g++) {
 
 			//System.out.println("Generation=" + g + " Pop size=" + pop.size());
@@ -64,9 +79,10 @@ public class RollingHorizonEvolution implements AI {
 				// System.out.print("|");
 				clone.imitate(state);
 				clone.update(genome.actions);
-				final double val = heuristic.eval(clone, state.p1Turn);
+				final double val = heuristic.normalize(heuristic.eval(clone, state.p1Turn));
+				if (genome.visits == 0 || val < genome.value)
+					genome.value = val;
 				genome.visits++;
-				genome.value += val;
 			}
 
 			// Kill worst genomes
@@ -75,7 +91,16 @@ public class RollingHorizonEvolution implements AI {
 			final int idx = (int) Math.floor(pop.size() * killRate);
 			for (int i = idx; i < pop.size(); i++)
 				killed.add(pop.get(i));
-
+			
+			if (!pop.get(0).equals(bestGenome)){
+				bestGenome = pop.get(0);
+				found = g+1;
+			}
+			hash.add(bestGenome.hashCode());
+			visits.add(bestGenome.visits);
+			fitness.add(bestGenome.fitness());
+			vals.add(bestGenome.value);
+			
 			if (g != generations)
 				// Crossover new ones
 				for (final Genome genome : killed) {
@@ -94,9 +119,15 @@ public class RollingHorizonEvolution implements AI {
 					}
 
 				}
-
+			
 		}
-
+		
+		foundIn.add(found);
+		bestFitness.add(fitness);
+		bestVals.add(vals);
+		bestG.add(bestGenome.visits);
+		bestHash.add(hash);
+		bestVisits.add(visits);
 		//System.out.println("Best Genome: " + pop.get(0).actions);
 		//System.out.println("Visits: " + pop.get(0).visits);
 		//System.out.println("Value: " + pop.get(0).avgValue());
@@ -112,7 +143,7 @@ public class RollingHorizonEvolution implements AI {
 
 		for (int i = 0; i < popSize; i++) {
 			clone.imitate(state);
-			final Genome genome = new Genome();
+			final Genome genome = new Genome(generations);
 			genome.random(clone);
 			pop.add(genome);
 		}
