@@ -31,9 +31,10 @@ public class RollingHorizonEvolution implements AI {
 	private List<Action> actions;
 	private final Random random;
 	private Genome bestGenome;
+	private boolean strong;
 
 	public RollingHorizonEvolution(int popSize, double mutRate,
-			double killRate, int generations, IHeuristic heuristic) {
+			double killRate, int generations, IHeuristic heuristic, boolean strong) {
 		super();
 		this.popSize = popSize;
 		this.mutRate = mutRate;
@@ -43,6 +44,7 @@ public class RollingHorizonEvolution implements AI {
 		pop = new ArrayList<Genome>();
 		actions = new ArrayList<Action>();
 		random = new Random();
+		this.strong = strong;
 	}
 
 	@Override
@@ -63,7 +65,6 @@ public class RollingHorizonEvolution implements AI {
 		final List<Genome> killed = new ArrayList<Genome>();
 		final GameState clone = new GameState(HAMap.mapA);
 		clone.imitate(state);
-		final double stateVal = heuristic.eval(clone, state.p1Turn);
 		
 		int found = 0;
 		List<Double> fitness = new ArrayList<Double>();
@@ -143,7 +144,11 @@ public class RollingHorizonEvolution implements AI {
 
 		for (int i = 0; i < popSize; i++) {
 			clone.imitate(state);
-			final Genome genome = new Genome(generations);
+			final Genome genome;
+			if (strong)
+				genome = new StrongGenome(generations);
+			else
+				genome = new WeakGenome();
 			genome.random(clone);
 			pop.add(genome);
 		}

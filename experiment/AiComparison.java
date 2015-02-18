@@ -21,13 +21,13 @@ public class AiComparison {
 
 	public static void main(String[] args) {
 		//Rolling Horizon 50 .5 .35 50 heuristic
-		AI p1 = new RollingHorizonEvolution(40, .5, .35, 500, new RolloutEvaluation(5, 1, new RandomHeuristicAI(new ComplexActionComparator()),  new HeuristicEvaluation(), true, true));
+		AI p1 = new RollingHorizonEvolution(40, .5, .35, 500, new RolloutEvaluation(5, 1, new RandomHeuristicAI(new ComplexActionComparator()),  new HeuristicEvaluation(), true, true), false);
 		AI p2 = new GreedyActionAI(new HeuristicEvaluation());
 		
 		System.out.println("P1: rollinghorizon 100 .5 .35 100 rollout 5 1 randomheuristic heuristic");
 		System.out.println("P2: greedyaction heuristic");
-		compare(p1, p2, 90);
-		
+		compare(p1, p2, 50);
+		/*
 		System.out.println("Avg. found in:");
 		System.out.println(Statistics.avgInteger(RollingHorizonEvolution.foundIn));
 		System.out.println("Avg. best genome visits:");
@@ -39,7 +39,7 @@ public class AiComparison {
 				System.out.println(i+"\t"+RollingHorizonEvolution.bestHash.get(d).get(i)+"\t"+RollingHorizonEvolution.bestVals.get(d).get(i)+"\t"+RollingHorizonEvolution.bestFitness.get(d).get(i)+"\t"+RollingHorizonEvolution.bestVisits.get(d).get(i));
 			System.out.println();
 		}
-		
+		*/
 		/*
 		 * p1 = new Mcts(2025, new RolloutEvaluation(1, 1000, new
 		 * RandomHeuristicAI(new ComplexActionComparator()), new
