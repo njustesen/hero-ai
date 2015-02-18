@@ -5,7 +5,6 @@ import ai.AI;
 import ai.RandomHeuristicAI;
 import ai.heuristic.MaterialBalanceEvaluation;
 import ai.heuristic.RolloutEvaluation;
-import ai.heuristic.WinLoseEvaluation;
 import ai.mcts.Mcts;
 import ai.util.ComplexActionComparator;
 
@@ -15,15 +14,17 @@ public class AiComparison {
 
 	public static void main(String[] args) {
 
-		final AI p1 = new Mcts(2025, new RolloutEvaluation(1, 1000,
-				new RandomHeuristicAI(new ComplexActionComparator()),
-				new WinLoseEvaluation(), false));
-		final AI p2 = new Mcts(2025, new RolloutEvaluation(1, 20,
+		final AI p1 = new Mcts(2025, new RolloutEvaluation(1, 5,
 				new RandomHeuristicAI(new ComplexActionComparator()),
 				new MaterialBalanceEvaluation(true), false));
-		System.out.println("P1: greedyaction heuristic");
-		System.out.println("P2: heuristic");
-		compare(p1, p2, 100);
+		final AI p2 = new Mcts(2025, new RolloutEvaluation(1, 1,
+				new RandomHeuristicAI(new ComplexActionComparator()),
+				new MaterialBalanceEvaluation(true), false));
+		System.out
+				.println("P1: mcts 2025 rollout 1 5 randomheuristic materialbalance");
+		System.out
+				.println("P2: mcts 2025 rollout 1 1 randomheuristic materialbalance");
+		compare(p1, p2, 50);
 		/*
 		 * p1 = new Mcts(2025, new RolloutEvaluation(1, 1000, new
 		 * RandomHeuristicAI(new ComplexActionComparator()), new
