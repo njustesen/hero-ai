@@ -16,12 +16,14 @@ public class Genome implements Comparable<Genome> {
 	public List<Action> actions;
 	public double value;
 	public int visits;
+	public int g;
 
-	public Genome() {
+	public Genome(int g) {
 		super();
 		actions = new ArrayList<Action>();
 		value = 0;
 		visits = 0;
+		this.g = g;
 	}
 
 	public void random(GameState state) {
@@ -114,17 +116,16 @@ public class Genome implements Comparable<Genome> {
 
 	@Override
 	public int compareTo(Genome other) {
-		final double avg = fitness();
-		final double otherAvg = other.fitness();
-		if (avg == otherAvg)
+		if (fitness() == other.fitness())
 			return 0;
-		if (avg > otherAvg)
+		if (fitness() > other.fitness())
 			return -1;
 		return 1;
 	}
 
 	public double fitness() {
-		return avgValue() * Math.sqrt(visits)/2;
+		//return value + (Math.abs(value) * (Math.sqrt(visits-1)/g));
+		return value;
 	}
 
 	public double avgValue() {
@@ -144,4 +145,9 @@ public class Genome implements Comparable<Genome> {
 		return true;
 	}
 
+	@Override
+	public String toString() {
+		return "Genome [value=" + value + ", visits="+ visits + ", fitness=" + fitness() + "]";
+	}
+	
 }

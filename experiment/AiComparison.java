@@ -1,30 +1,53 @@
 import game.Game;
 import game.GameState;
 import model.HAMap;
+import util.Statistics;
 import ai.AI;
+import ai.GreedyActionAI;
 import ai.RandomHeuristicAI;
-import ai.heuristic.MaterialBalanceEvaluation;
+import ai.evolution.RollingHorizonEvolution;
+import ai.heuristic.HeuristicEvaluation;
 import ai.heuristic.RolloutEvaluation;
-import ai.mcts.Mcts;
 import ai.util.ComplexActionComparator;
 
 public class AiComparison {
 
-	private static final boolean GFX = false;
+	private static final boolean GFX = true;
 
 	public static void main(String[] args) {
 
-		final AI p1 = new Mcts(2025, new RolloutEvaluation(1, 5,
-				new RandomHeuristicAI(new ComplexActionComparator()),
-				new MaterialBalanceEvaluation(true), false));
-		final AI p2 = new Mcts(2025, new RolloutEvaluation(1, 1,
-				new RandomHeuristicAI(new ComplexActionComparator()),
-				new MaterialBalanceEvaluation(true), false));
+		// Rolling Horizon 50 .5 .35 50 heuristic
+		final AI p1 = new RollingHorizonEvolution(40, .5, .35, 500,
+				new RolloutEvaluation(5, 1, new RandomHeuristicAI(
+						new ComplexActionComparator()),
+						new HeuristicEvaluation(), true, true));
+		final AI p2 = new GreedyActionAI(new HeuristicEvaluation());
+
 		System.out
-				.println("P1: mcts 2025 rollout 1 5 randomheuristic materialbalance");
+				.println("P1: rollinghorizon 100 .5 .35 100 rollout 5 1 randomheuristic heuristic");
+		System.out.println("P2: greedyaction heuristic");
+		compare(p1, p2, 90);
+
+		System.out.println("Avg. found in:");
+		System.out.println(Statistics
+				.avgInteger(RollingHorizonEvolution.foundIn));
+		System.out.println("Avg. best genome visits:");
 		System.out
-				.println("P2: mcts 2025 rollout 1 1 randomheuristic materialbalance");
-		compare(p1, p2, 50);
+				.println(Statistics.avgInteger(RollingHorizonEvolution.bestG));
+		System.out.println();
+		System.out.println("Best fitness / avg:");
+		for (int d = 0; d < RollingHorizonEvolution.bestFitness.size(); d++) {
+			for (int i = 0; i < RollingHorizonEvolution.bestFitness.get(d)
+					.size(); i++)
+				System.out.println(i + "\t"
+						+ RollingHorizonEvolution.bestHash.get(d).get(i) + "\t"
+						+ RollingHorizonEvolution.bestVals.get(d).get(i) + "\t"
+						+ RollingHorizonEvolution.bestFitness.get(d).get(i)
+						+ "\t"
+						+ RollingHorizonEvolution.bestVisits.get(d).get(i));
+			System.out.println();
+		}
+
 		/*
 		 * p1 = new Mcts(2025, new RolloutEvaluation(1, 1000, new
 		 * RandomHeuristicAI(new ComplexActionComparator()), new
@@ -46,8 +69,12 @@ public class AiComparison {
 		final GameState state = new GameState(HAMap.mapA);
 		final GameState clone = new GameState(HAMap.mapA);
 		final Game game = new Game(state, GFX, p1, p2);
+		boolean p1Starting;
 		for (int i = 0; i < games; i++) {
-			final boolean p1Starting = (i < games / 2);
+			if (games == 1)
+				p1Starting = true;
+			else
+				p1Starting = (i < games / 2);
 			clone.imitate(state);
 			game.state = clone;
 			if (p1Starting) {
