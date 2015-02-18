@@ -21,11 +21,11 @@ import ai.util.SimpleActionComparator;
 public class AiComparison {
 
 	public static void main(String[] args) {
-		
-		AI p1 = new Mcts(2025, new RolloutEvaluation(1, 1000, new RandomHeuristicAI(new ComplexActionComparator()), new WinLoseEvaluation(), false));
-		AI p2 = new Mcts(2025, new RolloutEvaluation(1, 20, new RandomHeuristicAI(new ComplexActionComparator()), new MaterialBalanceEvaluation(true), false));
-		System.out.println("P1: greedyaction heuristic");
-		System.out.println("P2: heuristic");
+		//Rolling Horizon 50 .5 .35 50 heuristic
+		AI p1 = new RollingHorizonEvolution(100, .5, .35, 100, new HeuristicEvaluation());
+		AI p2 = new GreedyActionAI(new HeuristicEvaluation());
+		System.out.println("P1: rollinghorizon 100 .5 .35 100 heuristic");
+		System.out.println("P2: greedyaction heuristic");
 		compare(p1, p2, 100);
 		/*
 		p1 = new Mcts(2025, new RolloutEvaluation(1, 1000, new RandomHeuristicAI(new ComplexActionComparator()), new WinLoseEvaluation(), false));
