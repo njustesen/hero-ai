@@ -125,7 +125,7 @@ public class Game {
 					players[p] = new RollingHorizonEvolution(64, 0.4, 0.5, 200,
 							new RolloutEvaluation(50, 1, new RandomAI(
 									RAND_METHOD.TREE),
-									new HeuristicEvaluation(), true));
+									new HeuristicEvaluation(), true), false);
 				p = -1;
 			} else if (args[a].toLowerCase().equals("sleep")) {
 				a++;

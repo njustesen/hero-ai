@@ -10,20 +10,18 @@ import action.Action;
 import action.EndTurnAction;
 import action.SingletonAction;
 
-public class Genome implements Comparable<Genome> {
+public abstract class Genome implements Comparable<Genome> {
 
 	public static Random random = new Random();
 	public List<Action> actions;
 	public double value;
 	public int visits;
-	public int g;
 
-	public Genome(int g) {
+	public Genome() {
 		super();
 		actions = new ArrayList<Action>();
 		value = 0;
 		visits = 0;
-		this.g = g;
 	}
 
 	public void random(GameState state) {
@@ -123,10 +121,7 @@ public class Genome implements Comparable<Genome> {
 		return 1;
 	}
 
-	public double fitness() {
-		//return value + (Math.abs(value) * (Math.sqrt(visits-1)/g));
-		return value;
-	}
+	public abstract double fitness();
 
 	public double avgValue() {
 		if (visits == 0)

@@ -30,7 +30,8 @@ public class BestMoveSearch {
 	private final GameStateHasher hasher = new GameStateHasher();
 
 	public List<Action> bestMove(GameState state, ObjectPool<GameState> pool,
-			ObjectPool<Unit> unitPool, IHeuristic heuristic, List<Action> lastMove) {
+			ObjectPool<Unit> unitPool, IHeuristic heuristic,
+			List<Action> lastMove) {
 
 		this.heuristic = heuristic;
 
@@ -42,7 +43,7 @@ public class BestMoveSearch {
 		} catch (final Exception e) {
 			e.printStackTrace();
 		}
-
+		System.out.print("\n");
 		printStats();
 
 		return bestMove;
@@ -61,17 +62,18 @@ public class BestMoveSearch {
 			}
 		}
 
-		//System.out.println(c + ";" + transTable.keySet().size() + ";" + t + ";" + tt + ";");
+		// System.out.println(c + ";" + transTable.keySet().size() + ";" + t +
+		// ";" + tt + ";");
 	}
 
-	private void addMoves(GameState state, List<Action> move, int depth, List<Action> lastMove)
-			throws IllegalStateException, UnsupportedOperationException,
-			Exception {
+	private void addMoves(GameState state, List<Action> move, int depth,
+			List<Action> lastMove) throws IllegalStateException,
+			UnsupportedOperationException, Exception {
 
 		// End turn
 		if (state.APLeft == 0) {
 			final double value = heuristic.eval(state, state.p1Turn);
-			if (value > bestValue){
+			if (value > bestValue) {
 				final List<Action> nextMove = clone(move);
 				nextMove.add(SingletonAction.endTurnAction);
 				if (!sameMove(nextMove, lastMove)) {
@@ -90,8 +92,8 @@ public class BestMoveSearch {
 
 		int i = 0;
 		for (final Action action : actions) {
-			//if (depth == 0)
-			//	System.out.print("|");
+			if (depth == 0)
+				System.out.print("|(" + transTable.size() + ")");
 
 			if (i > 0)
 				next.imitate(state);
@@ -112,14 +114,14 @@ public class BestMoveSearch {
 	}
 
 	private boolean sameMove(List<Action> a, List<Action> b) {
-		if (a==b)
+		if (a == b)
 			return true;
 		if (a == null || b == null)
 			return false;
 		if (a.size() != b.size())
 			return false;
 		int i = 0;
-		for(Action action : a){
+		for (final Action action : a) {
 			if (!action.equals(b.get(i)))
 				return false;
 			i++;
