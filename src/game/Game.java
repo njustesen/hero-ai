@@ -122,10 +122,9 @@ public class Game {
 							new MaterialBalanceEvaluation(true), false));
 				}
 				if (args[a].toLowerCase().equals("evolution"))
-					players[p] = new RollingHorizonEvolution(64, 0.4, 0.5, 200,
-							new RolloutEvaluation(50, 1, new RandomAI(
-									RAND_METHOD.TREE),
-									new HeuristicEvaluation(), true), false);
+					players[p] = new RollingHorizonEvolution(200, .5, .35, 1200,
+							new RolloutEvaluation(5, 1, new RandomHeuristicAI(new ComplexActionComparator()),
+									new HeuristicEvaluation(), false, true), false);
 				p = -1;
 			} else if (args[a].toLowerCase().equals("sleep")) {
 				a++;

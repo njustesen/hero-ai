@@ -21,11 +21,12 @@ public class AiComparison {
 
 	public static void main(String[] args) {
 		//Rolling Horizon 50 .5 .35 50 heuristic
-		AI p1 = new RollingHorizonEvolution(40, .5, .35, 500, new RolloutEvaluation(5, 1, new RandomHeuristicAI(new ComplexActionComparator()),  new HeuristicEvaluation(), true, true), false);
-		AI p2 = new GreedyActionAI(new HeuristicEvaluation());
+		AI p1 = new Mcts(2025, new RolloutEvaluation(1, 1, new RandomHeuristicAI(new ComplexActionComparator()), new MaterialBalanceEvaluation(true)));
+		AI p2 = new Mcts(2025, new RolloutEvaluation(1, 1, new RandomHeuristicAI(new ComplexActionComparator()), new MaterialBalanceEvaluation(true)));
+		((Mcts)p1).c = ((Mcts)p1).c / 2; 
 		
-		System.out.println("P1: rollinghorizon 100 .5 .35 100 rollout 5 1 randomheuristic heuristic");
-		System.out.println("P2: greedyaction heuristic");
+		System.out.println("P1: mcts 2025 rollout 1 1 randomheuristic materialblance win c=" + ((Mcts)p1).c);
+		System.out.println("P2: mcts 2025 rollout 1 1 randomheuristic materialblance win c=" + ((Mcts)p2).c);
 		compare(p1, p2, 50);
 		/*
 		System.out.println("Avg. found in:");

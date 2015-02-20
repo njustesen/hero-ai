@@ -10,6 +10,7 @@ import model.Unit;
 import org.apache.commons.pool2.impl.GenericObjectPool;
 
 import action.Action;
+import action.SingletonAction;
 import ai.heuristic.IHeuristic;
 import ai.movesearch.BestMoveSearch;
 import ai.util.GameStateFactory;
@@ -44,6 +45,8 @@ public class GreedyTurnAI implements AI {
 		// actions = searcher.bestMove(state, pool, null, heuristic);
 		actions = searcher.bestMove(state, null, null, heuristic, lastMove);
 		lastMove.clear();
+		if (actions == null || actions.isEmpty())
+			return SingletonAction.endTurnAction;
 		lastMove.addAll(actions);
 		// System.out.println(actions);
 

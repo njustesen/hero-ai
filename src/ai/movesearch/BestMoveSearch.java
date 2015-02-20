@@ -86,6 +86,7 @@ public class BestMoveSearch {
 		final List<Action> actions = new ArrayList<Action>();
 		state.possibleActions(actions);
 		pruner.prune(actions, state);
+		
 		final GameState next = state.copy();
 
 		int i = 0;
