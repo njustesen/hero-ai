@@ -1,8 +1,10 @@
+import model.DECK_SIZE;
 import ai.AI;
 import ai.RandomAI;
 import ai.heuristic.HeuristicEvaluation;
 import ai.util.RAND_METHOD;
 import game.Game;
+import game.GameArguments;
 
 public class StateEvaluationPerformance {
 	
@@ -20,7 +22,7 @@ public class StateEvaluationPerformance {
 		AI p1 = new RandomAI(RAND_METHOD.BRUTE);
 		AI p2 = new RandomAI(RAND_METHOD.BRUTE);
 		for(int i = 0; i < n; i++){
-			Game game = new Game(null, false, p1, p2);
+			Game game = new Game(null, new GameArguments(false, p1, p2, "a", DECK_SIZE.STANDARD));
 			while(!game.state.isTerminal){
 				if (game.state.p1Turn) {
 					game.state.update(p1.act(game.state, -1));

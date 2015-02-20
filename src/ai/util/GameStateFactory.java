@@ -1,7 +1,7 @@
 package ai.util;
 
 import game.GameState;
-import model.HAMap;
+import model.HaMap;
 import model.Unit;
 
 import org.apache.commons.pool2.BasePooledObjectFactory;
@@ -17,7 +17,7 @@ public class GameStateFactory extends BasePooledObjectFactory<GameState> {
 
 	@Override
 	public GameState create() throws Exception {
-		return new GameState(HAMap.mapA);
+		return new GameState(null);
 	}
 
 	@Override

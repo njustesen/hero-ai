@@ -9,24 +9,16 @@ import java.util.Map;
 
 import javax.imageio.ImageIO;
 
+import util.PathHelper;
+
 public class ImageLib {
 
 	public static Map<String, BufferedImage> lib;
 
 	static {
-		// String basePath = (new File(".")).getAbsolutePath();
-		String basePath = "";
-		try {
-			final String path = ImageLib.class.getProtectionDomain()
-					.getCodeSource().getLocation().toURI().getPath();
-			final String[] folders = path.split("/");
-			for (int i = 0; i < folders.length - 1; i++) {
-				basePath += folders[i] + "/";
-			}
-		} catch (final URISyntaxException e1) {
-			e1.printStackTrace();
-		}
-		basePath = basePath.substring(0, basePath.length());
+		
+		String basePath = PathHelper.basePath();
+		
 		System.out.println("BasePath = " + basePath);
 
 		lib = new HashMap<String, BufferedImage>();

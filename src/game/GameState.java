@@ -14,8 +14,9 @@ import java.util.Set;
 import model.AttackType;
 import model.Card;
 import model.CardType;
+import model.DECK_SIZE;
 import model.Direction;
-import model.HAMap;
+import model.HaMap;
 import model.Position;
 import model.SquareType;
 import model.Unit;
@@ -42,7 +43,7 @@ public class GameState {
 	private static final int POTION_HEAL = 1000;
 	private static final int TURN_LIMIT = 100;
 
-	public HAMap map;
+	public HaMap map;
 	public boolean p1Turn;
 	public int turn;
 	public int APLeft;
@@ -57,7 +58,7 @@ public class GameState {
 
 	public ObjectPool<Unit> unitPool;
 
-	public GameState(HAMap map) {
+	public GameState(HaMap map) {
 		super();
 		isTerminal = false;
 		this.map = map;
@@ -72,7 +73,7 @@ public class GameState {
 		units = new Unit[map.width][map.height];
 	}
 
-	public GameState(HAMap map, boolean p1Turn, int turn, int APLeft,
+	public GameState(HaMap map, boolean p1Turn, int turn, int APLeft,
 			Unit[][] units, List<Card> p1Hand, List<Card> p2Hand,
 			List<Card> p1Deck, List<Card> p2Deck, List<Position> chainTargets,
 			boolean isTerminal) {
@@ -90,8 +91,8 @@ public class GameState {
 		this.isTerminal = isTerminal;
 	}
 
-	public void init() {
-		shuffleDecks();
+	public void init(DECK_SIZE deckSize) {
+		shuffleDecks(deckSize);
 		dealCards();
 		for (final Position pos : map.p1Crystals) {
 			units[pos.x][pos.y] = borrowUnit(Card.CRYSTAL, true);
@@ -103,8 +104,8 @@ public class GameState {
 		}
 	}
 
-	private void shuffleDecks() {
-		for (final Card type : Council.deck){
+	private void shuffleDecks(DECK_SIZE deckSize) {
+		for (final Card type : Council.deck(deckSize)){
 			p1Deck.add(type);
 			p2Deck.add(type);
 		}

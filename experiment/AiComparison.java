@@ -1,9 +1,13 @@
+import java.io.IOException;
 import java.util.List;
 
+import util.MapLoader;
 import util.Statistics;
 import game.Game;
+import game.GameArguments;
 import game.GameState;
-import model.HAMap;
+import model.DECK_SIZE;
+import model.HaMap;
 import ai.AI;
 import ai.GreedyActionAI;
 import ai.RandomHeuristicAI;
@@ -59,40 +63,46 @@ public class AiComparison {
 		int p2Wins = 0;
 		int draws = 0;
 
-		final GameState state = new GameState(HAMap.mapA);
-		final GameState clone = new GameState(HAMap.mapA);
-		final Game game = new Game(state, GFX, p1, p2);
-		boolean p1Starting;
-		for (int i = 0; i < games; i++) {
-			if (games == 1)
-				p1Starting = true;
-			else
-				p1Starting = (i < games / 2);
-			clone.imitate(state);
-			game.state = clone;
-			if (p1Starting) {
-				game.player1 = p1;
-				game.player2 = p2;
-			} else {
-				game.player1 = p2;
-				game.player2 = p1;
+		GameState state;
+		try {
+			state = new GameState(MapLoader.get("a"));
+			final GameState clone = state.copy();
+			;
+			final Game game = new Game(state, new GameArguments(GFX, p1, p2, "a", DECK_SIZE.STANDARD));
+			boolean p1Starting;
+			for (int i = 0; i < games; i++) {
+				if (games == 1)
+					p1Starting = true;
+				else
+					p1Starting = (i < games / 2);
+				clone.imitate(state);
+				game.state = clone;
+				if (p1Starting) {
+					game.player1 = p1;
+					game.player2 = p2;
+				} else {
+					game.player1 = p2;
+					game.player2 = p1;
+				}
+				game.run();
+
+				final int winner = clone.getWinner();
+				if (winner == 1 && p1Starting || winner == 2 && !p1Starting)
+					p1Wins++;
+				else if (winner == 2 && p1Starting || winner == 1 && !p1Starting)
+					p2Wins++;
+				else
+					draws++;
+				System.out.print(winner);
 			}
-			game.run();
+			System.out.print("\n");
 
-			final int winner = clone.getWinner();
-			if (winner == 1 && p1Starting || winner == 2 && !p1Starting)
-				p1Wins++;
-			else if (winner == 2 && p1Starting || winner == 1 && !p1Starting)
-				p2Wins++;
-			else
-				draws++;
-			System.out.print(winner);
+			System.out.println("P1=" + p1Wins);
+			System.out.println("P2=" + p2Wins);
+			System.out.println("draws=" + draws);
+		} catch (IOException e) {
+			e.printStackTrace();
 		}
-		System.out.print("\n");
-
-		System.out.println("P1=" + p1Wins);
-		System.out.println("P2=" + p2Wins);
-		System.out.println("draws=" + draws);
 
 	}
 

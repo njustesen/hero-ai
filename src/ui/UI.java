@@ -110,7 +110,7 @@ public class UI extends JComponent {
 			paintUnitDetails(g);
 			paintDeck(g);
 		} catch (final IOException e) {
-			e.printStackTrace();
+			//e.printStackTrace();
 		}
 
 	}
