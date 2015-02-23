@@ -14,8 +14,8 @@ import org.apache.commons.pool2.ObjectPool;
 import org.apache.commons.pool2.impl.GenericObjectPool;
 
 import util.MapLoader;
-import ai.util.GameStateFactory;
-import ai.util.UnitFactory;
+import util.pool.GameStateFactory;
+import util.pool.UnitFactory;
 
 public class GameStatePoolTest {
 

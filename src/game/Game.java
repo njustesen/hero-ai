@@ -1,33 +1,16 @@
 package game;
 
 import java.io.IOException;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.Stack;
-
-import model.DECK_SIZE;
 import model.HaMap;
 import ui.UI;
 import util.CachedLines;
 import util.MapLoader;
+import util.pool.ObjectPools;
 import action.Action;
 import action.SingletonAction;
 import action.UndoAction;
 import ai.AI;
-import ai.GreedyActionAI;
-import ai.GreedyTurnAI;
-import ai.HeuristicAI;
-import ai.NmSearchAI;
-import ai.RandomAI;
-import ai.RandomHeuristicAI;
-import ai.ScanRandomAI;
-import ai.evolution.RollingHorizonEvolution;
-import ai.heuristic.HeuristicEvaluation;
-import ai.heuristic.MaterialBalanceEvaluation;
-import ai.heuristic.RolloutEvaluation;
-import ai.mcts.Mcts;
-import ai.util.ComplexActionComparator;
-import ai.util.RAND_METHOD;
 
 public class Game {
 
@@ -39,7 +22,6 @@ public class Game {
 	public GameArguments gameArgs;
 	private Stack<GameState> history;
 	private int lastTurn;
-	
 	
 	public static void main(String[] args) {
 
@@ -53,7 +35,7 @@ public class Game {
 			return;
 		}
 		
-		GameState state = new GameState(map);
+		GameState state = ObjectPools.borrowState(map);
 		final Game game = new Game(state, gameArgs);
 
 		try {
@@ -85,7 +67,9 @@ public class Game {
 	public void run() {
 
 		state.init(gameArgs.deckSize);
-		history.add(state.copy());
+		GameState initState = ObjectPools.borrowState(state.map);
+		initState.imitate(state);
+		history.add(initState);
 		lastTurn = 5;
 
 		if (player1 != null)
@@ -104,11 +88,11 @@ public class Game {
 				}
 			}
 			
-
+			
 			if (state.p1Turn && player1 != null)
-				act(player1, player2, state.copy());
+				act(player1, player2);
 			else if (!state.p1Turn && player2 != null)
-				act(player2, player1, state.copy());
+				act(player2, player1);
 			else if (ui.action != null) {
 
 				if (ui.action instanceof UndoAction)
@@ -121,17 +105,20 @@ public class Game {
 			}
 
 			if (state.APLeft != lastTurn) {
-				if (state.APLeft < lastTurn)
-					history.add(state.copy());
+				if (state.APLeft < lastTurn){
+					GameState clone = ObjectPools.borrowState(state.map);
+					clone.imitate(state);
+					history.add(clone);
+				}
 				lastTurn = state.APLeft;
 			}
 
 			if (state.APLeft == 5) {
 				history.clear();
-				final GameState copy = state.copy();
-				history.add(copy);
+				GameState clone = ObjectPools.borrowState(state.map);
+				clone.imitate(state);
+				history.add(clone);
 				lastTurn = 5;
-
 			}
 
 		}
@@ -142,8 +129,10 @@ public class Game {
 
 	}
 
-	private void act(AI player, AI other, GameState copy) {
-		Action action = player.act(copy, TIME_LIMIT);
+	private void act(AI player, AI other) {
+		GameState clone = ObjectPools.borrowState(state.map);
+		clone.imitate(state);
+		Action action = player.act(clone, TIME_LIMIT);
 		if (action == null)
 			action = SingletonAction.endTurnAction;
 		state.update(action);
@@ -166,8 +155,9 @@ public class Game {
 			return;
 
 		history.pop();
-
-		state = history.peek().copy();
+		
+		state = ObjectPools.borrowState(state.map);
+		state.imitate(history.peek());
 
 	}
 

@@ -163,19 +163,14 @@ public class Mcts implements AI {
 			if (from != null)
 				node.in.add(from);
 		} else
-			for (final MctsEdge edge : node.out) {
-				if (edge == null || edge.to == null)
-					System.out.println("NULL");
+			for (final MctsEdge edge : node.out) 
 				cut(edge.to, edge, depth + 1, cut);
-			}
 	}
 
 	private MctsEdge best(MctsNode node, boolean urgent) {
 		double bestVal = -100000;
 		MctsEdge bestEdge = null;
 		for (final MctsEdge edge : node.out) {
-			if (edge == null)
-				System.out.println("NULL");
 			final double val = uct(edge, node, urgent);
 			if (val > bestVal) {
 				bestVal = val;

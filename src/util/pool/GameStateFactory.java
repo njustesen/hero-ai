@@ -1,4 +1,4 @@
-package ai.util;
+package util.pool;
 
 import game.GameState;
 import model.HaMap;

@@ -9,13 +9,13 @@ import model.DECK_SIZE;
 import org.apache.commons.pool2.ObjectPool;
 import org.apache.commons.pool2.impl.GenericObjectPool;
 
+import util.pool.GameStateFactory;
 import action.Action;
 import ai.AI;
 import ai.GreedyActionAI;
 import ai.RandomAI;
 import ai.heuristic.HeuristicEvaluation;
 import ai.movesearch.TreeMoveSearch;
-import ai.util.GameStateFactory;
 import ai.util.RAND_METHOD;
 
 public class MoveSearchPerformance {
