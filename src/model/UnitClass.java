@@ -28,4 +28,16 @@ public class UnitClass {
 		this.magicalResistance = magicalResistance;
 		this.swap = swap;
 	}
+
+	public int hash() {
+		switch(card){
+		case ARCHER : return 0;
+		case CRYSTAL : return 1;
+		case KNIGHT : return 2;
+		case NINJA : return 3;
+		case CLERIC : return 4;
+		case WIZARD : return 5;
+		}
+		return 6;
+	}
 }

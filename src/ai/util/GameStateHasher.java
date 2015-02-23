@@ -5,7 +5,6 @@ import game.GameState;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 import model.Card;
 import model.Unit;
@@ -20,8 +19,8 @@ public class GameStateHasher {
 		this.sb = new StringBuilder();
 		this.map = new HashMap<Card, Integer>();
 	}
-
-	public String hash(GameState state) {
+	
+		public String hash(GameState state) {
 		sb.setLength(0);
 		sb.append(state.turn).append(state.APLeft).append(state.isTerminal ? "T" : "N");
 		hashCards(state.p1Hand, sb);

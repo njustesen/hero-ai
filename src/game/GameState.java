@@ -15,7 +15,6 @@ import model.Position;
 import model.SquareType;
 import model.Unit;
 import model.team.Council;
-
 import util.CachedLines;
 import util.pool.ObjectPools;
 import action.Action;
@@ -968,6 +967,25 @@ public class GameState {
 		//chainTargets.clear();
 		// chainTargets.addAll(state.chainTargets); // NOT NECESSARY
 
+	}
+	
+	public long hash() {
+		final int prime = 31;
+		long result = 1;
+		result = prime * result + APLeft;
+		result = prime * result + turn;
+		result = prime * result + (isTerminal ? 0 : 1);
+		//result = prime * result + hash(state.p1Hand);
+		//result = prime * result + hash(state.p2Deck);
+		//result = prime * result + hash(state.p2Hand);
+		//result = prime * result + hash(state.p1Deck);
+		
+		for (int x = 0; x < map.width; x++)
+			for (int y = 0; y < map.height; y++)
+				if (units[x][y] != null)
+					result = prime * result + units[x][y].hash(x,y);
+
+		return result;
 	}
 
 	@Override

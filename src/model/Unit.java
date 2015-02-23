@@ -193,17 +193,37 @@ public class Unit {
 			return false;
 		return true;
 	}
-	/*
-	public int hash() {
-		final int prime = 31;
+	
+	public int hash(int x, int y) {
 		int result = 1;
-		result = prime * result
-				+ ((equipment == null) ? 0 : equipment.hashCode());
-		result = prime * result + hp;
-		result = prime * result + (p1Owner ? 1231 : 1237);
-		result = prime * result
-				+ ((unitClass == null) ? 0 : unitClass.hashCode());
+		result = 16 * result + equipmentHash();
+		result = 1500 * result + hp;
+		result = 2 * result + (p1Owner ? 0 : 1);
+		result = 6 * result + unitClass.hash();
+		result = 5 * result + x;
+		result = 5 * result + y;
 		return result;
 	}
-	*/
+	
+	public int hash() {
+		int result = 1;
+		result = 16 * result + equipmentHash();
+		result = 1500 * result + hp;
+		result = 2 * result + (p1Owner ? 0 : 1);
+		result = 6 * result + unitClass.hash();
+		return result;
+	}
+
+	private int equipmentHash() {
+		int e = 0;
+		if (equipment.contains(Card.DRAGONSCALE))
+			e += 1;
+		if (equipment.contains(Card.RUNEMETAL))
+			e += 2;
+		if (equipment.contains(Card.SHINING_HELM))
+			e += 4;
+		if (equipment.contains(Card.SCROLL))
+			e += 8;
+		return e;
+	}
 }
