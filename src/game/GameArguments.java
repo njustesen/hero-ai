@@ -100,7 +100,7 @@ public class GameArguments {
 					a++;
 					if (args[a].toLowerCase().equals("heuristic"))
 						players[p] = new NmSearchAI((p == 0), n, mm,
-								new HeuristicEvaluation());
+								new HeuristicEvaluation(false));
 					else {
 						a++;
 						final int rolls = Integer.parseInt(args[a]);
@@ -109,7 +109,7 @@ public class GameArguments {
 						players[p] = new NmSearchAI((p == 0), n, mm,
 								new RolloutEvaluation(rolls, depth,
 										new RandomAI(RAND_METHOD.TREE),
-										new HeuristicEvaluation(), true));
+										new HeuristicEvaluation(false), true));
 					}
 
 				}
@@ -117,7 +117,7 @@ public class GameArguments {
 					a++;
 					if (args[a].toLowerCase().equals("heuristic"))
 						players[p] = new GreedyActionAI(
-								new HeuristicEvaluation());
+								new HeuristicEvaluation(false));
 					else if (args[a].toLowerCase().equals("rollouts")) {
 						a++;
 						final int rolls = Integer.parseInt(args[a]);
@@ -125,13 +125,13 @@ public class GameArguments {
 						final int depth = Integer.parseInt(args[a]);
 						players[p] = new GreedyActionAI(new RolloutEvaluation(
 								rolls, depth, new RandomAI(RAND_METHOD.TREE),
-								new HeuristicEvaluation(), true));
+								new HeuristicEvaluation(false), true));
 					}
 				}
 				if (args[a].toLowerCase().equals("greedyturn")) {
 					a++;
 					if (args[a].toLowerCase().equals("heuristic"))
-						players[p] = new GreedyTurnAI(new HeuristicEvaluation());
+						players[p] = new GreedyTurnAI(new HeuristicEvaluation(false));
 					else if (args[a].toLowerCase().equals("rollouts")) {
 						a++;
 						final int rolls = Integer.parseInt(args[a]);
@@ -139,7 +139,7 @@ public class GameArguments {
 						final int depth = Integer.parseInt(args[a]);
 						players[p] = new GreedyTurnAI(new RolloutEvaluation(
 								rolls, depth, new RandomAI(RAND_METHOD.TREE),
-								new HeuristicEvaluation(), true));
+								new HeuristicEvaluation(false), true));
 					}
 
 				}
@@ -147,13 +147,13 @@ public class GameArguments {
 					a++;
 					final int t = Integer.parseInt(args[a]);
 					players[p] = new Mcts(t, new RolloutEvaluation(
-							1, 20, new RandomHeuristicAI(new ComplexActionComparator()),
-							new MaterialBalanceEvaluation(true), false));
+							1, 1, new RandomHeuristicAI(new ComplexActionComparator()),
+							new HeuristicEvaluation(true), false));
 				}
 				if (args[a].toLowerCase().equals("evolution"))
 					players[p] = new RollingHorizonEvolution(200, .5, .35, 1200,
 							new RolloutEvaluation(5, 1, new RandomHeuristicAI(new ComplexActionComparator()),
-									new HeuristicEvaluation(), false, true), false);
+									new HeuristicEvaluation(false), false, true), false);
 				p = -1;
 			} else if (args[a].toLowerCase().equals("sleep")) {
 				a++;

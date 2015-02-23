@@ -17,7 +17,7 @@ public class TranspositionStats {
 		GameState state;
 		try {
 			state = new GameState(MapLoader.get("a"));
-			final AI p1 = new GreedyTurnAI(new HeuristicEvaluation());
+			final AI p1 = new GreedyTurnAI(new HeuristicEvaluation(false));
 			final Game game = new Game(state, new GameArguments(false, p1, p1, "a", DECK_SIZE.STANDARD));
 			game.run();
 		} catch (IOException e) {

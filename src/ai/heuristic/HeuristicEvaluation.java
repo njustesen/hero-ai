@@ -10,16 +10,25 @@ import model.SquareType;
 public class HeuristicEvaluation implements IHeuristic {
 
 	private static final double MAX_VAL = 20000;
+	private boolean winVal;
 	
-	public HeuristicEvaluation() {
-
+	public HeuristicEvaluation(boolean winVal) {
+		this.winVal = winVal;
 	}
 
 	public double eval(GameState state, boolean p1) {
 
 		int hpDif = hpDif(state, p1);
 		
-		return hpDif;
+		if (!winVal)
+			return hpDif;
+		
+		if (hpDif == 0)
+			return 0.5;
+		else if (hpDif > 0)
+			return 1;
+		
+		return 0;
 
 	}
 

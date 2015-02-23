@@ -75,7 +75,7 @@ public class TreeMoveSearch {
 		}
 	}
 
-	HeuristicEvaluation evalutator = new HeuristicEvaluation();
+	HeuristicEvaluation evalutator = new HeuristicEvaluation(false);
 	ActionPruner pruner = new ActionPruner();
 
 	public List<List<Action>> possibleMoves(GameState state,

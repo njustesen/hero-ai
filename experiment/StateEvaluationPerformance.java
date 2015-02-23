@@ -11,7 +11,7 @@ public class StateEvaluationPerformance {
 	public static void main(String[] args){
 		
 		System.out.println("## STATE EVALUATIONS ##");
-		HeuristicEvaluation evaluator = new HeuristicEvaluation();
+		HeuristicEvaluation evaluator = new HeuristicEvaluation(false);
 		evalGameStates(evaluator, 1000);
 		
 	}

@@ -1,6 +1,7 @@
 package ai.mcts;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 
 import action.Action;
@@ -35,7 +36,22 @@ public class MctsNode {
 		return out.size() == 0;
 	}
 	
-	public String toXml(int depth){
+	public void depth(int depth, List<Integer> depths, HashSet<MctsNode> visited){
+		if (visited.contains(this))
+			return;
+		visited.add(this);
+		if (isLeaf())
+			depths.add(depth);
+		else 
+			for(MctsEdge edge : out)
+				edge.depth(depth, depths, visited);
+		
+	}
+	
+	public String toXml(int depth, HashSet<MctsNode> visited, int max){
+		if (visited.contains(this) || depth > max)
+			return "";
+		visited.add(this);
 		String str = "";
 		String tabs = "";
 		for(int i = 0; i < depth; i++)
@@ -46,7 +62,7 @@ public class MctsNode {
 			str += tabs + "<node h='"+hashCode()+"' vis='"+visits+"' >\n";
 			for (final MctsEdge edge : out)
 				if (edge.to != null)
-					str += edge.toXml(depth+1);
+					str += edge.toXml(depth+1, visited, max);
 			str += tabs + "</node>\n";
 		}
 		return str;

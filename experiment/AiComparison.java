@@ -25,13 +25,41 @@ public class AiComparison {
 
 	public static void main(String[] args) {
 		//Rolling Horizon 50 .5 .35 50 heuristic
-		AI p1 = new Mcts(2025, new RolloutEvaluation(1, 1, new RandomHeuristicAI(new ComplexActionComparator()), new MaterialBalanceEvaluation(true)));
-		AI p2 = new Mcts(2025, new RolloutEvaluation(1, 1, new RandomHeuristicAI(new ComplexActionComparator()), new MaterialBalanceEvaluation(true)));
-		((Mcts)p1).c = ((Mcts)p1).c / 2; 
+		AI p1 = new Mcts(6075, new RolloutEvaluation(1, 1, new RandomHeuristicAI(new ComplexActionComparator()), new MaterialBalanceEvaluation(true)));
+		AI p2 = new GreedyActionAI(new HeuristicEvaluation(false));
 		
-		System.out.println("P1: mcts 2025 rollout 1 1 randomheuristic materialblance win c=" + ((Mcts)p1).c);
-		System.out.println("P2: mcts 2025 rollout 1 1 randomheuristic materialblance win c=" + ((Mcts)p2).c);
-		compare(p1, p2, 50);
+		System.out.println("P1: mcts 2025 rollout 1 1 randomheuristic materialblance win");
+		System.out.println("P2: greedyaction heuristic");
+		compare(p1, p2, 32);
+		
+		p1 = new Mcts(6075, new RolloutEvaluation(1, 1, new RandomHeuristicAI(new ComplexActionComparator()), new HeuristicEvaluation(true)));
+		p2 = new GreedyActionAI(new HeuristicEvaluation(false));
+		
+		System.out.println("P1: mcts 2025 rollout 1 1 randomheuristic heuristic win");
+		System.out.println("P2: greedyaction heuristic");
+		compare(p1, p2, 32);
+		
+		p1 = new Mcts(6075, new RolloutEvaluation(1, 5, new RandomHeuristicAI(new ComplexActionComparator()), new MaterialBalanceEvaluation(true)));
+		p2 = new GreedyActionAI(new HeuristicEvaluation(false));
+		
+		System.out.println("P1: mcts 2025 rollout 1 5 randomheuristic materialblance win");
+		System.out.println("P2: greedyaction heuristic");
+		compare(p1, p2, 32);
+		
+		p1 = new Mcts(6075, new RolloutEvaluation(1, 1000, new RandomHeuristicAI(new ComplexActionComparator()), new WinLoseEvaluation()));
+		p2 = new GreedyActionAI(new HeuristicEvaluation(false));
+		
+		System.out.println("P1: mcts 2025 rollout 1 1000 randomheuristic winlose win");
+		System.out.println("P2: greedyaction heuristic");
+		compare(p1, p2, 32);
+		
+		p1 = new Mcts(6075, new RolloutEvaluation(1, 1000, new RandomHeuristicAI(new ComplexActionComparator()), new WinLoseEvaluation()));
+		p2 = new GreedyActionAI(new HeuristicEvaluation(false));
+		
+		System.out.println("P1: mcts 6075 rollout 1 1000 randomheuristic winlose win");
+		System.out.println("P2: greedyaction heuristic");
+		compare(p1, p2, 32);
+		
 		/*
 		System.out.println("Avg. found in:");
 		System.out.println(Statistics.avgInteger(RollingHorizonEvolution.foundIn));
@@ -65,10 +93,10 @@ public class AiComparison {
 
 		GameState state;
 		try {
-			state = new GameState(MapLoader.get("a"));
+			state = new GameState(MapLoader.get("a-small"));
 			final GameState clone = state.copy();
 			;
-			final Game game = new Game(state, new GameArguments(GFX, p1, p2, "a", DECK_SIZE.STANDARD));
+			final Game game = new Game(state, new GameArguments(GFX, p1, p2, "a-small", DECK_SIZE.SMALL));
 			boolean p1Starting;
 			for (int i = 0; i < games; i++) {
 				if (games == 1)

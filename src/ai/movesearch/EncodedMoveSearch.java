@@ -15,7 +15,7 @@ import game.GameState;
 
 public class EncodedMoveSearch {
 
-	HeuristicEvaluation evalutator = new HeuristicEvaluation();
+	HeuristicEvaluation evalutator = new HeuristicEvaluation(false);
 	ActionPruner pruner = new ActionPruner();
 	List<String> moves;
 	ObjectPool<GameState> pool;

@@ -14,7 +14,7 @@ import game.GameState;
 
 public class MoveSearch {
 
-	HeuristicEvaluation evalutator = new HeuristicEvaluation();
+	HeuristicEvaluation evalutator = new HeuristicEvaluation(false);
 	ActionPruner pruner = new ActionPruner();
 	List<List<Action>> moves;
 	ObjectPool<GameState> pool;

@@ -33,14 +33,16 @@ public class InputController implements MouseListener, KeyListener,
 	public int activeCardIdx;
 	public int mouseX;
 	public int mouseY;
+	private UI ui;
 
 	public InputController(boolean humanP1, boolean humanP2, int gridX,
-			int gridY, int squareSize) {
+			int gridY, int squareSize, UI ui) {
 		this.humanP1 = humanP1;
 		this.humanP2 = humanP2;
 		this.squareSize = squareSize;
 		this.gridX = gridX;
 		this.gridY = gridY;
+		this.ui = ui;
 		possibleActions = new ArrayList<Action>();
 		activeCardIdx = -1;
 	}
@@ -73,8 +75,7 @@ public class InputController implements MouseListener, KeyListener,
 			// System.out.println("Out of grid");
 
 			// Hand
-			final int width = state.map.width * squareSize + squareSize * 2;
-			final int start = (width / 2) - ((6 * squareSize) / 2);
+			final int start = (ui.getWidth() / 2) - ((6 * squareSize) / 2);
 			final int bottom = squareSize + state.map.height * squareSize
 					+ squareSize / 4;
 
@@ -94,7 +95,7 @@ public class InputController implements MouseListener, KeyListener,
 
 			// End turn
 			final int buttonWidth = 90;
-			final int buttonStart = squareSize * state.map.width - 24;
+			final int buttonStart = ui.getWidth() - 24 - squareSize*2;
 			final int buttonHeight = 64;
 			if (arg0.getX() >= buttonStart
 					&& arg0.getX() <= buttonStart + buttonWidth

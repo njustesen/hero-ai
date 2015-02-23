@@ -49,7 +49,7 @@ public class UI extends JComponent {
 
 	public UI(GameState state, boolean humanP1, boolean humanP2) {
 		frame = new JFrame();
-		width = state.map.width * squareSize + squareSize * 2;
+		width = Math.max(8, state.map.width) * squareSize + squareSize * 2;
 		height = state.map.height * squareSize + squareSize * 2 + squareSize;
 		frame.setSize(width, height);
 		frame.setTitle("Hero AI");
@@ -59,7 +59,7 @@ public class UI extends JComponent {
 		this.humanP1 = humanP1;
 		this.humanP2 = humanP2;
 		inputController = new InputController(humanP1, humanP2, squareSize,
-				squareSize, squareSize);
+				squareSize, squareSize, this);
 		this.addMouseListener(inputController);
 		this.addMouseMotionListener(inputController);
 		this.state = state;
@@ -627,7 +627,7 @@ public class UI extends JComponent {
 		if (state.APLeft != 0)
 			image = ImageLib.lib.get("go-inactive");
 
-		g.drawImage(image, squareSize * state.map.width - 24, bottom, null);
+		g.drawImage(image, this.getWidth() - 24 - squareSize*2, bottom, null);
 
 	}
 

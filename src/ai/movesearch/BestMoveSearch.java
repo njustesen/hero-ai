@@ -22,7 +22,7 @@ public class BestMoveSearch {
 
 	Map<String, Integer> transTable = new HashMap<String, Integer>();
 
-	HeuristicEvaluation evalutator = new HeuristicEvaluation();
+	HeuristicEvaluation evalutator = new HeuristicEvaluation(false);
 	ActionPruner pruner = new ActionPruner();
 	List<Action> bestMove = new ArrayList<Action>();
 	double bestValue;
