@@ -1,33 +1,37 @@
 package LineIterators;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
 import game.GameState;
 import model.Card;
-import model.HAMap;
+import model.HaMap;
 import model.Unit;
 
 import org.apache.commons.pool2.ObjectPool;
 import org.apache.commons.pool2.impl.GenericObjectPool;
 
-import ai.util.GameStateFactory;
-import ai.util.UnitFactory;
+import util.MapLoader;
+import util.pool.GameStateFactory;
+import util.pool.UnitFactory;
 
 public class GameStatePoolTest {
 
 	public static void main(String[] args){
-		
-		//borrowReturn();
-		borrowNReturnN(100);
+		try {
+			borrowNReturnN(100);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 		
 	}
 
-	private static void borrowReturn() {
+	private static void borrowReturn() throws IOException {
 		
 		ObjectPool<GameState> pool = new GenericObjectPool<GameState>(new GameStateFactory());
-		GameState state = new GameState(HAMap.mapA);
+		GameState state = new GameState(MapLoader.get("a"));
 		
 		for(int i = 0; i < 100; i++){
 			GameState clone = null;
@@ -54,13 +58,13 @@ public class GameStatePoolTest {
 		
 	}
 	
-	private static void borrowNReturnN(int n) {
+	private static void borrowNReturnN(int n) throws IOException {
 		
 		GenericObjectPool<GameState> pool = new GenericObjectPool<GameState>(new GameStateFactory());
 		pool.setBlockWhenExhausted(false);
 		pool.setMaxTotal(n);
 		List<GameState> states = new ArrayList<GameState>();
-		GameState state = new GameState(HAMap.mapA);
+		GameState state = new GameState(MapLoader.get("a"));
 		
 		for(int i = 0; i < n; i++){
 			GameState clone = null;

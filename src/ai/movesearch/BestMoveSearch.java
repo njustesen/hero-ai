@@ -7,10 +7,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import model.Unit;
-
-import org.apache.commons.pool2.ObjectPool;
-
+import util.pool.ObjectPools;
 import action.Action;
 import action.SingletonAction;
 import ai.heuristic.HeuristicEvaluation;
@@ -22,29 +19,26 @@ public class BestMoveSearch {
 
 	Map<String, Integer> transTable = new HashMap<String, Integer>();
 
-	HeuristicEvaluation evalutator = new HeuristicEvaluation();
+	HeuristicEvaluation evalutator = new HeuristicEvaluation(false);
 	ActionPruner pruner = new ActionPruner();
 	List<Action> bestMove = new ArrayList<Action>();
 	double bestValue;
 	private IHeuristic heuristic;
 	private final GameStateHasher hasher = new GameStateHasher();
 
-	public List<Action> bestMove(GameState state, ObjectPool<GameState> pool,
-			ObjectPool<Unit> unitPool, IHeuristic heuristic,
+	public List<Action> bestMove(GameState state, IHeuristic heuristic,
 			List<Action> lastMove) {
 
 		this.heuristic = heuristic;
 
 		transTable.clear();
+		// FORCE GC?
 		bestValue = -1000000;
 		bestMove = null;
-		try {
-			addMoves(state, new ArrayList<Action>(), 0, lastMove);
-		} catch (final Exception e) {
-			e.printStackTrace();
-		}
-		System.out.print("\n");
 		printStats();
+		addMoves(state, new ArrayList<Action>(), 0, lastMove);
+
+		// printStats();
 
 		return bestMove;
 
@@ -62,13 +56,12 @@ public class BestMoveSearch {
 			}
 		}
 
-		// System.out.println(c + ";" + transTable.keySet().size() + ";" + t +
-		// ";" + tt + ";");
+		System.out.println(c + ";" + transTable.keySet().size() + ";" + t + ";"
+				+ tt + ";");
 	}
 
 	private void addMoves(GameState state, List<Action> move, int depth,
-			List<Action> lastMove) throws IllegalStateException,
-			UnsupportedOperationException, Exception {
+			List<Action> lastMove) {
 
 		// End turn
 		if (state.APLeft == 0) {
@@ -81,6 +74,8 @@ public class BestMoveSearch {
 					bestMove = nextMove;
 				}
 			}
+			// ObjectPools.returnState(state);
+			state.returnUnits();
 			return;
 		}
 
@@ -88,7 +83,10 @@ public class BestMoveSearch {
 		final List<Action> actions = new ArrayList<Action>();
 		state.possibleActions(actions);
 		pruner.prune(actions, state);
-		final GameState next = state.copy();
+
+		// final GameState next = state.copy();
+		final GameState next = ObjectPools.borrowState(null);
+		next.imitate(state);
 
 		int i = 0;
 		for (final Action action : actions) {

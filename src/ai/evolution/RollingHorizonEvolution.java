@@ -7,7 +7,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Random;
 
-import model.HAMap;
+import model.HaMap;
 import action.Action;
 import ai.AI;
 import ai.heuristic.IHeuristic;
@@ -63,7 +63,7 @@ public class RollingHorizonEvolution implements AI {
 		setup(state);
 
 		final List<Genome> killed = new ArrayList<Genome>();
-		final GameState clone = new GameState(HAMap.mapA);
+		final GameState clone = new GameState(state.map);
 		clone.imitate(state);
 		
 		int found = 0;
@@ -140,7 +140,7 @@ public class RollingHorizonEvolution implements AI {
 	private void setup(GameState state) {
 
 		pop.clear();
-		final GameState clone = new GameState(HAMap.mapA);
+		final GameState clone = new GameState(null);
 
 		for (int i = 0; i < popSize; i++) {
 			clone.imitate(state);

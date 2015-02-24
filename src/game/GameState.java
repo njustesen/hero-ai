@@ -3,27 +3,21 @@ package game;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.List;
-
-import org.apache.commons.pool2.ObjectPool;
-
-import java.util.Map;
-import java.util.Set;
 
 import model.AttackType;
 import model.Card;
 import model.CardType;
+import model.DECK_SIZE;
 import model.Direction;
-import model.HAMap;
+import model.HaMap;
 import model.Position;
 import model.SquareType;
 import model.Unit;
 import model.team.Council;
 
-import org.apache.commons.pool2.ObjectPool;
-
 import util.CachedLines;
+import util.pool.ObjectPools;
 import action.Action;
 import action.DropAction;
 import action.EndTurnAction;
@@ -42,7 +36,7 @@ public class GameState {
 	private static final int POTION_HEAL = 1000;
 	private static final int TURN_LIMIT = 100;
 
-	public HAMap map;
+	public HaMap map;
 	public boolean p1Turn;
 	public int turn;
 	public int APLeft;
@@ -55,9 +49,7 @@ public class GameState {
 
 	public List<Position> chainTargets;
 
-	public ObjectPool<Unit> unitPool;
-
-	public GameState(HAMap map) {
+	public GameState(HaMap map) {
 		super();
 		isTerminal = false;
 		this.map = map;
@@ -69,10 +61,13 @@ public class GameState {
 		p1Deck = new ArrayList<Card>();
 		p2Deck = new ArrayList<Card>();
 		chainTargets = new ArrayList<Position>();
-		units = new Unit[map.width][map.height];
+		if (map != null)
+			units = new Unit[map.width][map.height];
+		else
+			units = new Unit[0][0];
 	}
 
-	public GameState(HAMap map, boolean p1Turn, int turn, int APLeft,
+	public GameState(HaMap map, boolean p1Turn, int turn, int APLeft,
 			Unit[][] units, List<Card> p1Hand, List<Card> p2Hand,
 			List<Card> p1Deck, List<Card> p2Deck, List<Position> chainTargets,
 			boolean isTerminal) {
@@ -90,21 +85,21 @@ public class GameState {
 		this.isTerminal = isTerminal;
 	}
 
-	public void init() {
-		shuffleDecks();
+	public void init(DECK_SIZE deckSize) {
+		shuffleDecks(deckSize);
 		dealCards();
 		for (final Position pos : map.p1Crystals) {
-			units[pos.x][pos.y] = borrowUnit(Card.CRYSTAL, true);
+			units[pos.x][pos.y] = ObjectPools.borrowUnit(Card.CRYSTAL, true);
 			units[pos.x][pos.y].init(Card.CRYSTAL, true);
 		}
 		for (final Position pos : map.p2Crystals) {
-			units[pos.x][pos.y] = borrowUnit(Card.CRYSTAL, false);
+			units[pos.x][pos.y] = ObjectPools.borrowUnit(Card.CRYSTAL, false);
 			units[pos.x][pos.y].init(Card.CRYSTAL, false);
 		}
 	}
 
-	private void shuffleDecks() {
-		for (final Card type : Council.deck){
+	private void shuffleDecks(DECK_SIZE deckSize) {
+		for (final Card type : Council.deck(deckSize)){
 			p1Deck.add(type);
 			p2Deck.add(type);
 		}
@@ -284,7 +279,7 @@ public class GameState {
 							&& p1Turn)
 						return;
 
-					deploy(drop.type, drop.to, unitPool);
+					deploy(drop.type, drop.to);
 
 				}
 
@@ -453,7 +448,7 @@ public class GameState {
 				if (units[pos.x][pos.y] != null
 						&& units[pos.x][pos.y].p1Owner != p1Turn) {
 					if (units[pos.x][pos.y].hp == 0) {
-						returnUnit(units[pos.x][pos.y]);
+						ObjectPools.returnUnit(units[pos.x][pos.y]);
 						units[pos.x][pos.y] = null;
 						continue;
 					}
@@ -469,7 +464,7 @@ public class GameState {
 					if (units[pos.x][pos.y].hp <= 0)
 						if (units[pos.x][pos.y].unitClass.card == Card.CRYSTAL) {
 							checkWinOnCrystals(p1Turn ? 2 : 1);
-							returnUnit(units[pos.x][pos.y]);
+							ObjectPools.returnUnit(units[pos.x][pos.y]);
 							units[pos.x][pos.y] = null;
 						} else {
 							units[pos.x][pos.y].hp = 0;
@@ -483,16 +478,10 @@ public class GameState {
 
 	}
 
-	private void returnUnit(Unit unit) throws Exception {
-		if (unitPool == null)
-			return;
-		unitPool.returnObject(unit);
-	}
-
 	private void attack(Unit attacker, Position attPos, Unit defender,
 			Position defPos) throws Exception {
 		if (defender.hp == 0) {
-			returnUnit(units[defPos.x][defPos.y]);
+			ObjectPools.returnUnit(units[defPos.x][defPos.y]);
 			units[defPos.x][defPos.y] = null;
 			move(attacker, attPos, defPos);
 			checkWinOnUnits(p1Turn ? 2 : 1);
@@ -506,7 +495,7 @@ public class GameState {
 			if (defender.hp <= 0) {
 				defender.hp = 0;
 				if (defender.unitClass.card == Card.CRYSTAL) {
-					returnUnit(units[defPos.x][defPos.y]);
+					ObjectPools.returnUnit(units[defPos.x][defPos.y]);
 					units[defPos.x][defPos.y] = null;
 					checkWinOnCrystals(p1Turn ? 2 : 1);
 				} else {
@@ -555,7 +544,7 @@ public class GameState {
 				units[bestPos.x][bestPos.y].hp = 0;
 				if (units[bestPos.x][bestPos.y].unitClass.card == Card.CRYSTAL) {
 					checkWinOnCrystals(p1Turn ? 2 : 1);
-					returnUnit(units[bestPos.x][bestPos.y]);
+					ObjectPools.returnUnit(units[bestPos.x][bestPos.y]);
 					units[bestPos.x][bestPos.y] = null;
 				} else {
 					units[bestPos.x][bestPos.y].hp = 0;
@@ -765,9 +754,13 @@ public class GameState {
 			return;
 
 		if (units[defPos.x][defPos.y] != null) {
-			returnUnit(units[defPos.x][defPos.y]);
+			ObjectPools.returnUnit(units[defPos.x][defPos.y]);
 			units[defPos.x][defPos.y] = null;
 		}
+		
+		if (units[newPos.x][newPos.y] != null)
+			ObjectPools.returnUnit(units[newPos.x][newPos.y]);
+		
 		units[newPos.x][newPos.y] = defender;
 
 	}
@@ -796,7 +789,7 @@ public class GameState {
 
 	private void move(Unit unit, Position from, Position to) throws Exception {
 		if (units[to.x][to.y] != null)
-			returnUnit(units[to.x][to.y]);
+			ObjectPools.returnUnit(units[to.x][to.y]);
 		units[from.x][from.y] = null;
 		units[to.x][to.y] = unit;
 		APLeft--;
@@ -814,23 +807,11 @@ public class GameState {
 		APLeft--;
 	}
 
-	private void deploy(Card card, Position pos, ObjectPool<Unit> unitPool) {
-		units[pos.x][pos.y] = borrowUnit(card, p1Turn);
+	private void deploy(Card card, Position pos) {
+		units[pos.x][pos.y] = ObjectPools.borrowUnit(card, p1Turn);
 		units[pos.x][pos.y].init(card, p1Turn);
 		currentHand().remove(card);
 		APLeft--;
-	}
-
-	private Unit borrowUnit(Card card, boolean p1) {
-		if (unitPool == null)
-			return new Unit(card, p1);
-		else
-			try {
-				return unitPool.borrowObject();
-			} catch (final Exception e) {
-				e.printStackTrace();
-				return new Unit(card, p1);
-			}
 	}
 
 	private void endTurn() throws Exception {
@@ -927,7 +908,7 @@ public class GameState {
 			for (int y = 0; y < map.height; y++)
 				if (units[x][y] != null && units[x][y].p1Owner == p1
 						&& units[x][y].hp == 0) {
-					returnUnit(units[x][y]);
+					ObjectPools.returnUnit(units[x][y]);
 					units[x][y] = null;
 				}
 	}
@@ -955,13 +936,22 @@ public class GameState {
 	}
 
 	public void imitate(GameState state) {
-			for (int x = 0; x < map.width; x++)
-				for (int y = 0; y < map.height; y++)
-					if (state.units[x][y] != null)
-							units[x][y] = state.units[x][y].copy();
-						else
-							units[x][y] = null;
-					
+		
+		map = state.map;
+		if (units.length != state.units.length || (state.units.length > 0 && units[0].length != state.units[0].length))
+			units = new Unit[map.width][map.height];
+			
+		for (int x = 0; x < map.width; x++)
+			for (int y = 0; y < map.height; y++){
+				if (units[x][y] != null){
+					ObjectPools.returnUnit(units[x][y]);
+					units[x][y] = null;
+				}
+				if (state.units[x][y] != null){
+					units[x][y] = ObjectPools.borrowUnit(null, false);
+					units[x][y].imitate(state.units[x][y]);
+				}
+			}
 		p1Hand.clear();
 		p1Hand.addAll(state.p1Hand);
 		p2Hand.clear();
@@ -1047,11 +1037,11 @@ public class GameState {
 		return -1;
 	}
 
-	public void returnUnits() throws Exception {
+	public void returnUnits() {
 		for (int x = 0; x < map.width; x++)
 			for (int y = 0; y < map.height; y++)
 				if (units[x][y] != null) {
-					unitPool.returnObject(units[x][y]);
+					ObjectPools.returnUnit(units[x][y]);
 					units[x][y] = null;
 				}
 	}

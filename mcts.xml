@@ -1,0 +1,1454 @@
+<node h='1373712755' vis='65735' >
+	<edge p='1' a='DropAction [type=CLERIC, to=(0,4)]' vis='1468' avg='0.8549046321525886' >
+		<node h='393584388' vis='1468' >
+			<edge p='1' a='DropAction [type=SHINING_HELM, to=(0,4)]' vis='368' avg='0.9320652173913043' >
+				<node h='723176356' vis='368' >
+					<edge p='1' a='DropAction [type=CLERIC, to=(0,0)]' vis='50' avg='0.92' >
+						<node h='1815056919' vis='70' >
+							<edge p='1' a='EndTurnAction []' vis='68' avg='0.8970588235294118' >
+							</edge>
+						</node>
+					</edge>
+					<edge p='1' a='DropAction [type=WIZARD, to=(0,0)]' vis='48' avg='0.8958333333333334' >
+						<node h='537131882' vis='64' >
+							<edge p='1' a='EndTurnAction []' vis='62' avg='0.8870967741935484' >
+							</edge>
+						</node>
+					</edge>
+					<edge p='1' a='DropAction [type=INFERNO, to=(6,2)]' vis='64' avg='1.0' >
+						<node h='60443532' vis='1634' >
+							<edge p='1' a='EndTurnAction []' vis='1632' avg='1.0' >
+							</edge>
+						</node>
+					</edge>
+					<edge p='1' a='UnitAction [from=(0,4), to=(0,2)]' vis='47' avg='0.8723404255319149' >
+						<node h='2018162119' vis='83' >
+							<edge p='1' a='EndTurnAction []' vis='80' avg='0.8375' >
+							</edge>
+						</node>
+					</edge>
+					<edge p='1' a='UnitAction [from=(0,4), to=(1,4)]' vis='54' avg='0.9444444444444444' >
+						<node h='846626475' vis='64' >
+							<edge p='1' a='EndTurnAction []' vis='62' avg='0.9516129032258065' >
+							</edge>
+						</node>
+					</edge>
+					<edge p='1' a='UnitAction [from=(0,4), to=(0,3)]' vis='54' avg='0.9444444444444444' >
+						<node h='1354288190' vis='64' >
+							<edge p='1' a='EndTurnAction []' vis='62' avg='0.9354838709677419' >
+							</edge>
+						</node>
+					</edge>
+					<edge p='1' a='UnitAction [from=(0,4), to=(2,4)]' vis='50' avg='0.92' >
+						<node h='891623291' vis='57' >
+							<edge p='1' a='EndTurnAction []' vis='55' avg='0.8909090909090909' >
+							</edge>
+						</node>
+					</edge>
+				</node>
+			</edge>
+			<edge p='1' a='DropAction [type=CLERIC, to=(0,0)]' vis='95' avg='0.6526315789473685' >
+				<node h='117645428' vis='155' >
+					<edge p='1' a='DropAction [type=SHINING_HELM, to=(0,4)]' vis='20' avg='0.85' >
+					</edge>
+					<edge p='1' a='DropAction [type=SHINING_HELM, to=(0,0)]' vis='22' avg='0.9545454545454546' >
+						<node h='1581753156' vis='52' >
+							<edge p='1' a='EndTurnAction []' vis='50' avg='0.96' >
+							</edge>
+						</node>
+					</edge>
+					<edge p='1' a='DropAction [type=INFERNO, to=(6,2)]' vis='24' avg='1.0' >
+						<node h='2046945060' vis='2933' >
+							<edge p='1' a='EndTurnAction []' vis='2930' avg='1.0' >
+							</edge>
+						</node>
+					</edge>
+					<edge p='1' a='UnitAction [from=(0,0), to=(0,2)]' vis='10' avg='0.4' >
+						<node h='640269597' vis='16' >
+							<edge p='1' a='EndTurnAction []' vis='14' avg='0.21428571428571427' >
+							</edge>
+						</node>
+					</edge>
+					<edge p='1' a='UnitAction [from=(0,4), to=(0,3)]' vis='9' avg='0.3333333333333333' >
+						<node h='1127255466' vis='15' >
+							<edge p='1' a='EndTurnAction []' vis='13' avg='0.23076923076923078' >
+							</edge>
+						</node>
+					</edge>
+					<edge p='1' a='UnitAction [from=(0,4), to=(2,4)]' vis='9' avg='0.3333333333333333' >
+						<node h='1209542372' vis='14' >
+							<edge p='1' a='EndTurnAction []' vis='12' avg='0.25' >
+							</edge>
+						</node>
+					</edge>
+					<edge p='1' a='UnitAction [from=(0,4), to=(0,2)]' vis='11' avg='0.45454545454545453' >
+						<node h='1689106659' vis='20' >
+							<edge p='1' a='EndTurnAction []' vis='18' avg='0.3888888888888889' >
+							</edge>
+						</node>
+					</edge>
+					<edge p='1' a='UnitAction [from=(0,4), to=(1,4)]' vis='9' avg='0.3333333333333333' >
+						<node h='1835908144' vis='14' >
+							<edge p='1' a='EndTurnAction []' vis='12' avg='0.25' >
+							</edge>
+						</node>
+					</edge>
+					<edge p='1' a='UnitAction [from=(0,0), to=(0,1)]' vis='10' avg='0.5' >
+						<node h='664583086' vis='14' >
+							<edge p='1' a='EndTurnAction []' vis='12' avg='0.3333333333333333' >
+							</edge>
+						</node>
+					</edge>
+					<edge p='1' a='UnitAction [from=(0,0), to=(1,1)]' vis='10' avg='0.4' >
+						<node h='168392754' vis='15' >
+							<edge p='1' a='EndTurnAction []' vis='13' avg='0.38461538461538464' >
+							</edge>
+						</node>
+					</edge>
+					<edge p='1' a='UnitAction [from=(0,0), to=(1,0)]' vis='9' avg='0.3333333333333333' >
+						<node h='1939846944' vis='14' >
+							<edge p='1' a='EndTurnAction []' vis='12' avg='0.25' >
+							</edge>
+						</node>
+					</edge>
+					<edge p='1' a='UnitAction [from=(0,0), to=(2,0)]' vis='10' avg='0.4' >
+						<node h='485276659' vis='15' >
+							<edge p='1' a='EndTurnAction []' vis='13' avg='0.38461538461538464' >
+							</edge>
+						</node>
+					</edge>
+				</node>
+			</edge>
+			<edge p='1' a='DropAction [type=WIZARD, to=(0,0)]' vis='63' avg='0.5238095238095238' >
+				<node h='625659092' vis='122' >
+					<edge p='1' a='DropAction [type=SHINING_HELM, to=(0,4)]' vis='16' avg='0.875' >
+					</edge>
+					<edge p='1' a='DropAction [type=SHINING_HELM, to=(0,0)]' vis='14' avg='0.8571428571428571' >
+						<node h='1372423532' vis='25' >
+							<edge p='1' a='EndTurnAction []' vis='23' avg='0.9130434782608695' >
+							</edge>
+						</node>
+					</edge>
+					<edge p='1' a='DropAction [type=INFERNO, to=(6,2)]' vis='18' avg='1.0' >
+						<node h='977259800' vis='2908' >
+							<edge p='1' a='EndTurnAction []' vis='2905' avg='1.0' >
+							</edge>
+						</node>
+					</edge>
+					<edge p='1' a='UnitAction [from=(0,4), to=(2,4)]' vis='9' avg='0.4444444444444444' >
+						<node h='1171606842' vis='15' >
+							<edge p='1' a='EndTurnAction []' vis='13' avg='0.38461538461538464' >
+							</edge>
+						</node>
+					</edge>
+					<edge p='1' a='UnitAction [from=(0,0), to=(2,0)]' vis='8' avg='0.375' >
+						<node h='507566477' vis='13' >
+							<edge p='1' a='EndTurnAction []' vis='11' avg='0.36363636363636365' >
+							</edge>
+						</node>
+					</edge>
+					<edge p='1' a='UnitAction [from=(0,0), to=(1,0)]' vis='9' avg='0.4444444444444444' >
+						<node h='143136019' vis='14' >
+							<edge p='1' a='EndTurnAction []' vis='12' avg='0.4166666666666667' >
+							</edge>
+						</node>
+					</edge>
+					<edge p='1' a='UnitAction [from=(0,0), to=(0,1)]' vis='9' avg='0.4444444444444444' >
+						<node h='1222951411' vis='13' >
+							<edge p='1' a='EndTurnAction []' vis='11' avg='0.36363636363636365' >
+							</edge>
+						</node>
+					</edge>
+					<edge p='1' a='UnitAction [from=(0,4), to=(0,3)]' vis='6' avg='0.16666666666666666' >
+						<node h='251268520' vis='11' >
+							<edge p='1' a='EndTurnAction []' vis='9' avg='0.1111111111111111' >
+							</edge>
+						</node>
+					</edge>
+					<edge p='1' a='UnitAction [from=(0,0), to=(1,1)]' vis='7' avg='0.2857142857142857' >
+						<node h='1326212380' vis='10' >
+							<edge p='1' a='EndTurnAction []' vis='8' avg='0.125' >
+							</edge>
+						</node>
+					</edge>
+					<edge p='1' a='UnitAction [from=(0,0), to=(0,2)]' vis='9' avg='0.5555555555555556' >
+						<node h='236264699' vis='14' >
+							<edge p='1' a='EndTurnAction []' vis='12' avg='0.3333333333333333' >
+							</edge>
+						</node>
+					</edge>
+					<edge p='1' a='UnitAction [from=(0,4), to=(1,4)]' vis='7' avg='0.2857142857142857' >
+						<node h='813185189' vis='12' >
+							<edge p='1' a='EndTurnAction []' vis='10' avg='0.1' >
+							</edge>
+						</node>
+					</edge>
+					<edge p='1' a='UnitAction [from=(0,4), to=(0,2)]' vis='8' avg='0.375' >
+						<node h='784870937' vis='16' >
+							<edge p='1' a='EndTurnAction []' vis='14' avg='0.2857142857142857' >
+							</edge>
+						</node>
+					</edge>
+				</node>
+			</edge>
+			<edge p='1' a='DropAction [type=INFERNO, to=(6,2)]' vis='638' avg='1.0' >
+				<node h='1269052318' vis='10977' >
+					<edge p='1' a='DropAction [type=SHINING_HELM, to=(0,4)]' vis='1570' avg='1.0' >
+					</edge>
+					<edge p='1' a='DropAction [type=CLERIC, to=(0,0)]' vis='1570' avg='1.0' >
+					</edge>
+					<edge p='1' a='DropAction [type=WIZARD, to=(0,0)]' vis='1570' avg='1.0' >
+					</edge>
+					<edge p='1' a='UnitAction [from=(0,4), to=(2,4)]' vis='1556' avg='0.9993573264781491' >
+						<node h='154726622' vis='1565' >
+							<edge p='1' a='EndTurnAction []' vis='1563' avg='0.999360204734485' >
+							</edge>
+						</node>
+					</edge>
+					<edge p='1' a='UnitAction [from=(0,4), to=(0,2)]' vis='1570' avg='1.0' >
+						<node h='2088845539' vis='2926' >
+							<edge p='1' a='EndTurnAction []' vis='2923' avg='1.0' >
+							</edge>
+						</node>
+					</edge>
+					<edge p='1' a='UnitAction [from=(0,4), to=(0,3)]' vis='1570' avg='1.0' >
+						<node h='1172136662' vis='1581' >
+							<edge p='1' a='EndTurnAction []' vis='1579' avg='1.0' >
+							</edge>
+						</node>
+					</edge>
+					<edge p='1' a='UnitAction [from=(0,4), to=(1,4)]' vis='1569' avg='1.0' >
+						<node h='67770417' vis='1579' >
+							<edge p='1' a='EndTurnAction []' vis='1577' avg='1.0' >
+							</edge>
+						</node>
+					</edge>
+				</node>
+			</edge>
+			<edge p='1' a='UnitAction [from=(0,4), to=(2,4)]' vis='79' avg='0.5949367088607594' >
+				<node h='1147255982' vis='79' >
+					<edge p='1' a='DropAction [type=SHINING_HELM, to=(2,4)]' vis='7' avg='0.7142857142857143' >
+					</edge>
+					<edge p='1' a='DropAction [type=CLERIC, to=(0,4)]' vis='6' avg='0.6666666666666666' >
+						<node h='1823106708' vis='6' >
+							<edge p='1' a='EndTurnAction []' vis='5' avg='0.6' >
+							</edge>
+						</node>
+					</edge>
+					<edge p='1' a='DropAction [type=CLERIC, to=(0,0)]' vis='5' avg='0.4' >
+					</edge>
+					<edge p='1' a='DropAction [type=WIZARD, to=(0,4)]' vis='6' avg='0.6666666666666666' >
+						<node h='800932809' vis='6' >
+							<edge p='1' a='EndTurnAction []' vis='5' avg='0.6' >
+							</edge>
+						</node>
+					</edge>
+					<edge p='1' a='DropAction [type=WIZARD, to=(0,0)]' vis='6' avg='0.5' >
+					</edge>
+					<edge p='1' a='DropAction [type=INFERNO, to=(6,2)]' vis='9' avg='1.0' >
+					</edge>
+					<edge p='1' a='UnitAction [from=(2,4), to=(2,2)]' vis='4' avg='0.25' >
+						<node h='348132436' vis='18' >
+							<edge p='1' a='EndTurnAction []' vis='14' avg='0.07142857142857142' >
+							</edge>
+						</node>
+					</edge>
+					<edge p='1' a='UnitAction [from=(2,4), to=(0,4)]' vis='6' avg='0.5' >
+						<node h='516670669' vis='23' >
+							<edge p='1' a='EndTurnAction []' vis='19' avg='0.2631578947368421' >
+							</edge>
+						</node>
+					</edge>
+					<edge p='1' a='UnitAction [from=(2,4), to=(4,4)]' vis='8' avg='0.75' >
+						<node h='1237319747' vis='8' >
+							<edge p='1' a='EndTurnAction []' vis='7' avg='0.7142857142857143' >
+							</edge>
+						</node>
+					</edge>
+					<edge p='1' a='UnitAction [from=(2,4), to=(3,4)]' vis='6' avg='0.5' >
+						<node h='1552061673' vis='10' >
+							<edge p='1' a='EndTurnAction []' vis='8' avg='0.25' >
+							</edge>
+						</node>
+					</edge>
+					<edge p='1' a='UnitAction [from=(2,4), to=(3,3)]' vis='4' avg='0.25' >
+						<node h='226901527' vis='4' >
+							<edge p='1' a='EndTurnAction []' vis='3' avg='0.0' >
+							</edge>
+						</node>
+					</edge>
+					<edge p='1' a='UnitAction [from=(2,4), to=(1,4)]' vis='6' avg='0.5' >
+						<node h='627456261' vis='12' >
+							<edge p='1' a='EndTurnAction []' vis='10' avg='0.4' >
+							</edge>
+						</node>
+					</edge>
+					<edge p='1' a='UnitAction [from=(2,4), to=(2,3)]' vis='5' avg='0.4' >
+						<node h='1347587827' vis='14' >
+							<edge p='1' a='EndTurnAction []' vis='11' avg='0.18181818181818182' >
+							</edge>
+						</node>
+					</edge>
+				</node>
+			</edge>
+			<edge p='1' a='UnitAction [from=(0,4), to=(0,2)]' vis='67' avg='0.5522388059701493' >
+				<node h='307687995' vis='115' >
+					<edge p='1' a='DropAction [type=SHINING_HELM, to=(0,2)]' vis='14' avg='0.8571428571428571' >
+					</edge>
+					<edge p='1' a='DropAction [type=CLERIC, to=(0,4)]' vis='6' avg='0.16666666666666666' >
+					</edge>
+					<edge p='1' a='DropAction [type=CLERIC, to=(0,0)]' vis='9' avg='0.4444444444444444' >
+					</edge>
+					<edge p='1' a='DropAction [type=WIZARD, to=(0,4)]' vis='8' avg='0.375' >
+						<node h='171509989' vis='17' >
+							<edge p='1' a='EndTurnAction []' vis='15' avg='0.3333333333333333' >
+							</edge>
+						</node>
+					</edge>
+					<edge p='1' a='DropAction [type=WIZARD, to=(0,0)]' vis='8' avg='0.375' >
+					</edge>
+					<edge p='1' a='DropAction [type=INFERNO, to=(6,2)]' vis='18' avg='1.0' >
+					</edge>
+					<edge p='1' a='UnitAction [from=(0,2), to=(2,2)]' vis='6' avg='0.16666666666666666' >
+					</edge>
+					<edge p='1' a='UnitAction [from=(0,2), to=(0,4)]' vis='6' avg='0.16666666666666666' >
+					</edge>
+					<edge p='1' a='UnitAction [from=(0,2), to=(0,0)]' vis='8' avg='0.5' >
+						<node h='713418989' vis='26' >
+							<edge p='1' a='EndTurnAction []' vis='21' avg='0.2857142857142857' >
+							</edge>
+						</node>
+					</edge>
+					<edge p='1' a='UnitAction [from=(0,2), to=(1,1)]' vis='8' avg='0.5' >
+						<node h='268463123' vis='22' >
+							<edge p='1' a='EndTurnAction []' vis='18' avg='0.3333333333333333' >
+							</edge>
+						</node>
+					</edge>
+					<edge p='1' a='UnitAction [from=(0,2), to=(0,1)]' vis='6' avg='0.16666666666666666' >
+						<node h='18761259' vis='20' >
+							<edge p='1' a='EndTurnAction []' vis='16' avg='0.25' >
+							</edge>
+						</node>
+					</edge>
+					<edge p='1' a='UnitAction [from=(0,2), to=(0,3)]' vis='8' avg='0.5' >
+						<node h='907018964' vis='18' >
+							<edge p='1' a='EndTurnAction []' vis='15' avg='0.4' >
+							</edge>
+						</node>
+					</edge>
+					<edge p='1' a='UnitAction [from=(0,2), to=(1,2)]' vis='8' avg='0.5' >
+						<node h='1265853252' vis='34' >
+							<edge p='1' a='EndTurnAction []' vis='28' avg='0.35714285714285715' >
+							</edge>
+						</node>
+					</edge>
+				</node>
+			</edge>
+			<edge p='1' a='UnitAction [from=(0,4), to=(0,3)]' vis='81' avg='0.6049382716049383' >
+				<node h='75765716' vis='81' >
+					<edge p='1' a='DropAction [type=SHINING_HELM, to=(0,3)]' vis='10' avg='0.9' >
+					</edge>
+					<edge p='1' a='DropAction [type=CLERIC, to=(0,4)]' vis='8' avg='0.75' >
+						<node h='2084069788' vis='8' >
+							<edge p='1' a='EndTurnAction []' vis='7' avg='0.7142857142857143' >
+							</edge>
+						</node>
+					</edge>
+					<edge p='1' a='DropAction [type=CLERIC, to=(0,0)]' vis='6' avg='0.3333333333333333' >
+					</edge>
+					<edge p='1' a='DropAction [type=WIZARD, to=(0,4)]' vis='6' avg='0.5' >
+						<node h='1212120302' vis='6' >
+							<edge p='1' a='EndTurnAction []' vis='5' avg='0.4' >
+							</edge>
+						</node>
+					</edge>
+					<edge p='1' a='DropAction [type=WIZARD, to=(0,0)]' vis='5' avg='0.4' >
+					</edge>
+					<edge p='1' a='DropAction [type=INFERNO, to=(6,2)]' vis='11' avg='1.0' >
+					</edge>
+					<edge p='1' a='UnitAction [from=(0,3), to=(0,4)]' vis='6' avg='0.5' >
+					</edge>
+					<edge p='1' a='UnitAction [from=(0,3), to=(2,3)]' vis='5' avg='0.4' >
+					</edge>
+					<edge p='1' a='UnitAction [from=(0,3), to=(1,2)]' vis='5' avg='0.2' >
+					</edge>
+					<edge p='1' a='UnitAction [from=(0,3), to=(1,4)]' vis='6' avg='0.5' >
+					</edge>
+					<edge p='1' a='UnitAction [from=(0,3), to=(0,2)]' vis='7' avg='0.5714285714285714' >
+						<node h='123865019' vis='16' >
+							<edge p='1' a='EndTurnAction []' vis='13' avg='0.38461538461538464' >
+							</edge>
+						</node>
+					</edge>
+					<edge p='1' a='UnitAction [from=(0,3), to=(0,1)]' vis='5' avg='0.4' >
+					</edge>
+				</node>
+			</edge>
+			<edge p='1' a='UnitAction [from=(0,4), to=(1,4)]' vis='76' avg='0.5921052631578947' >
+				<node h='273490873' vis='76' >
+					<edge p='1' a='DropAction [type=SHINING_HELM, to=(1,4)]' vis='10' avg='1.0' >
+					</edge>
+					<edge p='1' a='DropAction [type=CLERIC, to=(0,4)]' vis='5' avg='0.2' >
+						<node h='946097931' vis='5' >
+							<edge p='1' a='EndTurnAction []' vis='4' avg='0.0' >
+							</edge>
+						</node>
+					</edge>
+					<edge p='1' a='DropAction [type=CLERIC, to=(0,0)]' vis='5' avg='0.4' >
+					</edge>
+					<edge p='1' a='DropAction [type=WIZARD, to=(0,4)]' vis='7' avg='0.5714285714285714' >
+						<node h='43463123' vis='7' >
+							<edge p='1' a='EndTurnAction []' vis='6' avg='0.5' >
+							</edge>
+						</node>
+					</edge>
+					<edge p='1' a='DropAction [type=WIZARD, to=(0,0)]' vis='5' avg='0.2' >
+					</edge>
+					<edge p='1' a='DropAction [type=INFERNO, to=(6,2)]' vis='10' avg='1.0' >
+					</edge>
+					<edge p='1' a='UnitAction [from=(1,4), to=(0,4)]' vis='5' avg='0.4' >
+					</edge>
+					<edge p='1' a='UnitAction [from=(1,4), to=(2,4)]' vis='8' avg='0.75' >
+						<node h='2020820777' vis='8' >
+							<edge p='1' a='EndTurnAction []' vis='7' avg='0.7142857142857143' >
+							</edge>
+						</node>
+					</edge>
+					<edge p='1' a='UnitAction [from=(1,4), to=(0,3)]' vis='5' avg='0.4' >
+					</edge>
+					<edge p='1' a='UnitAction [from=(1,4), to=(1,2)]' vis='7' avg='0.5714285714285714' >
+					</edge>
+					<edge p='1' a='UnitAction [from=(1,4), to=(3,4)]' vis='4' avg='0.25' >
+					</edge>
+					<edge p='1' a='UnitAction [from=(1,4), to=(2,3)]' vis='4' avg='0.25' >
+					</edge>
+				</node>
+			</edge>
+		</node>
+	</edge>
+	<edge p='1' a='DropAction [type=CLERIC, to=(0,0)]' vis='1020' avg='0.8205882352941176' >
+		<node h='1330841378' vis='1020' >
+			<edge p='1' a='DropAction [type=SHINING_HELM, to=(0,0)]' vis='231' avg='0.9393939393939394' >
+				<node h='1408856541' vis='231' >
+					<edge p='1' a='DropAction [type=CLERIC, to=(0,4)]' vis='30' avg='0.9666666666666667' >
+					</edge>
+					<edge p='1' a='DropAction [type=WIZARD, to=(0,4)]' vis='30' avg='0.9666666666666667' >
+						<node h='497192765' vis='50' >
+							<edge p='1' a='EndTurnAction []' vis='48' avg='0.9583333333333334' >
+							</edge>
+						</node>
+					</edge>
+					<edge p='1' a='DropAction [type=INFERNO, to=(6,2)]' vis='33' avg='1.0' >
+						<node h='1276013693' vis='1372' >
+							<edge p='1' a='EndTurnAction []' vis='1370' avg='1.0' >
+							</edge>
+						</node>
+					</edge>
+					<edge p='1' a='UnitAction [from=(0,0), to=(1,1)]' vis='27' avg='0.9259259259259259' >
+						<node h='1628578121' vis='33' >
+							<edge p='1' a='EndTurnAction []' vis='31' avg='0.9354838709677419' >
+							</edge>
+						</node>
+					</edge>
+					<edge p='1' a='UnitAction [from=(0,0), to=(2,0)]' vis='28' avg='0.9285714285714286' >
+						<node h='1970487586' vis='35' >
+							<edge p='1' a='EndTurnAction []' vis='33' avg='0.9393939393939394' >
+							</edge>
+						</node>
+					</edge>
+					<edge p='1' a='UnitAction [from=(0,0), to=(0,1)]' vis='33' avg='0.9696969696969697' >
+						<node h='1660125743' vis='41' >
+							<edge p='1' a='EndTurnAction []' vis='39' avg='0.9743589743589743' >
+							</edge>
+						</node>
+					</edge>
+					<edge p='1' a='UnitAction [from=(0,0), to=(1,0)]' vis='27' avg='0.9259259259259259' >
+						<node h='1194236035' vis='34' >
+							<edge p='1' a='EndTurnAction []' vis='32' avg='0.90625' >
+							</edge>
+						</node>
+					</edge>
+					<edge p='1' a='UnitAction [from=(0,0), to=(0,2)]' vis='22' avg='0.7727272727272727' >
+					</edge>
+				</node>
+			</edge>
+			<edge p='1' a='DropAction [type=CLERIC, to=(0,4)]' vis='60' avg='0.6' >
+			</edge>
+			<edge p='1' a='DropAction [type=WIZARD, to=(0,4)]' vis='72' avg='0.6527777777777778' >
+				<node h='1048543526' vis='145' >
+					<edge p='1' a='DropAction [type=SHINING_HELM, to=(0,4)]' vis='22' avg='1.0' >
+						<node h='620234200' vis='45' >
+							<edge p='1' a='EndTurnAction []' vis='43' avg='1.0' >
+							</edge>
+						</node>
+					</edge>
+					<edge p='1' a='DropAction [type=SHINING_HELM, to=(0,0)]' vis='20' avg='0.95' >
+					</edge>
+					<edge p='1' a='DropAction [type=INFERNO, to=(6,2)]' vis='22' avg='1.0' >
+						<node h='1343660956' vis='2890' >
+							<edge p='1' a='EndTurnAction []' vis='2887' avg='1.0' >
+							</edge>
+						</node>
+					</edge>
+					<edge p='1' a='UnitAction [from=(0,4), to=(0,2)]' vis='9' avg='0.3333333333333333' >
+						<node h='578766502' vis='14' >
+							<edge p='1' a='EndTurnAction []' vis='12' avg='0.16666666666666666' >
+							</edge>
+						</node>
+					</edge>
+					<edge p='1' a='UnitAction [from=(0,0), to=(2,0)]' vis='10' avg='0.5' >
+						<node h='1401604802' vis='14' >
+							<edge p='1' a='EndTurnAction []' vis='12' avg='0.3333333333333333' >
+							</edge>
+						</node>
+					</edge>
+					<edge p='1' a='UnitAction [from=(0,4), to=(0,3)]' vis='9' avg='0.4444444444444444' >
+						<node h='873346291' vis='14' >
+							<edge p='1' a='EndTurnAction []' vis='12' avg='0.4166666666666667' >
+							</edge>
+						</node>
+					</edge>
+					<edge p='1' a='UnitAction [from=(0,0), to=(0,2)]' vis='9' avg='0.4444444444444444' >
+					</edge>
+					<edge p='1' a='UnitAction [from=(0,4), to=(1,4)]' vis='8' avg='0.25' >
+						<node h='2097588378' vis='14' >
+							<edge p='1' a='EndTurnAction []' vis='12' avg='0.3333333333333333' >
+							</edge>
+						</node>
+					</edge>
+					<edge p='1' a='UnitAction [from=(0,0), to=(1,1)]' vis='8' avg='0.25' >
+						<node h='1129673932' vis='13' >
+							<edge p='1' a='EndTurnAction []' vis='11' avg='0.36363636363636365' >
+							</edge>
+						</node>
+					</edge>
+					<edge p='1' a='UnitAction [from=(0,4), to=(2,4)]' vis='9' avg='0.4444444444444444' >
+						<node h='814285435' vis='14' >
+							<edge p='1' a='EndTurnAction []' vis='12' avg='0.3333333333333333' >
+							</edge>
+						</node>
+					</edge>
+					<edge p='1' a='UnitAction [from=(0,0), to=(1,0)]' vis='9' avg='0.4444444444444444' >
+						<node h='706593254' vis='14' >
+							<edge p='1' a='EndTurnAction []' vis='12' avg='0.3333333333333333' >
+							</edge>
+						</node>
+					</edge>
+					<edge p='1' a='UnitAction [from=(0,0), to=(0,1)]' vis='8' avg='0.375' >
+						<node h='1869969939' vis='13' >
+							<edge p='1' a='EndTurnAction []' vis='11' avg='0.2727272727272727' >
+							</edge>
+						</node>
+					</edge>
+				</node>
+			</edge>
+			<edge p='1' a='DropAction [type=INFERNO, to=(6,2)]' vis='340' avg='1.0' >
+				<node h='1270267288' vis='10710' >
+					<edge p='1' a='DropAction [type=SHINING_HELM, to=(0,0)]' vis='1339' avg='1.0' >
+					</edge>
+					<edge p='1' a='DropAction [type=CLERIC, to=(0,4)]' vis='1339' avg='1.0' >
+					</edge>
+					<edge p='1' a='DropAction [type=WIZARD, to=(0,4)]' vis='1339' avg='1.0' >
+					</edge>
+					<edge p='1' a='UnitAction [from=(0,0), to=(1,1)]' vis='1339' avg='1.0' >
+						<node h='1247374589' vis='1345' >
+							<edge p='1' a='EndTurnAction []' vis='1343' avg='1.0' >
+							</edge>
+						</node>
+					</edge>
+					<edge p='1' a='UnitAction [from=(0,0), to=(0,2)]' vis='1338' avg='1.0' >
+					</edge>
+					<edge p='1' a='UnitAction [from=(0,0), to=(2,0)]' vis='1338' avg='1.0' >
+						<node h='1411815534' vis='1345' >
+							<edge p='1' a='EndTurnAction []' vis='1343' avg='1.0' >
+							</edge>
+						</node>
+					</edge>
+					<edge p='1' a='UnitAction [from=(0,0), to=(1,0)]' vis='1338' avg='1.0' >
+						<node h='253607082' vis='1347' >
+							<edge p='1' a='EndTurnAction []' vis='1345' avg='1.0' >
+							</edge>
+						</node>
+					</edge>
+					<edge p='1' a='UnitAction [from=(0,0), to=(0,1)]' vis='1338' avg='1.0' >
+						<node h='1310130318' vis='1346' >
+							<edge p='1' a='EndTurnAction []' vis='1344' avg='1.0' >
+							</edge>
+						</node>
+					</edge>
+				</node>
+			</edge>
+			<edge p='1' a='UnitAction [from=(0,0), to=(1,1)]' vis='64' avg='0.625' >
+				<node h='1416664188' vis='64' >
+					<edge p='1' a='DropAction [type=SHINING_HELM, to=(1,1)]' vis='6' avg='1.0' >
+					</edge>
+					<edge p='1' a='DropAction [type=CLERIC, to=(0,4)]' vis='5' avg='0.6' >
+					</edge>
+					<edge p='1' a='DropAction [type=CLERIC, to=(0,0)]' vis='4' avg='0.5' >
+						<node h='723813427' vis='4' >
+							<edge p='1' a='EndTurnAction []' vis='3' avg='0.3333333333333333' >
+							</edge>
+						</node>
+					</edge>
+					<edge p='1' a='DropAction [type=WIZARD, to=(0,4)]' vis='5' avg='0.8' >
+					</edge>
+					<edge p='1' a='DropAction [type=WIZARD, to=(0,0)]' vis='5' avg='0.6' >
+						<node h='1678288385' vis='5' >
+							<edge p='1' a='EndTurnAction []' vis='4' avg='0.5' >
+							</edge>
+						</node>
+					</edge>
+					<edge p='1' a='DropAction [type=INFERNO, to=(6,2)]' vis='6' avg='1.0' >
+					</edge>
+					<edge p='1' a='UnitAction [from=(1,1), to=(2,2)]' vis='4' avg='0.25' >
+					</edge>
+					<edge p='1' a='UnitAction [from=(1,1), to=(0,0)]' vis='3' avg='0.3333333333333333' >
+					</edge>
+					<edge p='1' a='UnitAction [from=(1,1), to=(1,2)]' vis='4' avg='0.5' >
+					</edge>
+					<edge p='1' a='UnitAction [from=(1,1), to=(2,0)]' vis='4' avg='0.5' >
+						<node h='982218348' vis='9' >
+							<edge p='1' a='EndTurnAction []' vis='7' avg='0.42857142857142855' >
+							</edge>
+						</node>
+					</edge>
+					<edge p='1' a='UnitAction [from=(1,1), to=(0,1)]' vis='3' avg='0.3333333333333333' >
+					</edge>
+					<edge p='1' a='UnitAction [from=(1,1), to=(3,1)]' vis='5' avg='0.6' >
+						<node h='1541652684' vis='9' >
+							<edge p='1' a='EndTurnAction []' vis='7' avg='0.2857142857142857' >
+							</edge>
+						</node>
+					</edge>
+					<edge p='1' a='UnitAction [from=(1,1), to=(0,2)]' vis='4' avg='0.5' >
+					</edge>
+					<edge p='1' a='UnitAction [from=(1,1), to=(1,0)]' vis='5' avg='0.6' >
+						<node h='1788733588' vis='13' >
+							<edge p='1' a='EndTurnAction []' vis='10' avg='0.4' >
+							</edge>
+						</node>
+					</edge>
+				</node>
+			</edge>
+			<edge p='1' a='UnitAction [from=(0,0), to=(2,0)]' vis='68' avg='0.6470588235294118' >
+				<node h='158678311' vis='68' >
+					<edge p='1' a='DropAction [type=SHINING_HELM, to=(2,0)]' vis='7' avg='1.0' >
+					</edge>
+					<edge p='1' a='DropAction [type=CLERIC, to=(0,4)]' vis='5' avg='0.6' >
+					</edge>
+					<edge p='1' a='DropAction [type=CLERIC, to=(0,0)]' vis='6' avg='0.8333333333333334' >
+						<node h='1879167050' vis='6' >
+							<edge p='1' a='EndTurnAction []' vis='5' avg='0.8' >
+							</edge>
+						</node>
+					</edge>
+					<edge p='1' a='DropAction [type=WIZARD, to=(0,4)]' vis='4' avg='0.25' >
+					</edge>
+					<edge p='1' a='DropAction [type=WIZARD, to=(0,0)]' vis='6' avg='0.6666666666666666' >
+						<node h='520889064' vis='6' >
+							<edge p='1' a='EndTurnAction []' vis='5' avg='0.6' >
+							</edge>
+						</node>
+					</edge>
+					<edge p='1' a='DropAction [type=INFERNO, to=(6,2)]' vis='7' avg='1.0' >
+					</edge>
+					<edge p='1' a='UnitAction [from=(2,0), to=(4,0)]' vis='6' avg='0.8333333333333334' >
+						<node h='1332815493' vis='6' >
+							<edge p='1' a='EndTurnAction []' vis='5' avg='0.8' >
+							</edge>
+						</node>
+					</edge>
+					<edge p='1' a='UnitAction [from=(2,0), to=(2,2)]' vis='4' avg='0.5' >
+					</edge>
+					<edge p='1' a='UnitAction [from=(2,0), to=(0,0)]' vis='4' avg='0.25' >
+					</edge>
+					<edge p='1' a='UnitAction [from=(2,0), to=(1,1)]' vis='4' avg='0.25' >
+					</edge>
+					<edge p='1' a='UnitAction [from=(2,0), to=(3,0)]' vis='6' avg='0.6666666666666666' >
+						<node h='1874221931' vis='11' >
+							<edge p='1' a='EndTurnAction []' vis='9' avg='0.5555555555555556' >
+							</edge>
+						</node>
+					</edge>
+					<edge p='1' a='UnitAction [from=(2,0), to=(1,0)]' vis='4' avg='0.5' >
+					</edge>
+					<edge p='1' a='UnitAction [from=(2,0), to=(3,1)]' vis='4' avg='0.25' >
+					</edge>
+				</node>
+			</edge>
+			<edge p='1' a='UnitAction [from=(0,0), to=(0,1)]' vis='64' avg='0.625' >
+				<node h='691919251' vis='64' >
+					<edge p='1' a='DropAction [type=SHINING_HELM, to=(0,1)]' vis='8' avg='1.0' >
+					</edge>
+					<edge p='1' a='DropAction [type=CLERIC, to=(0,4)]' vis='4' avg='0.25' >
+					</edge>
+					<edge p='1' a='DropAction [type=CLERIC, to=(0,0)]' vis='6' avg='0.8333333333333334' >
+						<node h='462903052' vis='6' >
+							<edge p='1' a='EndTurnAction []' vis='5' avg='0.8' >
+							</edge>
+						</node>
+					</edge>
+					<edge p='1' a='DropAction [type=WIZARD, to=(0,4)]' vis='5' avg='0.4' >
+					</edge>
+					<edge p='1' a='DropAction [type=WIZARD, to=(0,0)]' vis='5' avg='0.6' >
+						<node h='1320079019' vis='5' >
+							<edge p='1' a='EndTurnAction []' vis='4' avg='0.5' >
+							</edge>
+						</node>
+					</edge>
+					<edge p='1' a='DropAction [type=INFERNO, to=(6,2)]' vis='8' avg='1.0' >
+					</edge>
+					<edge p='1' a='UnitAction [from=(0,1), to=(0,0)]' vis='5' avg='0.4' >
+					</edge>
+					<edge p='1' a='UnitAction [from=(0,1), to=(0,2)]' vis='5' avg='0.4' >
+					</edge>
+					<edge p='1' a='UnitAction [from=(0,1), to=(0,3)]' vis='5' avg='0.6' >
+					</edge>
+					<edge p='1' a='UnitAction [from=(0,1), to=(1,1)]' vis='4' avg='0.5' >
+					</edge>
+					<edge p='1' a='UnitAction [from=(0,1), to=(1,0)]' vis='4' avg='0.5' >
+					</edge>
+					<edge p='1' a='UnitAction [from=(0,1), to=(1,2)]' vis='4' avg='0.25' >
+					</edge>
+				</node>
+			</edge>
+			<edge p='1' a='UnitAction [from=(0,0), to=(1,0)]' vis='72' avg='0.6527777777777778' >
+				<node h='254254426' vis='72' >
+					<edge p='1' a='DropAction [type=SHINING_HELM, to=(1,0)]' vis='7' avg='0.8571428571428571' >
+					</edge>
+					<edge p='1' a='DropAction [type=CLERIC, to=(0,4)]' vis='5' avg='0.4' >
+					</edge>
+					<edge p='1' a='DropAction [type=CLERIC, to=(0,0)]' vis='7' avg='0.8571428571428571' >
+						<node h='1909163899' vis='7' >
+							<edge p='1' a='EndTurnAction []' vis='6' avg='0.8333333333333334' >
+							</edge>
+						</node>
+					</edge>
+					<edge p='1' a='DropAction [type=WIZARD, to=(0,4)]' vis='5' avg='0.4' >
+					</edge>
+					<edge p='1' a='DropAction [type=WIZARD, to=(0,0)]' vis='4' avg='0.25' >
+						<node h='1973552402' vis='4' >
+							<edge p='1' a='EndTurnAction []' vis='3' avg='0.0' >
+							</edge>
+						</node>
+					</edge>
+					<edge p='1' a='DropAction [type=INFERNO, to=(6,2)]' vis='9' avg='1.0' >
+					</edge>
+					<edge p='1' a='UnitAction [from=(1,0), to=(0,0)]' vis='6' avg='0.5' >
+					</edge>
+					<edge p='1' a='UnitAction [from=(1,0), to=(0,1)]' vis='6' avg='0.6666666666666666' >
+					</edge>
+					<edge p='1' a='UnitAction [from=(1,0), to=(1,2)]' vis='6' avg='0.6666666666666666' >
+					</edge>
+					<edge p='1' a='UnitAction [from=(1,0), to=(1,1)]' vis='6' avg='0.5' >
+					</edge>
+					<edge p='1' a='UnitAction [from=(1,0), to=(2,0)]' vis='5' avg='0.6' >
+					</edge>
+					<edge p='1' a='UnitAction [from=(1,0), to=(3,0)]' vis='5' avg='0.6' >
+					</edge>
+				</node>
+			</edge>
+			<edge p='1' a='UnitAction [from=(0,0), to=(0,2)]' vis='48' avg='0.5208333333333334' >
+			</edge>
+		</node>
+	</edge>
+	<edge p='1' a='DropAction [type=WIZARD, to=(0,4)]' vis='827' avg='0.7968561064087062' >
+		<node h='1149204873' vis='827' >
+			<edge p='1' a='DropAction [type=SHINING_HELM, to=(0,4)]' vis='99' avg='0.7474747474747475' >
+				<node h='218379393' vis='99' >
+					<edge p='1' a='DropAction [type=CLERIC, to=(0,0)]' vis='23' avg='1.0' >
+					</edge>
+					<edge p='1' a='DropAction [type=INFERNO, to=(6,2)]' vis='23' avg='1.0' >
+						<node h='252905428' vis='1552' >
+							<edge p='1' a='EndTurnAction []' vis='1550' avg='1.0' >
+							</edge>
+						</node>
+					</edge>
+					<edge p='1' a='UnitAction [from=(0,4), to=(0,2)]' vis='9' avg='0.4444444444444444' >
+						<node h='1053615281' vis='20' >
+							<edge p='1' a='EndTurnAction []' vis='17' avg='0.35294117647058826' >
+							</edge>
+						</node>
+					</edge>
+					<edge p='1' a='UnitAction [from=(0,4), to=(2,4)]' vis='13' avg='0.6153846153846154' >
+						<node h='1348723727' vis='18' >
+							<edge p='1' a='EndTurnAction []' vis='16' avg='0.5625' >
+							</edge>
+						</node>
+					</edge>
+					<edge p='1' a='UnitAction [from=(0,4), to=(1,4)]' vis='13' avg='0.6153846153846154' >
+						<node h='1431110323' vis='18' >
+							<edge p='1' a='EndTurnAction []' vis='16' avg='0.5' >
+							</edge>
+						</node>
+					</edge>
+					<edge p='1' a='SwapCardAction [card=CLERIC]' vis='8' avg='0.375' >
+						<node h='1778187904' vis='66' >
+							<edge p='1' a='EndTurnAction []' vis='64' avg='0.53125' >
+							</edge>
+						</node>
+					</edge>
+					<edge p='1' a='UnitAction [from=(0,4), to=(0,3)]' vis='9' avg='0.4444444444444444' >
+						<node h='331511730' vis='15' >
+							<edge p='1' a='EndTurnAction []' vis='13' avg='0.46153846153846156' >
+							</edge>
+						</node>
+					</edge>
+				</node>
+			</edge>
+			<edge p='1' a='DropAction [type=CLERIC, to=(0,0)]' vis='73' avg='0.6712328767123288' >
+			</edge>
+			<edge p='1' a='DropAction [type=INFERNO, to=(6,2)]' vis='339' avg='0.9970501474926253' >
+				<node h='366596840' vis='10678' >
+					<edge p='1' a='DropAction [type=SHINING_HELM, to=(0,4)]' vis='1529' avg='1.0' >
+					</edge>
+					<edge p='1' a='DropAction [type=CLERIC, to=(0,0)]' vis='1529' avg='1.0' >
+					</edge>
+					<edge p='1' a='UnitAction [from=(0,4), to=(0,2)]' vis='1529' avg='1.0' >
+						<node h='262506637' vis='2860' >
+							<edge p='1' a='EndTurnAction []' vis='2857' avg='1.0' >
+							</edge>
+						</node>
+					</edge>
+					<edge p='1' a='UnitAction [from=(0,4), to=(1,4)]' vis='1529' avg='1.0' >
+						<node h='1599365022' vis='1537' >
+							<edge p='1' a='EndTurnAction []' vis='1535' avg='1.0' >
+							</edge>
+						</node>
+					</edge>
+					<edge p='1' a='SwapCardAction [card=CLERIC]' vis='1529' avg='1.0' >
+						<node h='416428596' vis='6651' >
+							<edge p='1' a='EndTurnAction []' vis='6648' avg='1.0' >
+							</edge>
+						</node>
+					</edge>
+					<edge p='1' a='UnitAction [from=(0,4), to=(2,4)]' vis='1503' avg='0.9986693280106453' >
+						<node h='122855199' vis='1511' >
+							<edge p='1' a='EndTurnAction []' vis='1509' avg='0.998674618952949' >
+							</edge>
+						</node>
+					</edge>
+					<edge p='1' a='UnitAction [from=(0,4), to=(0,3)]' vis='1528' avg='1.0' >
+						<node h='146036271' vis='1536' >
+							<edge p='1' a='EndTurnAction []' vis='1534' avg='1.0' >
+							</edge>
+						</node>
+					</edge>
+				</node>
+			</edge>
+			<edge p='1' a='UnitAction [from=(0,4), to=(2,4)]' vis='63' avg='0.6190476190476191' >
+				<node h='1962145303' vis='63' >
+					<edge p='1' a='DropAction [type=SHINING_HELM, to=(2,4)]' vis='5' avg='0.6' >
+					</edge>
+					<edge p='1' a='DropAction [type=CLERIC, to=(0,4)]' vis='6' avg='0.8333333333333334' >
+						<node h='1017224189' vis='6' >
+							<edge p='1' a='EndTurnAction []' vis='5' avg='0.8' >
+							</edge>
+						</node>
+					</edge>
+					<edge p='1' a='DropAction [type=CLERIC, to=(0,0)]' vis='5' avg='0.4' >
+					</edge>
+					<edge p='1' a='DropAction [type=INFERNO, to=(6,2)]' vis='8' avg='1.0' >
+					</edge>
+					<edge p='1' a='UnitAction [from=(2,4), to=(2,2)]' vis='5' avg='0.4' >
+						<node h='1582033148' vis='18' >
+							<edge p='1' a='EndTurnAction []' vis='14' avg='0.35714285714285715' >
+							</edge>
+						</node>
+					</edge>
+					<edge p='1' a='UnitAction [from=(2,4), to=(0,4)]' vis='5' avg='0.4' >
+						<node h='1689462610' vis='20' >
+							<edge p='1' a='EndTurnAction []' vis='16' avg='0.3125' >
+							</edge>
+						</node>
+					</edge>
+					<edge p='1' a='UnitAction [from=(2,4), to=(4,4)]' vis='6' avg='0.6666666666666666' >
+						<node h='264205340' vis='6' >
+							<edge p='1' a='EndTurnAction []' vis='5' avg='0.6' >
+							</edge>
+						</node>
+					</edge>
+					<edge p='1' a='UnitAction [from=(2,4), to=(1,4)]' vis='4' avg='0.5' >
+						<node h='579684138' vis='9' >
+							<edge p='1' a='EndTurnAction []' vis='7' avg='0.42857142857142855' >
+							</edge>
+						</node>
+					</edge>
+					<edge p='1' a='UnitAction [from=(2,4), to=(2,3)]' vis='4' avg='0.5' >
+						<node h='464770288' vis='13' >
+							<edge p='1' a='EndTurnAction []' vis='10' avg='0.2' >
+							</edge>
+						</node>
+					</edge>
+					<edge p='1' a='UnitAction [from=(2,4), to=(3,4)]' vis='4' avg='0.5' >
+						<node h='7645683' vis='8' >
+							<edge p='1' a='EndTurnAction []' vis='6' avg='0.3333333333333333' >
+							</edge>
+						</node>
+					</edge>
+					<edge p='1' a='UnitAction [from=(2,4), to=(3,3)]' vis='6' avg='0.8333333333333334' >
+						<node h='477670416' vis='6' >
+							<edge p='1' a='EndTurnAction []' vis='5' avg='0.8' >
+							</edge>
+						</node>
+					</edge>
+					<edge p='1' a='SwapCardAction [card=CLERIC]' vis='4' avg='0.25' >
+						<node h='1332213877' vis='34' >
+							<edge p='1' a='EndTurnAction []' vis='32' avg='0.25' >
+							</edge>
+						</node>
+					</edge>
+				</node>
+			</edge>
+			<edge p='1' a='UnitAction [from=(0,4), to=(0,3)]' vis='59' avg='0.5932203389830508' >
+				<node h='42847580' vis='59' >
+					<edge p='1' a='DropAction [type=SHINING_HELM, to=(0,3)]' vis='6' avg='0.6666666666666666' >
+					</edge>
+					<edge p='1' a='DropAction [type=CLERIC, to=(0,4)]' vis='5' avg='0.4' >
+						<node h='732255315' vis='5' >
+							<edge p='1' a='EndTurnAction []' vis='4' avg='0.25' >
+							</edge>
+						</node>
+					</edge>
+					<edge p='1' a='DropAction [type=CLERIC, to=(0,0)]' vis='5' avg='0.6' >
+					</edge>
+					<edge p='1' a='DropAction [type=INFERNO, to=(6,2)]' vis='8' avg='1.0' >
+					</edge>
+					<edge p='1' a='UnitAction [from=(0,3), to=(0,4)]' vis='5' avg='0.6' >
+					</edge>
+					<edge p='1' a='UnitAction [from=(0,3), to=(1,4)]' vis='5' avg='0.6' >
+					</edge>
+					<edge p='1' a='UnitAction [from=(0,3), to=(2,3)]' vis='5' avg='0.4' >
+					</edge>
+					<edge p='1' a='UnitAction [from=(0,3), to=(1,2)]' vis='5' avg='0.6' >
+						<node h='543158223' vis='24' >
+							<edge p='1' a='EndTurnAction []' vis='18' avg='0.2222222222222222' >
+							</edge>
+						</node>
+					</edge>
+					<edge p='1' a='SwapCardAction [card=CLERIC]' vis='5' avg='0.6' >
+						<node h='1147652459' vis='33' >
+							<edge p='1' a='EndTurnAction []' vis='31' avg='0.2903225806451613' >
+							</edge>
+						</node>
+					</edge>
+					<edge p='1' a='UnitAction [from=(0,3), to=(0,1)]' vis='5' avg='0.4' >
+						<node h='1787666996' vis='18' >
+							<edge p='1' a='EndTurnAction []' vis='14' avg='0.2857142857142857' >
+							</edge>
+						</node>
+					</edge>
+					<edge p='1' a='UnitAction [from=(0,3), to=(0,2)]' vis='4' avg='0.25' >
+						<node h='1119471852' vis='12' >
+							<edge p='1' a='EndTurnAction []' vis='9' avg='0.3333333333333333' >
+							</edge>
+						</node>
+					</edge>
+				</node>
+			</edge>
+			<edge p='1' a='UnitAction [from=(0,4), to=(0,2)]' vis='41' avg='0.4634146341463415' >
+				<node h='580081679' vis='77' >
+					<edge p='1' a='DropAction [type=SHINING_HELM, to=(0,2)]' vis='6' avg='0.5' >
+					</edge>
+					<edge p='1' a='DropAction [type=CLERIC, to=(0,4)]' vis='5' avg='0.2' >
+					</edge>
+					<edge p='1' a='DropAction [type=CLERIC, to=(0,0)]' vis='5' avg='0.2' >
+					</edge>
+					<edge p='1' a='DropAction [type=INFERNO, to=(6,2)]' vis='11' avg='1.0' >
+					</edge>
+					<edge p='1' a='UnitAction [from=(0,2), to=(0,0)]' vis='6' avg='0.3333333333333333' >
+						<node h='2004505220' vis='22' >
+							<edge p='1' a='EndTurnAction []' vis='17' avg='0.29411764705882354' >
+							</edge>
+						</node>
+					</edge>
+					<edge p='1' a='UnitAction [from=(0,2), to=(2,2)]' vis='7' avg='0.5714285714285714' >
+					</edge>
+					<edge p='1' a='UnitAction [from=(0,2), to=(0,4)]' vis='6' avg='0.3333333333333333' >
+					</edge>
+					<edge p='1' a='UnitAction [from=(0,2), to=(1,2)]' vis='5' avg='0.2' >
+					</edge>
+					<edge p='1' a='UnitAction [from=(0,2), to=(1,1)]' vis='6' avg='0.5' >
+						<node h='955151442' vis='15' >
+							<edge p='1' a='EndTurnAction []' vis='11' avg='0.18181818181818182' >
+							</edge>
+						</node>
+					</edge>
+					<edge p='1' a='UnitAction [from=(0,2), to=(0,3)]' vis='6' avg='0.5' >
+						<node h='1673137418' vis='14' >
+							<edge p='1' a='EndTurnAction []' vis='11' avg='0.36363636363636365' >
+							</edge>
+						</node>
+					</edge>
+					<edge p='1' a='SwapCardAction [card=CLERIC]' vis='6' avg='0.3333333333333333' >
+						<node h='1350133321' vis='60' >
+							<edge p='1' a='EndTurnAction []' vis='57' avg='0.3157894736842105' >
+							</edge>
+						</node>
+					</edge>
+					<edge p='1' a='UnitAction [from=(0,2), to=(0,1)]' vis='6' avg='0.3333333333333333' >
+					</edge>
+				</node>
+			</edge>
+			<edge p='1' a='SwapCardAction [card=CLERIC]' vis='99' avg='0.7474747474747475' >
+				<node h='2111251388' vis='631' >
+					<edge p='1' a='DropAction [type=SHINING_HELM, to=(0,4)]' vis='58' avg='0.5689655172413793' >
+					</edge>
+					<edge p='1' a='DropAction [type=CLERIC, to=(0,0)]' vis='33' avg='0.36363636363636365' >
+						<node h='929778735' vis='54' >
+							<edge p='1' a='EndTurnAction []' vis='52' avg='0.34615384615384615' >
+							</edge>
+						</node>
+					</edge>
+					<edge p='1' a='DropAction [type=INFERNO, to=(6,2)]' vis='408' avg='1.0' >
+					</edge>
+					<edge p='1' a='UnitAction [from=(0,4), to=(0,3)]' vis='28' avg='0.2857142857142857' >
+					</edge>
+					<edge p='1' a='UnitAction [from=(0,4), to=(0,2)]' vis='33' avg='0.36363636363636365' >
+					</edge>
+					<edge p='1' a='UnitAction [from=(0,4), to=(2,4)]' vis='30' avg='0.3' >
+					</edge>
+					<edge p='1' a='UnitAction [from=(0,4), to=(1,4)]' vis='39' avg='0.4358974358974359' >
+						<node h='550224915' vis='43' >
+							<edge p='1' a='EndTurnAction []' vis='41' avg='0.3902439024390244' >
+							</edge>
+						</node>
+					</edge>
+				</node>
+			</edge>
+			<edge p='1' a='UnitAction [from=(0,4), to=(1,4)]' vis='53' avg='0.5660377358490566' >
+				<node h='725268270' vis='53' >
+					<edge p='1' a='DropAction [type=SHINING_HELM, to=(1,4)]' vis='5' avg='0.4' >
+					</edge>
+					<edge p='1' a='DropAction [type=CLERIC, to=(0,4)]' vis='4' avg='0.5' >
+						<node h='466633518' vis='4' >
+							<edge p='1' a='EndTurnAction []' vis='3' avg='0.3333333333333333' >
+							</edge>
+						</node>
+					</edge>
+					<edge p='1' a='DropAction [type=CLERIC, to=(0,0)]' vis='6' avg='0.6666666666666666' >
+					</edge>
+					<edge p='1' a='DropAction [type=INFERNO, to=(6,2)]' vis='8' avg='1.0' >
+					</edge>
+					<edge p='1' a='UnitAction [from=(1,4), to=(0,4)]' vis='4' avg='0.5' >
+					</edge>
+					<edge p='1' a='UnitAction [from=(1,4), to=(1,2)]' vis='4' avg='0.5' >
+					</edge>
+					<edge p='1' a='UnitAction [from=(1,4), to=(2,3)]' vis='4' avg='0.25' >
+					</edge>
+					<edge p='1' a='UnitAction [from=(1,4), to=(3,4)]' vis='4' avg='0.5' >
+					</edge>
+					<edge p='1' a='UnitAction [from=(1,4), to=(0,3)]' vis='5' avg='0.6' >
+					</edge>
+					<edge p='1' a='SwapCardAction [card=CLERIC]' vis='4' avg='0.25' >
+					</edge>
+					<edge p='1' a='UnitAction [from=(1,4), to=(2,4)]' vis='4' avg='0.5' >
+						<node h='1268310816' vis='4' >
+							<edge p='1' a='EndTurnAction []' vis='3' avg='0.3333333333333333' >
+							</edge>
+						</node>
+					</edge>
+				</node>
+			</edge>
+		</node>
+	</edge>
+	<edge p='1' a='DropAction [type=WIZARD, to=(0,0)]' vis='584' avg='0.7534246575342466' >
+		<node h='168228747' vis='584' >
+			<edge p='1' a='DropAction [type=SHINING_HELM, to=(0,0)]' vis='63' avg='0.7142857142857143' >
+				<node h='1332071377' vis='63' >
+					<edge p='1' a='DropAction [type=CLERIC, to=(0,4)]' vis='11' avg='1.0' >
+					</edge>
+					<edge p='1' a='DropAction [type=INFERNO, to=(6,2)]' vis='11' avg='1.0' >
+						<node h='606613264' vis='1331' >
+							<edge p='1' a='EndTurnAction []' vis='1329' avg='1.0' >
+							</edge>
+						</node>
+					</edge>
+					<edge p='1' a='UnitAction [from=(0,0), to=(1,0)]' vis='6' avg='0.5' >
+						<node h='1021665754' vis='10' >
+							<edge p='1' a='EndTurnAction []' vis='8' avg='0.375' >
+							</edge>
+						</node>
+					</edge>
+					<edge p='1' a='UnitAction [from=(0,0), to=(0,2)]' vis='5' avg='0.4' >
+					</edge>
+					<edge p='1' a='UnitAction [from=(0,0), to=(2,0)]' vis='8' avg='0.625' >
+						<node h='1414230464' vis='12' >
+							<edge p='1' a='EndTurnAction []' vis='10' avg='0.5' >
+							</edge>
+						</node>
+					</edge>
+					<edge p='1' a='UnitAction [from=(0,0), to=(0,1)]' vis='8' avg='0.625' >
+						<node h='2133413120' vis='13' >
+							<edge p='1' a='EndTurnAction []' vis='11' avg='0.6363636363636364' >
+							</edge>
+						</node>
+					</edge>
+					<edge p='1' a='SwapCardAction [card=CLERIC]' vis='8' avg='0.625' >
+						<node h='1959741606' vis='52' >
+							<edge p='1' a='EndTurnAction []' vis='50' avg='0.64' >
+							</edge>
+						</node>
+					</edge>
+					<edge p='1' a='UnitAction [from=(0,0), to=(1,1)]' vis='5' avg='0.4' >
+						<node h='877283020' vis='9' >
+							<edge p='1' a='EndTurnAction []' vis='7' avg='0.42857142857142855' >
+							</edge>
+						</node>
+					</edge>
+				</node>
+			</edge>
+			<edge p='1' a='DropAction [type=CLERIC, to=(0,4)]' vis='59' avg='0.6949152542372882' >
+			</edge>
+			<edge p='1' a='DropAction [type=INFERNO, to=(6,2)]' vis='190' avg='1.0' >
+				<node h='2116739824' vis='10559' >
+					<edge p='1' a='DropAction [type=SHINING_HELM, to=(0,0)]' vis='1320' avg='1.0' >
+					</edge>
+					<edge p='1' a='DropAction [type=CLERIC, to=(0,4)]' vis='1320' avg='1.0' >
+					</edge>
+					<edge p='1' a='UnitAction [from=(0,0), to=(1,1)]' vis='1320' avg='1.0' >
+						<node h='832125766' vis='1325' >
+							<edge p='1' a='EndTurnAction []' vis='1323' avg='1.0' >
+							</edge>
+						</node>
+					</edge>
+					<edge p='1' a='UnitAction [from=(0,0), to=(0,2)]' vis='1320' avg='1.0' >
+					</edge>
+					<edge p='1' a='UnitAction [from=(0,0), to=(0,1)]' vis='1320' avg='1.0' >
+						<node h='1714481090' vis='1327' >
+							<edge p='1' a='EndTurnAction []' vis='1325' avg='1.0' >
+							</edge>
+						</node>
+					</edge>
+					<edge p='1' a='UnitAction [from=(0,0), to=(2,0)]' vis='1319' avg='1.0' >
+						<node h='902526561' vis='1325' >
+							<edge p='1' a='EndTurnAction []' vis='1323' avg='1.0' >
+							</edge>
+						</node>
+					</edge>
+					<edge p='1' a='UnitAction [from=(0,0), to=(1,0)]' vis='1319' avg='1.0' >
+						<node h='272266157' vis='1325' >
+							<edge p='1' a='EndTurnAction []' vis='1323' avg='1.0' >
+							</edge>
+						</node>
+					</edge>
+					<edge p='1' a='SwapCardAction [card=CLERIC]' vis='1319' avg='1.0' >
+						<node h='972032078' vis='6179' >
+							<edge p='1' a='EndTurnAction []' vis='6176' avg='1.0' >
+							</edge>
+						</node>
+					</edge>
+				</node>
+			</edge>
+			<edge p='1' a='UnitAction [from=(0,0), to=(1,1)]' vis='45' avg='0.6' >
+				<node h='461156722' vis='45' >
+					<edge p='1' a='DropAction [type=SHINING_HELM, to=(1,1)]' vis='4' avg='0.75' >
+					</edge>
+					<edge p='1' a='DropAction [type=CLERIC, to=(0,4)]' vis='3' avg='0.3333333333333333' >
+					</edge>
+					<edge p='1' a='DropAction [type=CLERIC, to=(0,0)]' vis='3' avg='0.3333333333333333' >
+						<node h='392544631' vis='3' >
+							<edge p='1' a='EndTurnAction []' vis='2' avg='0.0' >
+							</edge>
+						</node>
+					</edge>
+					<edge p='1' a='DropAction [type=INFERNO, to=(6,2)]' vis='5' avg='1.0' >
+					</edge>
+					<edge p='1' a='UnitAction [from=(1,1), to=(0,0)]' vis='4' avg='0.5' >
+					</edge>
+					<edge p='1' a='UnitAction [from=(1,1), to=(2,2)]' vis='3' avg='0.6666666666666666' >
+					</edge>
+					<edge p='1' a='UnitAction [from=(1,1), to=(0,1)]' vis='3' avg='0.6666666666666666' >
+					</edge>
+					<edge p='1' a='UnitAction [from=(1,1), to=(0,2)]' vis='3' avg='0.3333333333333333' >
+					</edge>
+					<edge p='1' a='UnitAction [from=(1,1), to=(1,2)]' vis='3' avg='0.3333333333333333' >
+					</edge>
+					<edge p='1' a='UnitAction [from=(1,1), to=(3,1)]' vis='3' avg='0.6666666666666666' >
+						<node h='821810699' vis='9' >
+							<edge p='1' a='EndTurnAction []' vis='7' avg='0.7142857142857143' >
+							</edge>
+						</node>
+					</edge>
+					<edge p='1' a='SwapCardAction [card=CLERIC]' vis='4' avg='0.75' >
+						<node h='1065131033' vis='22' >
+							<edge p='1' a='EndTurnAction []' vis='20' avg='0.25' >
+							</edge>
+						</node>
+					</edge>
+					<edge p='1' a='UnitAction [from=(1,1), to=(2,0)]' vis='3' avg='0.6666666666666666' >
+						<node h='509502250' vis='7' >
+							<edge p='1' a='EndTurnAction []' vis='5' avg='0.6' >
+							</edge>
+						</node>
+					</edge>
+					<edge p='1' a='UnitAction [from=(1,1), to=(1,0)]' vis='3' avg='0.3333333333333333' >
+						<node h='198279894' vis='11' >
+							<edge p='1' a='EndTurnAction []' vis='8' avg='0.25' >
+							</edge>
+						</node>
+					</edge>
+				</node>
+			</edge>
+			<edge p='1' a='UnitAction [from=(0,0), to=(0,2)]' vis='36' avg='0.5' >
+			</edge>
+			<edge p='1' a='UnitAction [from=(0,0), to=(2,0)]' vis='50' avg='0.64' >
+				<node h='738443269' vis='50' >
+					<edge p='1' a='DropAction [type=SHINING_HELM, to=(2,0)]' vis='4' avg='0.5' >
+					</edge>
+					<edge p='1' a='DropAction [type=CLERIC, to=(0,4)]' vis='5' avg='0.6' >
+					</edge>
+					<edge p='1' a='DropAction [type=CLERIC, to=(0,0)]' vis='3' avg='0.3333333333333333' >
+						<node h='708026070' vis='3' >
+							<edge p='1' a='EndTurnAction []' vis='2' avg='0.0' >
+							</edge>
+						</node>
+					</edge>
+					<edge p='1' a='DropAction [type=INFERNO, to=(6,2)]' vis='6' avg='1.0' >
+					</edge>
+					<edge p='1' a='UnitAction [from=(2,0), to=(0,0)]' vis='4' avg='0.75' >
+					</edge>
+					<edge p='1' a='UnitAction [from=(2,0), to=(4,0)]' vis='4' avg='0.75' >
+						<node h='1599517008' vis='4' >
+							<edge p='1' a='EndTurnAction []' vis='3' avg='0.6666666666666666' >
+							</edge>
+						</node>
+					</edge>
+					<edge p='1' a='UnitAction [from=(2,0), to=(2,2)]' vis='3' avg='0.3333333333333333' >
+					</edge>
+					<edge p='1' a='UnitAction [from=(2,0), to=(1,1)]' vis='3' avg='0.3333333333333333' >
+					</edge>
+					<edge p='1' a='UnitAction [from=(2,0), to=(1,0)]' vis='4' avg='0.5' >
+					</edge>
+					<edge p='1' a='UnitAction [from=(2,0), to=(3,0)]' vis='4' avg='0.75' >
+						<node h='1574107422' vis='8' >
+							<edge p='1' a='EndTurnAction []' vis='6' avg='0.6666666666666666' >
+							</edge>
+						</node>
+					</edge>
+					<edge p='1' a='UnitAction [from=(2,0), to=(3,1)]' vis='6' avg='0.8333333333333334' >
+					</edge>
+					<edge p='1' a='SwapCardAction [card=CLERIC]' vis='3' avg='0.3333333333333333' >
+						<node h='1177603055' vis='28' >
+							<edge p='1' a='EndTurnAction []' vis='26' avg='0.34615384615384615' >
+							</edge>
+						</node>
+					</edge>
+				</node>
+			</edge>
+			<edge p='1' a='SwapCardAction [card=CLERIC]' vis='46' avg='0.6086956521739131' >
+				<node h='543075429' vis='316' >
+					<edge p='1' a='DropAction [type=SHINING_HELM, to=(0,0)]' vis='44' avg='0.6590909090909091' >
+					</edge>
+					<edge p='1' a='DropAction [type=CLERIC, to=(0,4)]' vis='25' avg='0.4' >
+						<node h='663235453' vis='51' >
+							<edge p='1' a='EndTurnAction []' vis='49' avg='0.3469387755102041' >
+							</edge>
+						</node>
+					</edge>
+					<edge p='1' a='DropAction [type=INFERNO, to=(6,2)]' vis='147' avg='1.0' >
+					</edge>
+					<edge p='1' a='UnitAction [from=(0,0), to=(0,2)]' vis='21' avg='0.3333333333333333' >
+					</edge>
+					<edge p='1' a='UnitAction [from=(0,0), to=(2,0)]' vis='25' avg='0.4' >
+					</edge>
+					<edge p='1' a='UnitAction [from=(0,0), to=(0,1)]' vis='16' avg='0.1875' >
+						<node h='370449368' vis='19' >
+							<edge p='1' a='EndTurnAction []' vis='17' avg='0.11764705882352941' >
+							</edge>
+						</node>
+					</edge>
+					<edge p='1' a='UnitAction [from=(0,0), to=(1,1)]' vis='18' avg='0.2222222222222222' >
+					</edge>
+					<edge p='1' a='UnitAction [from=(0,0), to=(1,0)]' vis='18' avg='0.2222222222222222' >
+						<node h='465286436' vis='21' >
+							<edge p='1' a='EndTurnAction []' vis='19' avg='0.15789473684210525' >
+							</edge>
+						</node>
+					</edge>
+				</node>
+			</edge>
+			<edge p='1' a='UnitAction [from=(0,0), to=(0,1)]' vis='47' avg='0.6170212765957447' >
+				<node h='1007764290' vis='47' >
+					<edge p='1' a='DropAction [type=SHINING_HELM, to=(0,1)]' vis='5' avg='0.8' >
+					</edge>
+					<edge p='1' a='DropAction [type=CLERIC, to=(0,4)]' vis='4' avg='0.5' >
+					</edge>
+					<edge p='1' a='DropAction [type=CLERIC, to=(0,0)]' vis='5' avg='0.8' >
+						<node h='290898141' vis='5' >
+							<edge p='1' a='EndTurnAction []' vis='4' avg='0.75' >
+							</edge>
+						</node>
+					</edge>
+					<edge p='1' a='DropAction [type=INFERNO, to=(6,2)]' vis='7' avg='1.0' >
+					</edge>
+					<edge p='1' a='UnitAction [from=(0,1), to=(0,0)]' vis='4' avg='0.25' >
+					</edge>
+					<edge p='1' a='UnitAction [from=(0,1), to=(1,2)]' vis='3' avg='0.3333333333333333' >
+					</edge>
+					<edge p='1' a='UnitAction [from=(0,1), to=(0,2)]' vis='5' avg='0.8' >
+					</edge>
+					<edge p='1' a='UnitAction [from=(0,1), to=(1,1)]' vis='3' avg='0.3333333333333333' >
+					</edge>
+					<edge p='1' a='UnitAction [from=(0,1), to=(0,3)]' vis='3' avg='0.3333333333333333' >
+					</edge>
+					<edge p='1' a='SwapCardAction [card=CLERIC]' vis='3' avg='0.3333333333333333' >
+					</edge>
+					<edge p='1' a='UnitAction [from=(0,1), to=(1,0)]' vis='4' avg='0.5' >
+					</edge>
+				</node>
+			</edge>
+			<edge p='1' a='UnitAction [from=(0,0), to=(1,0)]' vis='47' avg='0.6170212765957447' >
+				<node h='2037759424' vis='47' >
+					<edge p='1' a='DropAction [type=SHINING_HELM, to=(1,0)]' vis='4' avg='0.5' >
+					</edge>
+					<edge p='1' a='DropAction [type=CLERIC, to=(0,4)]' vis='5' avg='0.6' >
+					</edge>
+					<edge p='1' a='DropAction [type=CLERIC, to=(0,0)]' vis='5' avg='0.6' >
+						<node h='553436812' vis='5' >
+							<edge p='1' a='EndTurnAction []' vis='4' avg='0.5' >
+							</edge>
+						</node>
+					</edge>
+					<edge p='1' a='DropAction [type=INFERNO, to=(6,2)]' vis='6' avg='1.0' >
+					</edge>
+					<edge p='1' a='UnitAction [from=(1,0), to=(0,0)]' vis='4' avg='0.5' >
+					</edge>
+					<edge p='1' a='UnitAction [from=(1,0), to=(1,2)]' vis='4' avg='0.5' >
+					</edge>
+					<edge p='1' a='UnitAction [from=(1,0), to=(3,0)]' vis='4' avg='0.75' >
+					</edge>
+					<edge p='1' a='UnitAction [from=(1,0), to=(0,1)]' vis='4' avg='0.5' >
+					</edge>
+					<edge p='1' a='SwapCardAction [card=CLERIC]' vis='3' avg='0.3333333333333333' >
+					</edge>
+					<edge p='1' a='UnitAction [from=(1,0), to=(2,0)]' vis='4' avg='0.75' >
+					</edge>
+					<edge p='1' a='UnitAction [from=(1,0), to=(1,1)]' vis='3' avg='0.3333333333333333' >
+					</edge>
+				</node>
+			</edge>
+		</node>
+	</edge>
+	<edge p='1' a='DropAction [type=INFERNO, to=(6,2)]' vis='51787' avg='0.9999613802691796' >
+		<node h='883556513' vis='51787' >
+			<edge p='1' a='DropAction [type=CLERIC, to=(0,4)]' vis='10339' avg='0.9999032788470839' >
+			</edge>
+			<edge p='1' a='DropAction [type=CLERIC, to=(0,0)]' vis='10370' avg='1.0' >
+			</edge>
+			<edge p='1' a='DropAction [type=WIZARD, to=(0,4)]' vis='10339' avg='0.9999032788470839' >
+			</edge>
+			<edge p='1' a='DropAction [type=WIZARD, to=(0,0)]' vis='10369' avg='1.0' >
+			</edge>
+			<edge p='1' a='SwapCardAction [card=CLERIC]' vis='10369' avg='1.0' >
+				<node h='84894986' vis='18857' >
+					<edge p='1' a='DropAction [type=CLERIC, to=(0,4)]' vis='4714' avg='1.0' >
+						<node h='900888094' vis='4941' >
+							<edge p='1' a='EndTurnAction []' vis='4939' avg='1.0' >
+							</edge>
+						</node>
+					</edge>
+					<edge p='1' a='DropAction [type=CLERIC, to=(0,0)]' vis='4714' avg='1.0' >
+						<node h='1680320645' vis='4823' >
+							<edge p='1' a='EndTurnAction []' vis='4821' avg='1.0' >
+							</edge>
+						</node>
+					</edge>
+					<edge p='1' a='DropAction [type=WIZARD, to=(0,4)]' vis='4714' avg='1.0' >
+					</edge>
+					<edge p='1' a='DropAction [type=WIZARD, to=(0,0)]' vis='4713' avg='1.0' >
+					</edge>
+				</node>
+			</edge>
+		</node>
+	</edge>
+	<edge p='1' a='SwapCardAction [card=CLERIC]' vis='10049' avg='0.9627823664046173' >
+		<node h='2047360537' vis='10049' >
+			<edge p='1' a='DropAction [type=CLERIC, to=(0,4)]' vis='463' avg='0.7818574514038877' >
+				<node h='858069478' vis='463' >
+					<edge p='1' a='DropAction [type=SHINING_HELM, to=(0,4)]' vis='110' avg='0.8545454545454545' >
+						<node h='1221027141' vis='110' >
+							<edge p='1' a='EndTurnAction []' vis='109' avg='0.8532110091743119' >
+							</edge>
+						</node>
+					</edge>
+					<edge p='1' a='DropAction [type=WIZARD, to=(0,0)]' vis='26' avg='0.34615384615384615' >
+					</edge>
+					<edge p='1' a='DropAction [type=INFERNO, to=(6,2)]' vis='227' avg='1.0' >
+					</edge>
+					<edge p='1' a='UnitAction [from=(0,4), to=(1,4)]' vis='21' avg='0.23809523809523808' >
+						<node h='1396529300' vis='21' >
+							<edge p='1' a='EndTurnAction []' vis='20' avg='0.2' >
+							</edge>
+						</node>
+					</edge>
+					<edge p='1' a='UnitAction [from=(0,4), to=(0,2)]' vis='26' avg='0.34615384615384615' >
+						<node h='1437480335' vis='53' >
+							<edge p='1' a='EndTurnAction []' vis='51' avg='0.4117647058823529' >
+							</edge>
+						</node>
+					</edge>
+					<edge p='1' a='UnitAction [from=(0,4), to=(0,3)]' vis='23' avg='0.2608695652173913' >
+						<node h='100697454' vis='23' >
+							<edge p='1' a='EndTurnAction []' vis='22' avg='0.22727272727272727' >
+							</edge>
+						</node>
+					</edge>
+					<edge p='1' a='UnitAction [from=(0,4), to=(2,4)]' vis='29' avg='0.3793103448275862' >
+						<node h='861463030' vis='29' >
+							<edge p='1' a='EndTurnAction []' vis='28' avg='0.35714285714285715' >
+							</edge>
+						</node>
+					</edge>
+				</node>
+			</edge>
+			<edge p='1' a='DropAction [type=CLERIC, to=(0,0)]' vis='295' avg='0.711864406779661' >
+				<node h='1366716870' vis='295' >
+					<edge p='1' a='DropAction [type=SHINING_HELM, to=(0,0)]' vis='66' avg='0.8636363636363636' >
+						<node h='925345778' vis='66' >
+							<edge p='1' a='EndTurnAction []' vis='65' avg='0.8615384615384616' >
+							</edge>
+						</node>
+					</edge>
+					<edge p='1' a='DropAction [type=WIZARD, to=(0,4)]' vis='21' avg='0.38095238095238093' >
+					</edge>
+					<edge p='1' a='DropAction [type=INFERNO, to=(6,2)]' vis='109' avg='1.0' >
+					</edge>
+					<edge p='1' a='UnitAction [from=(0,0), to=(1,0)]' vis='17' avg='0.29411764705882354' >
+						<node h='1956500322' vis='17' >
+							<edge p='1' a='EndTurnAction []' vis='16' avg='0.25' >
+							</edge>
+						</node>
+					</edge>
+					<edge p='1' a='UnitAction [from=(0,0), to=(1,1)]' vis='20' avg='0.35' >
+						<node h='122892352' vis='20' >
+							<edge p='1' a='EndTurnAction []' vis='19' avg='0.3157894736842105' >
+							</edge>
+						</node>
+					</edge>
+					<edge p='1' a='UnitAction [from=(0,0), to=(0,2)]' vis='27' avg='0.5185185185185185' >
+					</edge>
+					<edge p='1' a='UnitAction [from=(0,0), to=(0,1)]' vis='19' avg='0.3157894736842105' >
+						<node h='1678470271' vis='19' >
+							<edge p='1' a='EndTurnAction []' vis='18' avg='0.2777777777777778' >
+							</edge>
+						</node>
+					</edge>
+					<edge p='1' a='UnitAction [from=(0,0), to=(2,0)]' vis='15' avg='0.2' >
+						<node h='490076803' vis='15' >
+							<edge p='1' a='EndTurnAction []' vis='14' avg='0.14285714285714285' >
+							</edge>
+						</node>
+					</edge>
+				</node>
+			</edge>
+			<edge p='1' a='DropAction [type=WIZARD, to=(0,4)]' vis='532' avg='0.8026315789473685' >
+			</edge>
+			<edge p='1' a='DropAction [type=WIZARD, to=(0,0)]' vis='270' avg='0.6962962962962963' >
+			</edge>
+			<edge p='1' a='DropAction [type=INFERNO, to=(6,2)]' vis='8488' avg='1.0' >
+			</edge>
+		</node>
+	</edge>
+</node>

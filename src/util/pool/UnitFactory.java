@@ -1,4 +1,4 @@
-package ai.util;
+package util.pool;
 
 import model.Unit;
 
@@ -8,8 +8,13 @@ import org.apache.commons.pool2.impl.DefaultPooledObject;
 
 public class UnitFactory extends BasePooledObjectFactory<Unit> {
 
+	int count = 0;
+	
 	@Override
 	public Unit create() throws Exception {
+		//count++;
+		//if (count % 10000 == 0)
+		//	System.out.println(count);
 		return new Unit(null, false);
 	}
 
@@ -29,7 +34,7 @@ public class UnitFactory extends BasePooledObjectFactory<Unit> {
 	 */
 	@Override
 	public void passivateObject(PooledObject<Unit> pooledObject) throws Exception {
-		//pooledObject.getObject().reset();
+		pooledObject.getObject().equipment.clear();
 	}
 	
 }

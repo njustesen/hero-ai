@@ -51,5 +51,16 @@ public class Statistics {
 		return Math.sqrt(davg);
 		
 	}
+
+	public static int max(List<Integer> vals) {
+		
+		int min = Integer.MIN_VALUE;
+		
+		for(int n : vals)
+			if (n > min)
+				min = n;
+		
+		return min;
+	}
 	
 }

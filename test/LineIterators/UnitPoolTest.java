@@ -9,7 +9,7 @@ import model.Unit;
 import org.apache.commons.pool2.ObjectPool;
 import org.apache.commons.pool2.impl.GenericObjectPool;
 
-import ai.util.UnitFactory;
+import util.pool.UnitFactory;
 
 public class UnitPoolTest {
 

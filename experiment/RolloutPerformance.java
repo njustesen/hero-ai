@@ -1,6 +1,11 @@
-import model.HAMap;
+import java.io.IOException;
+
+import model.DECK_SIZE;
+import model.HaMap;
 import util.CachedLines;
+import util.MapLoader;
 import game.Game;
+import game.GameArguments;
 import ai.AI;
 import ai.HeuristicAI;
 import ai.RandomAI;
@@ -13,68 +18,45 @@ public class RolloutPerformance {
 
 	public static void main(String[] args) {
 
-		CachedLines.load(HAMap.mapA);
+		try {
+			CachedLines.load(MapLoader.get("a"));
+			AI p1 = null;
+			AI p2 = null;
+			
+			System.out.println("## Random Heuristic AI SIMPLE ##");
+			p1 = new RandomHeuristicAI(new SimpleActionComparator());
+			simulateGame(1000, p1, p1);
+			System.out.println("Done");
 
-		AI p1 = null;
-		AI p2 = null;
-		/*
-		 * System.out.println("## Random AI GAME BRUTE ##"); p1 = new
-		 * RandomAI(true, RAND_METHOD.BRUTE); p2 = new RandomAI(false,
-		 * RAND_METHOD.BRUTE); runGame(1000, p1, p2);
-		 * System.out.println("## DONE ##");
-		 * 
-		 * System.out.println("## Random AI GAME TREE ##"); p1 = new
-		 * RandomAI(true, RAND_METHOD.TREE); p2 = new RandomAI(false,
-		 * RAND_METHOD.TREE); runGame(1000, p1, p2);
-		 * System.out.println("## DONE ##");
-		 * 
-		 * System.out.println("## Random AI GAME SCAN ##"); p1 = new
-		 * ScanRandomAI(true); p2 = new ScanRandomAI(false); runGame(1000, p1,
-		 * p2);
-		 */
-		/*
-		System.out.println("## Random AI SIM BRUTE ##");
-		p1 = new RandomAI(true, RAND_METHOD.BRUTE);
-		p2 = new RandomAI(false, RAND_METHOD.BRUTE);
-		simulateGame(1000, p1, p2);
-		System.out.println("Done");
-*/
+			System.out.println("## Random Heuristic AI Complex ##");
+			p1 = new RandomHeuristicAI(new ComplexActionComparator());
+			simulateGame(1000, p1, p1);
+			System.out.println("Done");
+			
+			System.out.println("## Random AI SIM TREE ##");
+			p1 = new RandomAI(RAND_METHOD.TREE);
+			simulateGame(1000, p1, p1);
+			System.out.println("Done");
+
+			System.out.println("## Heuristic AI ##");
+			p1 = new HeuristicAI(new ComplexActionComparator());
+			p2 = new HeuristicAI(new ComplexActionComparator());
+			simulateGame(1000, p1, p2);
+			System.out.println("Done");
+			
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+
 		
-		System.out.println("## Random Heuristic AI SIMPLE ##");
-		p1 = new RandomHeuristicAI(new SimpleActionComparator());
-		simulateGame(1000, p1, p1);
-		System.out.println("Done");
-
-		System.out.println("## Random Heuristic AI Complex ##");
-		p1 = new RandomHeuristicAI(new ComplexActionComparator());
-		simulateGame(1000, p1, p1);
-		System.out.println("Done");
-		
-		System.out.println("## Random AI SIM TREE ##");
-		p1 = new RandomAI(RAND_METHOD.TREE);
-		simulateGame(1000, p1, p1);
-		System.out.println("Done");
-
-		System.out.println("## Heuristic AI ##");
-		p1 = new HeuristicAI(new ComplexActionComparator());
-		p2 = new HeuristicAI(new ComplexActionComparator());
-		simulateGame(1000, p1, p2);
-		System.out.println("Done");
-	
-		/*
-		 * System.out.println("## Random AI SIM SCAN ##"); p1 = new
-		 * ScanRandomAI(true); p2 = new ScanRandomAI(false); simulateGame(1000,
-		 * p1, p2);
-		 */
-
 	}
 	
 	private static void simulateGame(int n, AI p1, AI p2) {
 		long ns = 0;
 		int turns = 0;
 		for (int i = 0; i < n; i++) {
-			final Game game = new Game(null, false, p1, p2);
-			game.state.init();
+			final Game game = new Game(null, new GameArguments(false, p1, p2, "a", DECK_SIZE.STANDARD));
+			game.state.init(game.gameArgs.deckSize);
 			final long start = System.nanoTime();
 			while (!game.state.isTerminal)
 				if (game.state.p1Turn)

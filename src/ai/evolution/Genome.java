@@ -65,8 +65,6 @@ public abstract class Genome implements Comparable<Genome> {
 				actions.add(possible.get(random.nextInt(possible.size())));
 			state.update(actions.get(i));
 		}
-		if (actions.contains(null))
-			System.out.println("null");
 	}
 
 	private boolean hasMove(Genome g, ArrayList<Action> possible, int i) {

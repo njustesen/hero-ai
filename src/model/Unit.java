@@ -17,7 +17,11 @@ public class Unit {
 
 	public Unit(Card type, boolean p1Owner) {
 		super();
-		// System.out.println(count++);
+		/*
+		count++;
+		if (count % 1000 == 0)
+			System.out.println(count);
+		*/
 		if (type != null) {
 			unitClass = UnitClassLib.lib.get(type);
 			hp = unitClass.maxHP;
@@ -189,7 +193,7 @@ public class Unit {
 			return false;
 		return true;
 	}
-
+	/*
 	public int hash() {
 		final int prime = 31;
 		int result = 1;
@@ -201,5 +205,5 @@ public class Unit {
 				+ ((unitClass == null) ? 0 : unitClass.hashCode());
 		return result;
 	}
-
+	*/
 }

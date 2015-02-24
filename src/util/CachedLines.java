@@ -5,7 +5,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import model.HAMap;
+import model.HaMap;
 import model.Position;
 
 public class CachedLines {
@@ -16,7 +16,7 @@ public class CachedLines {
 		return posMap.get(from).get(to);
 	}
 	
-	public static void load(HAMap map){
+	public static void load(HaMap map){
 		
 		for(int x = 0; x < map.width; x++){
 			for(int y = 0; y < map.height; y++){

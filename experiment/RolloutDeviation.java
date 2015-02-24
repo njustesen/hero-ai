@@ -1,8 +1,12 @@
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import model.HAMap;
+import util.MapLoader;
+import model.DECK_SIZE;
+import model.HaMap;
 import game.Game;
+import game.GameArguments;
 import game.GameState;
 import ai.AI;
 import ai.RandomAI;
@@ -30,18 +34,24 @@ public class RolloutDeviation {
 	
 	private static GameState createGameState(int turns, AI p1, AI p2) {
 		
-		GameState state = new GameState(HAMap.mapA);
-		Game game = new Game(state, true, p1, p2);
-		state.init();
-		
-		while(game.state.turn < turns){
-			if (game.state.p1Turn) {
-				game.state.update(p1.act(game.state, -1));
-			} else {
-				game.state.update(p2.act(game.state, -1));
+		GameState state;
+		try {
+			state = new GameState(MapLoader.get("a"));
+			Game game = new Game(state, new GameArguments(false, p1, p2, "a", DECK_SIZE.STANDARD));
+			state.init(game.gameArgs.deckSize);
+			
+			while(game.state.turn < turns){
+				if (game.state.p1Turn) {
+					game.state.update(p1.act(game.state, -1));
+				} else {
+					game.state.update(p2.act(game.state, -1));
+				}
 			}
+			return game.state;
+		} catch (IOException e) {
+			e.printStackTrace();
 		}
-		return game.state;
+		return null;
 	}
 	
 }

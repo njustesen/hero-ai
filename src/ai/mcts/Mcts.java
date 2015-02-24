@@ -2,12 +2,16 @@ package ai.mcts;
 
 import game.GameState;
 
+import java.io.FileNotFoundException;
+import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 
+import util.Statistics;
 import action.Action;
 import action.SingletonAction;
 import ai.AI;
@@ -110,10 +114,25 @@ public class Mcts implements AI {
 			rolls++;
 		}
 
-		// System.out.println("Rolls=" + rolls + ", ends=" + ends);
-		// if (ends == 0)
-		// System.out.println(root.toXml(0));
+		//System.out.println("Rolls=" + rolls + ", ends=" + ends);
 
+		//List<Integer> depths = new ArrayList<Integer>();
+		//root.depth(0, depths, new HashSet<MctsNode>());
+		
+		//System.out.println("Avg. depth: " + Statistics.avgInteger(depths));
+		//System.out.println("Max. depth: " + Statistics.max(depths));
+		/*
+		PrintWriter out = null;
+		try {
+			out = new PrintWriter("mcts.xml");
+			out.print(root.toXml(0, new HashSet<MctsNode>(), 6));
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		} finally {
+			if (out!= null)
+				out.close();
+		}
+		*/
 		// Save best move
 
 		// System.out.println(root.toXml(0));
@@ -144,19 +163,14 @@ public class Mcts implements AI {
 			if (from != null)
 				node.in.add(from);
 		} else
-			for (final MctsEdge edge : node.out) {
-				if (edge == null || edge.to == null)
-					System.out.println("NULL");
+			for (final MctsEdge edge : node.out) 
 				cut(edge.to, edge, depth + 1, cut);
-			}
 	}
 
 	private MctsEdge best(MctsNode node, boolean urgent) {
 		double bestVal = -100000;
 		MctsEdge bestEdge = null;
 		for (final MctsEdge edge : node.out) {
-			if (edge == null)
-				System.out.println("NULL");
 			final double val = uct(edge, node, urgent);
 			if (val > bestVal) {
 				bestVal = val;
