@@ -12,6 +12,7 @@ import ai.AI;
 import ai.GreedyActionAI;
 import ai.GreedyTurnAI;
 import ai.RandomHeuristicAI;
+import ai.evolution.NestedEvolution;
 import ai.evolution.RollingHorizonEvolution;
 import ai.heuristic.HeuristicEvaluation;
 import ai.heuristic.MaterialBalanceEvaluation;
@@ -26,68 +27,14 @@ public class AiComparison {
 
 	public static void main(String[] args) {
 		
-		/*
-		//Rolling Horizon 50 .5 .35 50 heuristic
-		AI p1 = new Mcts(6075, new RolloutEvaluation(1, 1, new RandomHeuristicAI(new ComplexActionComparator()), new MaterialBalanceEvaluation(true)));
-		AI p2 = new GreedyActionAI(new HeuristicEvaluation(false));
 		
-		System.out.println("P1: mcts 2025 rollout 1 1 randomheuristic materialblance win");
-		System.out.println("P2: greedyaction heuristic");
-		compare(p1, p2, 32);
+		AI p1 = new GreedyActionAI(new HeuristicEvaluation(false));
+		AI p2 = new NestedEvolution(100, 20, 0.5, .35, 100, new RolloutEvaluation(5, 1, new RandomHeuristicAI(new ComplexActionComparator()), new HeuristicEvaluation(false)));
 		
-		p1 = new Mcts(6075, new RolloutEvaluation(1, 1, new RandomHeuristicAI(new ComplexActionComparator()), new HeuristicEvaluation(true)));
-		p2 = new GreedyActionAI(new HeuristicEvaluation(false));
-		
-		System.out.println("P1: mcts 2025 rollout 1 1 randomheuristic heuristic win");
-		System.out.println("P2: greedyaction heuristic");
-		compare(p1, p2, 32);
-		
-		p1 = new Mcts(6075, new RolloutEvaluation(1, 5, new RandomHeuristicAI(new ComplexActionComparator()), new MaterialBalanceEvaluation(true)));
-		p2 = new GreedyActionAI(new HeuristicEvaluation(false));
-		
-		System.out.println("P1: mcts 2025 rollout 1 5 randomheuristic materialblance win");
-		System.out.println("P2: greedyaction heuristic");
-		compare(p1, p2, 32);
-		
-		p1 = new Mcts(6075, new RolloutEvaluation(1, 1000, new RandomHeuristicAI(new ComplexActionComparator()), new WinLoseEvaluation()));
-		p2 = new GreedyActionAI(new HeuristicEvaluation(false));
-		
-		System.out.println("P1: mcts 2025 rollout 1 1000 randomheuristic winlose win");
-		System.out.println("P2: greedyaction heuristic");
-		compare(p1, p2, 32);
-		
-		p1 = new Mcts(6075, new RolloutEvaluation(1, 1000, new RandomHeuristicAI(new ComplexActionComparator()), new WinLoseEvaluation()));
-		p2 = new GreedyActionAI(new HeuristicEvaluation(false));
-		
-		System.out.println("P1: mcts 6075 rollout 1 1000 randomheuristic winlose win");
-		System.out.println("P2: greedyaction heuristic");
-		compare(p1, p2, 32);
-		
-		*/
-		AI p1 = new GreedyTurnAI(new HeuristicEvaluation(false));
-		AI p2 = new Mcts(1000, new RolloutEvaluation(1, 1, new RandomHeuristicAI(new ComplexActionComparator()), new HeuristicEvaluation(true)));
-		
-		System.out.println("P1: greedyturn heuristic");
-		System.out.println("P2: greedyaction heuristic");
+		System.out.println("P1: greedyaction heuristic");
+		System.out.println("P2: Nested Evolution 100 20 .5 .35 100 rollout 5 1 randomheuristic heuristic");
 		System.out.println("TINY");
 		compare(p1, p2, 1, "a-tiny", DECK_SIZE.TINY);
-		
-		p1 = new GreedyTurnAI(new HeuristicEvaluation(false));
-		p2 = new Mcts(2000, new RolloutEvaluation(1, 1, new RandomHeuristicAI(new ComplexActionComparator()), new HeuristicEvaluation(true)));
-		
-		System.out.println("P1: greedyturn heuristic");
-		System.out.println("P2: greedyaction heuristic");
-		System.out.println("SMALL");
-		compare(p1, p2, 1, "a-small", DECK_SIZE.SMALL);
-		
-		p1 = new GreedyTurnAI(new HeuristicEvaluation(false));
-		p2 = new Mcts(3000, new RolloutEvaluation(1, 1, new RandomHeuristicAI(new ComplexActionComparator()), new HeuristicEvaluation(true)));
-		
-		System.out.println("P1: greedyturn heuristic");
-		System.out.println("P2: greedyaction heuristic");
-		System.out.println("SMALL");
-		compare(p1, p2, 1, "a", DECK_SIZE.STANDARD);
-		
 		
 	}
 
