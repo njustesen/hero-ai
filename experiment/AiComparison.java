@@ -65,28 +65,28 @@ public class AiComparison {
 		
 		*/
 		AI p1 = new GreedyTurnAI(new HeuristicEvaluation(false));
-		AI p2 = new GreedyActionAI(new HeuristicEvaluation(false));
+		AI p2 = new Mcts(1000, new RolloutEvaluation(1, 1, new RandomHeuristicAI(new ComplexActionComparator()), new HeuristicEvaluation(true)));
 		
 		System.out.println("P1: greedyturn heuristic");
 		System.out.println("P2: greedyaction heuristic");
 		System.out.println("TINY");
-		compare(p1, p2, 32, "a-tiny", DECK_SIZE.TINY);
+		compare(p1, p2, 1, "a-tiny", DECK_SIZE.TINY);
 		
 		p1 = new GreedyTurnAI(new HeuristicEvaluation(false));
-		p2 = new GreedyActionAI(new HeuristicEvaluation(false));
+		p2 = new Mcts(2000, new RolloutEvaluation(1, 1, new RandomHeuristicAI(new ComplexActionComparator()), new HeuristicEvaluation(true)));
 		
 		System.out.println("P1: greedyturn heuristic");
 		System.out.println("P2: greedyaction heuristic");
 		System.out.println("SMALL");
-		compare(p1, p2, 32, "a-small", DECK_SIZE.SMALL);
+		compare(p1, p2, 1, "a-small", DECK_SIZE.SMALL);
 		
 		p1 = new GreedyTurnAI(new HeuristicEvaluation(false));
-		p2 = new GreedyActionAI(new HeuristicEvaluation(false));
+		p2 = new Mcts(3000, new RolloutEvaluation(1, 1, new RandomHeuristicAI(new ComplexActionComparator()), new HeuristicEvaluation(true)));
 		
 		System.out.println("P1: greedyturn heuristic");
 		System.out.println("P2: greedyaction heuristic");
 		System.out.println("SMALL");
-		compare(p1, p2, 32, "a", DECK_SIZE.STANDARD);
+		compare(p1, p2, 1, "a", DECK_SIZE.STANDARD);
 		
 		
 	}

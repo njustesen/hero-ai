@@ -231,10 +231,10 @@ public class Mcts implements AI {
 				node = edge.to;
 				traversal.add(edge);
 				// TODO : HASH COLLISION?!
-				//int ap = clone.APLeft;
+				int ap = clone.APLeft;
 				clone.update(edge.action);
-				//if (ap == clone.APLeft)
-				//	System.out.println("!");
+				if (ap == clone.APLeft)
+					System.out.println("!");
 			}
 		}
 		return node;

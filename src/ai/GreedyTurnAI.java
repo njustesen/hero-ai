@@ -37,7 +37,9 @@ public class GreedyTurnAI implements AI {
 
 		// actions = searcher.bestMove(state, pool, unitPool, heuristic);
 		// actions = searcher.bestMove(state, pool, null, heuristic);
+		long start = System.currentTimeMillis();
 		actions = searcher.bestMove(state, heuristic, lastMove);
+		System.out.println(System.currentTimeMillis() - start);
 		lastMove.clear();
 		if (actions == null || actions.isEmpty())
 			return SingletonAction.endTurnAction;

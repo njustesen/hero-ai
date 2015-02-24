@@ -88,7 +88,6 @@ public class Game {
 				}
 			}
 			
-			
 			if (state.p1Turn && player1 != null)
 				act(player1, player2);
 			else if (!state.p1Turn && player2 != null)

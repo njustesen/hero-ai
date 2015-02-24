@@ -214,6 +214,11 @@ public class Unit {
 		return result;
 	}
 
+	@Override
+	public String toString() {
+		return "[" + (p1Owner ? 1 : 2) + "," + unitClass.card.name() + "," + hp + "," + equipment + "]";
+	}
+
 	private int equipmentHash() {
 		int e = 0;
 		if (equipment.contains(Card.DRAGONSCALE))

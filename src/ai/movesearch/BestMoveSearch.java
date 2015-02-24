@@ -40,7 +40,7 @@ public class BestMoveSearch {
 		bestMove = null;
 		addMoves(state, new ArrayList<Action>(), 0, lastMove);
 		
-		printStats();
+		//printStats();
 
 		return bestMove;
 

@@ -1,10 +1,4 @@
-/LineIterators/
-/action/
-/ai/
+/Hash/
 /game/
-/hash/
-/lib/
 /model/
-/ui/
-/util/
-/CardSet/
+/ai/

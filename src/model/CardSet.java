@@ -21,6 +21,7 @@ public class CardSet {
 	}
 	
 	public Card determined(){
+		seed = (int) ((double)seed * 33.0 / 29.0);
 		return get((int) (seed % size));
 	}
 	
@@ -116,6 +117,11 @@ public class CardSet {
 		if (!Arrays.equals(cards, other.cards))
 			return false;
 		return true;
+	}
+
+	@Override
+	public String toString() {
+		return Arrays.toString(cards).replaceAll(" ", "");
 	}
 	
 }

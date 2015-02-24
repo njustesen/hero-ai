@@ -861,7 +861,7 @@ public class GameState {
 
 		Card card = null;
 		while (!deck.isEmpty() && hand.size < 6) {
-			if (!RANDOMNESS)
+			if (RANDOMNESS)
 				card = deck.random();
 			else
 				card = deck.determined();
@@ -1019,6 +1019,33 @@ public class GameState {
 		if (turn != other.turn)
 			return false;
 		return true;
+	}
+	
+	public void print(){
+		List<Unit> p1Units = new ArrayList<Unit>();
+		List<Unit> p2Units = new ArrayList<Unit>();
+		for(int y=0; y < units[0].length; y++){
+			System.out.print("|");
+			for(int x=0; x < units.length; x++){
+				if (units[x][y]==null)
+					System.out.print("__|");
+				else {
+					System.out.print(units[x][y].unitClass.card.name().substring(0,2) + "|");
+					if (units[x][y].p1Owner)
+						p1Units.add(units[x][y]);
+					else
+						p2Units.add(units[x][y]);
+				}
+			}
+			System.out.print("\n");
+		}
+		System.out.println(p1Hand);
+		for(Unit unit : p1Units)
+			System.out.println(unit);
+		System.out.println(p2Hand);
+		for(Unit unit : p2Units)
+			System.out.println(unit);
+		
 	}
 
 	public SquareType squareAt(Position pos) {
