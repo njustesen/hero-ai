@@ -40,25 +40,23 @@ public class BestMoveSearch {
 		bestMove = null;
 		addMoves(state, new ArrayList<Action>(), 0, lastMove);
 		
-		//printStats();
+		printStats();
 
 		return bestMove;
 
 	}
 
 	private void printStats() {
-		int c = 0;
+		int s = 0;
 		int t = 0;
-		int tt = 0;
 		for (final Long l : transTable.keySet()) {
-			c += transTable.get(l);
-			if (transTable.get(l) > 1) {
-				t++;
-				tt += transTable.get(l);
-			}
+			if (transTable.get(l) > 1)
+				t += transTable.get(l);
+			else
+				s++;	
 		}
 
-		System.out.println(c + ";" + transTable.keySet().size() + ";" + t + ";" + tt + ";");
+		System.out.println(s + "\t" + t + "\t" + (double)t/((double)(t+s)));
 	}
 
 	private void addMoves(GameState state, List<Action> move, int depth, List<Action> lastMove) {

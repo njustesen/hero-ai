@@ -59,7 +59,7 @@ public class Game {
 					(this.player2 == null));
 
 		history = new Stack<GameState>();
-		if (CachedLines.posMap.isEmpty())
+		if (CachedLines.posMap.isEmpty() || state.map != CachedLines.map)
 			CachedLines.load(state.map);
 
 	}

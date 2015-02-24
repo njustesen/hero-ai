@@ -11,13 +11,14 @@ import model.Position;
 public class CachedLines {
 
 	public static Map<Position, Map<Position, List<Position>>> posMap = new HashMap<Position, Map<Position, List<Position>>>();
+	public static HaMap map;
 	
 	public static List<Position> supercover(Position from, Position to){
 		return posMap.get(from).get(to);
 	}
 	
 	public static void load(HaMap map){
-		
+		CachedLines.map = map;
 		for(int x = 0; x < map.width; x++){
 			for(int y = 0; y < map.height; y++){
 				Position from = new Position(x, y);

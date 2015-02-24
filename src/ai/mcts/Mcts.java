@@ -215,11 +215,13 @@ public class Mcts implements AI {
 			List<MctsEdge> traversal) {
 		
 		MctsEdge edge = null;
-		traversal.clear();
 		while (!clone.isTerminal){
+			//System.out.println(root.toXml(0, new HashSet<MctsNode>(), 20));
 			if (!node.isFullyExpanded()) {
 				// EXPANSION
 				edge = expand(node, clone);
+				if (edge == null)
+					return node;
 				traversal.add(edge);
 				return edge.to;
 			} else {
@@ -228,7 +230,11 @@ public class Mcts implements AI {
 					break;
 				node = edge.to;
 				traversal.add(edge);
+				// TODO : HASH COLLISION?!
+				//int ap = clone.APLeft;
 				clone.update(edge.action);
+				//if (ap == clone.APLeft)
+				//	System.out.println("!");
 			}
 		}
 		return node;
@@ -237,7 +243,13 @@ public class Mcts implements AI {
 	private MctsEdge expand(MctsNode node, GameState clone) {
 		final MctsEdge edge = node.nextEdge(clone.p1Turn);
 		node.out.add(edge);
+		int ap = clone.APLeft;
 		clone.update(edge.action);
+		if (ap == clone.APLeft){
+			System.out.print("!");
+			node.out.remove(edge);
+			return null;
+		}
 		final Long hash = clone.hash();
 		MctsNode result = null;
 		if (transTable.containsKey(hash)){

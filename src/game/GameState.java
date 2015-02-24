@@ -685,12 +685,9 @@ public class GameState {
 
 	private boolean aliveOnUnits(int player) {
 
-		if (deck(player).hasUnits())
+		if (deck(player).hasUnits() || hand(player).hasUnits())
 			return true;
 		
-		if (hand(player).hasUnits())
-				return true;
-
 		for (int x = 0; x < map.width; x++)
 			for (int y = 0; y < map.height; y++)
 				if (units[x][y] != null && units[x][y].p1Owner == (player == 1)
@@ -959,7 +956,7 @@ public class GameState {
 	}
 	
 	public long hash() {
-		final int prime = 31;
+		final int prime = 1193;
 		long result = 1;
 		result = prime * result + APLeft;
 		result = prime * result + turn;

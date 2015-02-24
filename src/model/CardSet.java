@@ -52,6 +52,49 @@ public class CardSet {
 		}
 	}
 
+	public boolean hasUnits() {
+		if (units() > 0)
+			return true;
+		return false;
+	}
+
+	public void addAll(CardSet other) {
+		size += other.size;
+		for(int i = 0; i < other.cards.length; i++)
+			cards[i] += other.cards[i];
+	}
+
+	public void clear() {
+		size = 0;
+		Arrays.fill(cards, 0);
+	}
+
+	public boolean isEmpty() {
+		return size == 0;
+	}
+
+	public void imitate(CardSet p1Hand) {
+		clear();
+		addAll(p1Hand);
+		seed = p1Hand.seed;
+	}
+
+	public int units() {
+		int units = 0;
+		for (Card card : Card.values())
+			if (card.type == CardType.UNIT && card != Card.CRYSTAL)
+				units += cards[card.ordinal()];
+		return units;
+	}
+
+	public boolean contains(Card card) {
+		return cards[card.ordinal()] > 0;
+	}
+
+	public int count(Card card) {
+		return cards[card.ordinal()];
+	}
+	
 	@Override
 	public int hashCode() {
 		int hash = 1;
@@ -73,53 +116,6 @@ public class CardSet {
 		if (!Arrays.equals(cards, other.cards))
 			return false;
 		return true;
-	}
-
-	public boolean hasUnits() {
-		for (Card card : Card.values()){
-			if (cards[card.ordinal()] > 0)
-				return true;
-		}
-		return false;
-	}
-
-	public void addAll(CardSet other) {
-		size += other.size;
-		for(int i = 0; i < other.cards.length; i++){
-			cards[i] += other.cards[i];
-		}
-		
-	}
-
-	public void clear() {
-		size = 0;
-		Arrays.fill(cards, 0);
-	}
-
-	public boolean isEmpty() {
-		return size == 0;
-	}
-
-	public void imitate(CardSet p1Hand) {
-		clear();
-		addAll(p1Hand);
-		seed = p1Hand.seed;
-	}
-
-	public int units() {
-		int units = 0;
-		for (Card card : Card.values())
-			if (card.type == CardType.UNIT)
-				units += cards[card.ordinal()];
-		return units;
-	}
-
-	public boolean contains(Card card) {
-		return cards[card.ordinal()] > 0;
-	}
-
-	public int count(Card card) {
-		return cards[card.ordinal()];
 	}
 	
 }
