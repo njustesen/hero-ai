@@ -7,6 +7,7 @@ import java.util.List;
 
 import model.AttackType;
 import model.Card;
+import model.CardSet;
 import model.CardType;
 import model.DECK_SIZE;
 import model.Direction;
@@ -34,16 +35,17 @@ public class GameState {
 	private static final int POTION_REVIVE = 100;
 	private static final int POTION_HEAL = 1000;
 	private static final int TURN_LIMIT = 100;
+	private static final boolean RANDOMNESS = false;
 
 	public HaMap map;
 	public boolean p1Turn;
 	public int turn;
 	public int APLeft;
 	public Unit[][] units;
-	public List<Card> p1Deck;
-	public List<Card> p2Deck;
-	public List<Card> p1Hand;
-	public List<Card> p2Hand;
+	public CardSet p1Deck;
+	public CardSet p2Deck;
+	public CardSet p1Hand;
+	public CardSet p2Hand;
 	public boolean isTerminal;
 
 	public List<Position> chainTargets;
@@ -55,10 +57,10 @@ public class GameState {
 		p1Turn = true;
 		turn = 1;
 		APLeft = STARTING_AP;
-		p1Hand = new ArrayList<Card>(6);
-		p2Hand = new ArrayList<Card>(6);
-		p1Deck = new ArrayList<Card>();
-		p2Deck = new ArrayList<Card>();
+		p1Hand = new CardSet();
+		p2Hand = new CardSet();
+		p1Deck = new CardSet();
+		p2Deck = new CardSet();
 		chainTargets = new ArrayList<Position>();
 		if (map != null)
 			units = new Unit[map.width][map.height];
@@ -67,8 +69,8 @@ public class GameState {
 	}
 
 	public GameState(HaMap map, boolean p1Turn, int turn, int APLeft,
-			Unit[][] units, List<Card> p1Hand, List<Card> p2Hand,
-			List<Card> p1Deck, List<Card> p2Deck, List<Position> chainTargets,
+			Unit[][] units, CardSet p1Hand, CardSet p2Hand,
+			CardSet p1Deck, CardSet p2Deck, List<Position> chainTargets,
 			boolean isTerminal) {
 		super();
 		this.map = map;
@@ -102,8 +104,6 @@ public class GameState {
 			p1Deck.add(type);
 			p2Deck.add(type);
 		}
-		Collections.shuffle(p1Deck);
-		Collections.shuffle(p2Deck);
 	}
 
 	public void possibleActions(List<Action> actions) {
@@ -121,8 +121,8 @@ public class GameState {
 					possibleActions(units[x][y], new Position(x, y), actions);
 
 		final List<Card> visited = new ArrayList<Card>();
-		for (final Card card : currentHand())
-			if (!visited.contains(card)) {
+		for (final Card card : Card.values())
+			if (currentHand().contains(card) && !visited.contains(card)) {
 				possibleActions(card, actions);
 				visited.add(card);
 			}
@@ -685,12 +685,10 @@ public class GameState {
 
 	private boolean aliveOnUnits(int player) {
 
-		for (final Card type : deck(player))
-			if (type.type == CardType.UNIT)
-				return true;
-
-		for (final Card type : hand(player))
-			if (type.type == CardType.UNIT)
+		if (deck(player).hasUnits())
+			return true;
+		
+		if (hand(player).hasUnits())
 				return true;
 
 		for (int x = 0; x < map.width; x++)
@@ -703,7 +701,7 @@ public class GameState {
 
 	}
 
-	private List<Card> deck(int player) {
+	private CardSet deck(int player) {
 		if (player == 1)
 			return p1Deck;
 		if (player == 2)
@@ -711,7 +709,7 @@ public class GameState {
 		return null;
 	}
 
-	private List<Card> hand(int player) {
+	private CardSet hand(int player) {
 		if (player == 1)
 			return p1Hand;
 		if (player == 2)
@@ -840,63 +838,57 @@ public class GameState {
 		if (player == 1) {
 			p1Deck.addAll(p1Hand);
 			p1Hand.clear();
-			Collections.shuffle(p1Deck);
+			//Collections.shuffle(p1Deck);
 			drawHandFrom(p1Deck, p1Hand);
 		} else if (player == 2) {
 			p2Deck.addAll(p2Hand);
 			p2Hand.clear();
-			Collections.shuffle(p2Hand);
+			//Collections.shuffle(p2Hand);
 			drawHandFrom(p2Deck, p2Hand);
 		}
 
 	}
 
-	private boolean legalStartingHand(List<Card> hand) {
-		if (hand.size() != 6)
+	private boolean legalStartingHand(CardSet hand) {
+		if (hand.size != 6)
 			return false;
 
-		int units = 0;
-		for (final Card card : hand)
-			if (card.type == CardType.UNIT)
-				units++;
-
-		if (units == REQUIRED_UNITS)
+		if (hand.units() == REQUIRED_UNITS)
 			return true;
 
 		return false;
 
 	}
 
-	private void drawHandFrom(List<Card> deck, List<Card> hand) {
+	private void drawHandFrom(CardSet deck, CardSet hand) {
 
-		while (!deck.isEmpty() && hand.size() < 6) {
-			final int idx = (int) (Math.random() * deck.size());
-			final Card card = deck.get(idx);
-			deck.remove(idx);
+		Card card = null;
+		while (!deck.isEmpty() && hand.size < 6) {
+			if (!RANDOMNESS)
+				card = deck.random();
+			else
+				card = deck.determined();
+			if (card == Card.CRYSTAL)
+				System.out.println("CRYSTAL");
 			hand.add(card);
+			deck.remove(card);
 		}
 
 	}
 
 	private void drawCards() {
 
-		while (currentHand().size() < 6 && !currentDeck().isEmpty()) {
-			//final int idx = (int) (Math.random() * currentDeck().size());
-			int idx = 0;
-			final Card card = currentDeck().get(idx);
-			currentDeck().remove(idx);
-			currentHand().add(card);
-		}
+		drawHandFrom(currentDeck(), currentHand());
 
 	}
 
-	public List<Card> currentHand() {
+	public CardSet currentHand() {
 		if (p1Turn)
 			return p1Hand;
 		return p2Hand;
 	}
 
-	public List<Card> currentDeck() {
+	public CardSet currentDeck() {
 		if (p1Turn)
 			return p1Deck;
 		return p2Deck;
@@ -918,18 +910,15 @@ public class GameState {
 			for (int y = 0; y < map.height; y++)
 				if (units[x][y] != null)
 					un[x][y] = units[x][y].copy();
-		final List<Card> p1h = new ArrayList<Card>(p1Hand.size());
-		for (final Card card : p1Hand)
-			p1h.add(card);
-		final List<Card> p2h = new ArrayList<Card>(p2Hand.size());
-		for (final Card card : p2Hand)
-			p2h.add(card);
-		final List<Card> p1d = new ArrayList<Card>(p1Deck.size());
-		for (final Card card : p1Deck)
-			p1d.add(card);
-		final List<Card> p2d = new ArrayList<Card>(p2Deck.size());
-		for (final Card card : p2Deck)
-			p2d.add(card);
+		CardSet p1h = new CardSet(p1Hand.seed);
+		p1h.imitate(p1Hand);
+		CardSet p2h = new CardSet(p2Hand.seed);
+		p2h.imitate(p2Hand);
+		CardSet p1d = new CardSet(p1Deck.seed);
+		p1d.imitate(p1Deck);
+		CardSet p2d = new CardSet(p2Deck.seed);
+		p2d.imitate(p2Deck);
+		
 		return new GameState(map, p1Turn, turn, APLeft, un, p1h, p2h, p1d, p2d,
 				chainTargets, isTerminal);
 	}
@@ -975,10 +964,10 @@ public class GameState {
 		result = prime * result + APLeft;
 		result = prime * result + turn;
 		result = prime * result + (isTerminal ? 0 : 1);
-		//result = prime * result + hash(state.p1Hand);
-		//result = prime * result + hash(state.p2Deck);
-		//result = prime * result + hash(state.p2Hand);
-		//result = prime * result + hash(state.p1Deck);
+		result = prime * result + p1Hand.hashCode();
+		result = prime * result + p2Deck.hashCode();
+		result = prime * result + p2Hand.hashCode();
+		result = prime * result + p1Deck.hashCode();
 		
 		for (int x = 0; x < map.width; x++)
 			for (int y = 0; y < map.height; y++)
@@ -1049,9 +1038,9 @@ public class GameState {
 
 	public int cardsLeft(int p) {
 		if (p == 1)
-			return p1Deck.size() + p1Hand.size();
+			return p1Deck.size + p1Hand.size;
 		else if (p == 2)
-			return p2Deck.size() + p2Hand.size();
+			return p2Deck.size + p2Hand.size;
 		return -1;
 	}
 

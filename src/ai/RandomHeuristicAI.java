@@ -54,8 +54,8 @@ public class RandomHeuristicAI implements AI {
 
 		if (Math.random() < PROP_HAND) {
 			final List<Integer> idxs = new ArrayList<Integer>(state
-					.currentHand().size());
-			for (int i = 0; i < state.currentHand().size(); i++)
+					.currentHand().size);
+			for (int i = 0; i < state.currentHand().size; i++)
 				idxs.add(i);
 			Collections.shuffle(idxs);
 			for (final Integer i : idxs) {
@@ -103,7 +103,7 @@ public class RandomHeuristicAI implements AI {
 			}
 			Collections.shuffle(idxs);
 			for (final Integer i : idxs) {
-				if (i >= state.currentHand().size())
+				if (i >= state.currentHand().size)
 					continue;
 				actions.clear();
 				state.possibleActions(state.currentHand().get(i), actions);

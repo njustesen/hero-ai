@@ -93,19 +93,15 @@ public class MaterialEvaluation implements IHeuristic {
 			}
 		}
 		// TODO: Opponent hand should be hidden
-		for (final Card card : state.p1Deck)
-			if (card.type == CardType.UNIT)
-				p1Units += values.get(card);
-		for (final Card card : state.p1Hand)
-			if (card.type == CardType.UNIT)
-				p1Units += values.get(card);
-		for (final Card card : state.p2Hand)
-			if (card.type == CardType.UNIT)
-				p2Units += values.get(card);
-		for (final Card card : state.p2Deck)
-			if (card.type == CardType.UNIT)
-				p2Units += values.get(card);
-
+		for (final Card card : Card.values()){
+			if (card.type != CardType.UNIT)
+				continue;
+			p1Units += values.get(card) * state.p1Deck.count(card);
+			p2Units += values.get(card) * state.p2Deck.count(card);
+			p1Units += values.get(card) * state.p1Hand.count(card);
+			p2Units += values.get(card) * state.p2Hand.count(card);
+		}
+		
 		if (p1)
 			return p1Units - p2Units;
 		return p2Units - p1Units;

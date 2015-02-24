@@ -71,7 +71,7 @@ public class NmSearchAI implements AI {
 	}
 
 	private void randomizeHand(GameState clone, boolean player1) {
-
+		/*
 		if (player1) {
 			for (final Card card : clone.p1Hand)
 				clone.p1Deck.add(card);
@@ -83,6 +83,7 @@ public class NmSearchAI implements AI {
 			clone.p2Hand.clear();
 			drawCards(clone.p2Hand, clone.p2Deck);
 		}
+		*/
 	}
 
 	private void drawCards(List<Card> hand, List<Card> deck) {

@@ -216,7 +216,7 @@ public class ScanRandomAI implements AI {
 		Action action = null;
 
 		for (final Integer i : handOrder) {
-			if (i >= state.currentHand().size())
+			if (i >= state.currentHand().size)
 				continue;
 			final Card card = state.currentHand().get(i);
 

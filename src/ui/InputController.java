@@ -79,7 +79,7 @@ public class InputController implements MouseListener, KeyListener,
 			final int bottom = squareSize + state.map.height * squareSize
 					+ squareSize / 4;
 
-			for (int i = 0; i < state.currentHand().size(); i++) {
+			for (int i = 0; i < state.currentHand().size; i++) {
 				final int fromX = start + squareSize * i;
 				final int toX = fromX + squareSize;
 				final int fromY = bottom;

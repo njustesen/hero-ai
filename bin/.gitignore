@@ -2,8 +2,9 @@
 /action/
 /ai/
 /game/
+/hash/
 /lib/
 /model/
+/ui/
 /util/
-/hash/
 /CardSet/

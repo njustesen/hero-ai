@@ -37,8 +37,8 @@ public class ActionPruner {
 					spellTargets.put(((DropAction) action),
 							spellTargets(dropAction.to, state));
 			} else if (action instanceof SwapCardAction)
-				pruned.add(action);
-				//if (onlyCard(state, ((SwapCardAction)action).card))
+				if (onlyCard(state, ((SwapCardAction)action).card))
+					pruned.add(action);
 					
 
 		for (final DropAction spell : spellTargets.keySet())
@@ -72,23 +72,11 @@ public class ActionPruner {
 
 	private boolean onlyCard(GameState state, Card card) {
 		
-		int count = 0;
 		if (state.p1Turn){
-			for(Card c : state.p1Hand){
-				if (c.equals(card))
-					count++;
-			}	
-		} else {
-			for(Card c : state.p2Hand){
-				if (c.equals(card))
-					count++;
-			}	
+			return state.p1Hand.count(card) == 1;
 		}
+		return state.p2Hand.count(card) == 1;	
 		
-		if (count >= 2)
-			return false;
-	
-		return true;
 	}
 
 	private boolean sameOrBetterSpellEffect(Map<DropAction, List<Position>> spellTargets, DropAction spell, List<Action> pruned) {

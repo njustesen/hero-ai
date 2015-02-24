@@ -1,49 +1,43 @@
 package model;
 
 import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Map;
 
 public class CardSet {
-	
-	public static Map<Integer, Card> cardIdxs;
-	
-	static {
-		cardIdxs = new HashMap<Integer, Card>();
-		for (Card card : Card.values()) 
-			cardIdxs.put(card.ordinal(), card);
-	}
 
 	public int[] cards;
 	public int size;
 	public int seed;
 	
 	public CardSet(){
-		cards = new int[cardIdxs.size()];
+		cards = new int[Card.values().length];
 		size = 0;
+		seed = (int) (Math.random() * 100000);
+	}
+	
+	public CardSet(int seed){
+		cards = new int[Card.values().length];
+		size = 0;
+		this.seed = seed;
 	}
 	
 	public Card determined(){
-		int r = (int) (seed % size);
-		int c = 0;
-		int i = 0;
-		while(c < r){
-			c += cards[i];
-			i++;
-		}
-		seed = (seed * (seed - 31)) / (seed + 29);
-		return cardIdxs.get(i);
+		return get((int) (seed % size));
 	}
 	
 	public Card random(){
-		int r = (int) (Math.random() * size);
+		return get((int) Math.floor(Math.random() * size));
+	}
+	
+	public Card get(Integer r) {
 		int c = 0;
 		int i = 0;
-		while(c < r){
+		while(true){
 			c += cards[i];
+			if (c > r)
+				break;
 			i++;
 		}
-		return cardIdxs.get(i);
+		return Card.values()[i];
 	}
 
 	public void add(Card card) {
@@ -52,8 +46,10 @@ public class CardSet {
 	}
 	
 	public void remove(Card card) {
-		cards[card.ordinal()]--;
-		size++;
+		if (cards[card.ordinal()] > 0){
+			cards[card.ordinal()]--;
+			size--;
+		}
 	}
 
 	@Override
@@ -77,6 +73,53 @@ public class CardSet {
 		if (!Arrays.equals(cards, other.cards))
 			return false;
 		return true;
+	}
+
+	public boolean hasUnits() {
+		for (Card card : Card.values()){
+			if (cards[card.ordinal()] > 0)
+				return true;
+		}
+		return false;
+	}
+
+	public void addAll(CardSet other) {
+		size += other.size;
+		for(int i = 0; i < other.cards.length; i++){
+			cards[i] += other.cards[i];
+		}
+		
+	}
+
+	public void clear() {
+		size = 0;
+		Arrays.fill(cards, 0);
+	}
+
+	public boolean isEmpty() {
+		return size == 0;
+	}
+
+	public void imitate(CardSet p1Hand) {
+		clear();
+		addAll(p1Hand);
+		seed = p1Hand.seed;
+	}
+
+	public int units() {
+		int units = 0;
+		for (Card card : Card.values())
+			if (card.type == CardType.UNIT)
+				units += cards[card.ordinal()];
+		return units;
+	}
+
+	public boolean contains(Card card) {
+		return cards[card.ordinal()] > 0;
+	}
+
+	public int count(Card card) {
+		return cards[card.ordinal()];
 	}
 	
 }

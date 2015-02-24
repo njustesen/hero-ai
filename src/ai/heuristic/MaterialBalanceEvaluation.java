@@ -5,6 +5,7 @@ import java.util.Map;
 
 import ai.util.NormUtil;
 import game.GameState;
+import lib.UnitClassLib;
 import model.Card;
 import model.CardType;
 
@@ -109,19 +110,14 @@ public class MaterialBalanceEvaluation implements IHeuristic {
 			}
 		}
 		// TODO: Opponent hand should be hidden
-		for (final Card card : state.p1Deck)
-			if (card.type == CardType.UNIT)
-				p1Units += values.get(card);
-		for (final Card card : state.p1Hand)
-			if (card.type == CardType.UNIT)
-				p1Units += values.get(card);
-		for (final Card card : state.p2Hand)
-			if (card.type == CardType.UNIT)
-				p2Units += values.get(card);
-		for (final Card card : state.p2Deck)
-			if (card.type == CardType.UNIT)
-				p2Units += values.get(card);
-
+		for (final Card card : Card.values()){
+			if (card.type != CardType.UNIT)
+				continue;
+			p1Units += values.get(card) * state.p1Deck.count(card);
+			p2Units += values.get(card) * state.p2Deck.count(card);
+			p1Units += values.get(card) * state.p1Hand.count(card);
+			p2Units += values.get(card) * state.p2Hand.count(card);
+		}
 		//double p1Val = (double)p1Units * (double)p1Crystals * 0.2;
 		//double p2Val = (double)p2Units * (double)p2Crystals * 0.2;
 		p1Crystals = MAX_VAL * p1Crystals;

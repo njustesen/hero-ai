@@ -21,6 +21,7 @@ import lib.ImageLib;
 import lib.UnitClassLib;
 import model.AttackType;
 import model.Card;
+import model.CardSet;
 import model.CardType;
 import model.Position;
 import model.SquareType;
@@ -173,11 +174,23 @@ public class UI extends JComponent {
 		int row = 0;
 		final List<Card> cards = new ArrayList<Card>();
 		if (p == 1) {
-			cards.addAll(state.p1Deck);
-			cards.addAll(state.p1Hand);
+			for(Card card : Card.values()){
+				if (state.p1Deck.contains(card))
+					for(int i = 0; i < state.p1Deck.count(card); i++)
+						cards.add(card);
+				if (state.p1Hand.contains(card))
+					for(int i = 0; i < state.p1Hand.count(card); i++)
+						cards.add(card);
+			}
 		} else if (p == 2) {
-			cards.addAll(state.p2Deck);
-			cards.addAll(state.p2Hand);
+			for(Card card : Card.values()){
+				if (state.p2Deck.contains(card))
+					for(int i = 0; i < state.p2Deck.count(card); i++)
+						cards.add(card);
+				if (state.p2Hand.contains(card))
+					for(int i = 0; i < state.p2Hand.count(card); i++)
+						cards.add(card);
+			}
 		} else {
 			return;
 		}
@@ -750,9 +763,12 @@ public class UI extends JComponent {
 
 	}
 
-	private void paintHand(Graphics g, int from, List<Card> hand, int p) {
+	private void paintHand(Graphics g, int from, CardSet hand, int p) {
 
-		for (int i = 0; i < hand.size(); i++) {
+		for (int i = 0; i < hand.size; i++) {
+			
+			if (hand.get(i) == Card.CRYSTAL)
+				continue;
 
 			final int x = from + i * squareSize;
 

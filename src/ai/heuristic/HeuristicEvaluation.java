@@ -54,19 +54,15 @@ public class HeuristicEvaluation implements IHeuristic {
 			}
 		}
 		// TODO: Opponent hand should be hidden
-		for (final Card card : state.p1Deck)
-			if (card.type == CardType.UNIT)
-				p1Units += UnitClassLib.lib.get(card).maxHP * 1.75;
-		for (final Card card : state.p1Hand)
-			if (card.type == CardType.UNIT)
-				p1Units += UnitClassLib.lib.get(card).maxHP * 1.75;
-		for (final Card card : state.p2Hand)
-			if (card.type == CardType.UNIT)
-				p2Units += UnitClassLib.lib.get(card).maxHP * 1.75;
-		for (final Card card : state.p2Deck)
-			if (card.type == CardType.UNIT)
-				p2Units += UnitClassLib.lib.get(card).maxHP * 1.75;
-
+		for (final Card card : Card.values()){
+			if (card.type != CardType.UNIT)
+				continue;
+			p1Units += state.p1Deck.count(card) * UnitClassLib.lib.get(card).maxHP * 1.75;
+			p2Units += state.p2Deck.count(card) * UnitClassLib.lib.get(card).maxHP * 1.75;
+			p1Units += state.p1Hand.count(card) * UnitClassLib.lib.get(card).maxHP * 1.75;
+			p2Units += state.p2Hand.count(card) * UnitClassLib.lib.get(card).maxHP * 1.75;
+		}
+			
 		if (p1)
 			return p1Units - p2Units;
 		return p2Units - p1Units;

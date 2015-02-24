@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Map;
 
 import model.Card;
+import model.CardSet;
 import model.Unit;
 
 public class GameStateHasher {
@@ -44,7 +45,7 @@ public class GameStateHasher {
 			sb.append(card.ordinal());
 	}
 	
-	private void hashCards(List<Card> cards, StringBuilder sb) {
+	private void hashCards(CardSet cards, StringBuilder sb) {
 		/*
 		map.clear();
 		for (final Card card : cards)
@@ -55,8 +56,7 @@ public class GameStateHasher {
 		sb.append("|");
 		*/
 		sb.append("c");
-		for (final Card card : cards)
-			sb.append(card.ordinal());
+		sb.append(cards.hashCode());
 	}
 	
 }
