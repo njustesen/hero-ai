@@ -49,13 +49,17 @@ public class MctsNode {
 	}
 	
 	public String toXml(int depth, HashSet<MctsNode> visited, int max){
-		if (visited.contains(this) || depth > max)
+		if (depth > max)
 			return "";
-		visited.add(this);
 		String str = "";
 		String tabs = "";
 		for(int i = 0; i < depth; i++)
 			tabs += "\t";
+		if (visited != null && visited.contains(this)){
+			str += tabs + "<node h='"+hashCode()+"' vis='"+visits+"' />\n";
+			return str;
+		} else if (visited!=null)
+			visited.add(this);
 		if (out.isEmpty())
 			str += tabs + "<node h='"+hashCode()+"' vis='"+visits+"' />\n";
 		else {
@@ -65,6 +69,7 @@ public class MctsNode {
 					str += edge.toXml(depth+1, visited, max);
 			str += tabs + "</node>\n";
 		}
+		
 		return str;
 	}
 

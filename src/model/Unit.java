@@ -197,7 +197,7 @@ public class Unit {
 	public int hash(int x, int y) {
 		int result = 1;
 		result = 16 * result + equipmentHash();
-		result = 1500 * result + hp;
+		result = 6553 * result + hp;
 		result = 2 * result + (p1Owner ? 0 : 1);
 		result = 6 * result + unitClass.hash();
 		result = 5 * result + x;

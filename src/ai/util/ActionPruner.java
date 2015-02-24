@@ -37,8 +37,9 @@ public class ActionPruner {
 					spellTargets.put(((DropAction) action),
 							spellTargets(dropAction.to, state));
 			} else if (action instanceof SwapCardAction)
-				if (onlyCard(state, ((SwapCardAction)action).card))
-					pruned.add(action);
+				pruned.add(action);
+				//if (onlyCard(state, ((SwapCardAction)action).card))
+					
 
 		for (final DropAction spell : spellTargets.keySet())
 			if (spellTargets.get(spell).isEmpty())
@@ -47,7 +48,7 @@ public class ActionPruner {
 		for (final DropAction spell : spellTargets.keySet())
 			if (!pruned.contains(spell))
 				if (sameOrBetterSpellEffect(spellTargets, spell, pruned))
-						pruned.add(spell);
+					pruned.add(spell);
 		
 		/*
 		Set<Integer> states = new HashSet<Integer>();

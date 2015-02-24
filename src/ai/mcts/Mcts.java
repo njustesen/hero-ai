@@ -2,8 +2,6 @@ package ai.mcts;
 
 import game.GameState;
 
-import java.io.FileNotFoundException;
-import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -11,27 +9,25 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 
-import util.Statistics;
 import action.Action;
 import action.SingletonAction;
 import ai.AI;
 import ai.heuristic.IHeuristic;
 import ai.util.ActionComparator;
 import ai.util.ActionPruner;
-import ai.util.ComplexActionComparator;
-import ai.util.GameStateHasher;
+import ai.util.ComplexActionComparator;;
 
 public class Mcts implements AI {
 
-	Map<String, MctsNode> transTable = new HashMap<String, MctsNode>();
-
+	Map<Long, MctsNode> transTable = new HashMap<Long, MctsNode>();
+	Map<Long, Integer> apTable = new HashMap<Long, Integer>();
+	
 	public double c;
 	public long budget;
 	public IHeuristic defaultPolicy;
 	private final ActionPruner pruner;
 	private final ActionComparator comparator;
 	private MctsNode root;
-	private final GameStateHasher hasher;
 	private List<Action> move;
 	private int ends;
 	public boolean cut;
@@ -42,7 +38,6 @@ public class Mcts implements AI {
 		this.defaultPolicy = defaultPolicy;
 		pruner = new ActionPruner();
 		comparator = new ComplexActionComparator();
-		hasher = new GameStateHasher();
 		move = new ArrayList<Action>();
 		ends = 0;
 		c = 1 / Math.sqrt(2);
@@ -107,7 +102,7 @@ public class Mcts implements AI {
 
 			// BACKPROPAGATION
 			backupNegaMax(traversal, delta, state.p1Turn);
-
+			
 			// if (rolls % 100 == 0)
 			// System.out.println(root.toXml(0));
 			time = (start + budget) - System.currentTimeMillis();
@@ -144,6 +139,7 @@ public class Mcts implements AI {
 		// Reset search
 		root = null;
 		transTable.clear();
+		apTable.clear();
 		ends = 0;
 
 		return action;
@@ -217,8 +213,10 @@ public class Mcts implements AI {
 
 	private MctsNode treePolicy(MctsNode node, GameState clone,
 			List<MctsEdge> traversal) {
+		
 		MctsEdge edge = null;
-		while (!clone.isTerminal)
+		traversal.clear();
+		while (!clone.isTerminal){
 			if (!node.isFullyExpanded()) {
 				// EXPANSION
 				edge = expand(node, clone);
@@ -232,6 +230,7 @@ public class Mcts implements AI {
 				traversal.add(edge);
 				clone.update(edge.action);
 			}
+		}
 		return node;
 	}
 
@@ -239,11 +238,11 @@ public class Mcts implements AI {
 		final MctsEdge edge = node.nextEdge(clone.p1Turn);
 		node.out.add(edge);
 		clone.update(edge.action);
-		final String hash = hasher.hash(clone);
+		final Long hash = clone.hash();
 		MctsNode result = null;
-		if (transTable.containsKey(hash))
+		if (transTable.containsKey(hash)){
 			result = transTable.get(hash);
-		else {
+		} else {
 			result = new MctsNode(actions(clone));
 			if (edge.action == SingletonAction.endTurnAction)
 				ends++;

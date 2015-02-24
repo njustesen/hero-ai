@@ -21,7 +21,7 @@ import ai.util.GameStateHasher;
 
 public class BestMoveSearch {
 
-	Map<String, Integer> transTable = new HashMap<String, Integer>();
+	Map<Long, Integer> transTable = new HashMap<Long, Integer>();
 
 	HeuristicEvaluation evalutator = new HeuristicEvaluation(false);
 	ActionPruner pruner = new ActionPruner();
@@ -50,11 +50,11 @@ public class BestMoveSearch {
 		int c = 0;
 		int t = 0;
 		int tt = 0;
-		for (final String i : transTable.keySet()) {
-			c += transTable.get(i);
-			if (transTable.get(i) > 1) {
+		for (final Long l : transTable.keySet()) {
+			c += transTable.get(l);
+			if (transTable.get(l) > 1) {
 				t++;
-				tt += transTable.get(i);
+				tt += transTable.get(l);
 			}
 		}
 
@@ -97,7 +97,7 @@ public class BestMoveSearch {
 				next.imitate(state);
 			next.update(action);
 
-			final String hash = hasher.hash(next);
+			final long hash = next.hash();
 			if (transTable.containsKey(hash))
 				transTable.put(hash, transTable.get(hash) + 1);
 			else {
