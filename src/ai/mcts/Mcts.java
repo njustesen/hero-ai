@@ -5,7 +5,6 @@ import game.GameState;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 
@@ -15,13 +14,13 @@ import ai.AI;
 import ai.heuristic.IHeuristic;
 import ai.util.ActionComparator;
 import ai.util.ActionPruner;
-import ai.util.ComplexActionComparator;;
+import ai.util.ComplexActionComparator;
 
 public class Mcts implements AI {
 
 	Map<Long, MctsNode> transTable = new HashMap<Long, MctsNode>();
 	Map<Long, Integer> apTable = new HashMap<Long, Integer>();
-	
+
 	public double c;
 	public long budget;
 	public IHeuristic defaultPolicy;
@@ -102,32 +101,26 @@ public class Mcts implements AI {
 
 			// BACKPROPAGATION
 			backupNegaMax(traversal, delta, state.p1Turn);
-			
+
 			// if (rolls % 100 == 0)
 			// System.out.println(root.toXml(0));
 			time = (start + budget) - System.currentTimeMillis();
 			rolls++;
 		}
 
-		//System.out.println("Rolls=" + rolls + ", ends=" + ends);
+		// System.out.println("Rolls=" + rolls + ", ends=" + ends);
 
-		//List<Integer> depths = new ArrayList<Integer>();
-		//root.depth(0, depths, new HashSet<MctsNode>());
-		
-		//System.out.println("Avg. depth: " + Statistics.avgInteger(depths));
-		//System.out.println("Max. depth: " + Statistics.max(depths));
+		// List<Integer> depths = new ArrayList<Integer>();
+		// root.depth(0, depths, new HashSet<MctsNode>());
+
+		// System.out.println("Avg. depth: " + Statistics.avgInteger(depths));
+		// System.out.println("Max. depth: " + Statistics.max(depths));
 		/*
-		PrintWriter out = null;
-		try {
-			out = new PrintWriter("mcts.xml");
-			out.print(root.toXml(0, new HashSet<MctsNode>(), 6));
-		} catch (FileNotFoundException e) {
-			e.printStackTrace();
-		} finally {
-			if (out!= null)
-				out.close();
-		}
-		*/
+		 * PrintWriter out = null; try { out = new PrintWriter("mcts.xml");
+		 * out.print(root.toXml(0, new HashSet<MctsNode>(), 6)); } catch
+		 * (FileNotFoundException e) { e.printStackTrace(); } finally { if
+		 * (out!= null) out.close(); }
+		 */
 		// Save best move
 
 		// System.out.println(root.toXml(0));
@@ -159,7 +152,7 @@ public class Mcts implements AI {
 			if (from != null)
 				node.in.add(from);
 		} else
-			for (final MctsEdge edge : node.out) 
+			for (final MctsEdge edge : node.out)
 				cut(edge.to, edge, depth + 1, cut);
 	}
 
@@ -213,10 +206,10 @@ public class Mcts implements AI {
 
 	private MctsNode treePolicy(MctsNode node, GameState clone,
 			List<MctsEdge> traversal) {
-		
+
 		MctsEdge edge = null;
-		while (!clone.isTerminal){
-			//System.out.println(root.toXml(0, new HashSet<MctsNode>(), 20));
+		while (!clone.isTerminal)
+			// System.out.println(root.toXml(0, new HashSet<MctsNode>(), 20));
 			if (!node.isFullyExpanded()) {
 				// EXPANSION
 				edge = expand(node, clone);
@@ -231,30 +224,29 @@ public class Mcts implements AI {
 				node = edge.to;
 				traversal.add(edge);
 				// TODO : HASH COLLISION?!
-				//int ap = clone.APLeft;
+				// int ap = clone.APLeft;
 				clone.update(edge.action);
-				//if (ap == clone.APLeft)
-				//	System.out.println("!");
+				// if (ap == clone.APLeft)
+				// System.out.println("!");
 			}
-		}
 		return node;
 	}
 
 	private MctsEdge expand(MctsNode node, GameState clone) {
 		final MctsEdge edge = node.nextEdge(clone.p1Turn);
 		node.out.add(edge);
-		int ap = clone.APLeft;
+		final int ap = clone.APLeft;
 		clone.update(edge.action);
-		if (ap == clone.APLeft){
-			System.out.print("!");
+		if (ap == clone.APLeft) {
+			// System.out.print("!");
 			node.out.remove(edge);
 			return null;
 		}
 		final Long hash = clone.hash();
 		MctsNode result = null;
-		if (transTable.containsKey(hash)){
+		if (transTable.containsKey(hash))
 			result = transTable.get(hash);
-		} else {
+		else {
 			result = new MctsNode(actions(clone));
 			if (edge.action == SingletonAction.endTurnAction)
 				ends++;

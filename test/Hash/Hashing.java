@@ -1,4 +1,4 @@
-package hash;
+package Hash;
 
 import java.io.IOException;
 import java.util.HashSet;
