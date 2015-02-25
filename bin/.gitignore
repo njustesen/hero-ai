@@ -1,4 +1,11 @@
+/.DS_Store
+/CardSet/
 /Hash/
-/game/
-/model/
+/LineIterators/
+/action/
 /ai/
+/game/
+/lib/
+/model/
+/ui/
+/util/

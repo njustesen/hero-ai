@@ -13,14 +13,15 @@ import ai.movesearch.BestMoveSearch;
 public class GreedyTurnAI implements AI {
 
 	private final BestMoveSearch searcher = new BestMoveSearch();
-	private List<Action> actions = new ArrayList<Action>();
+	private List<Action> actions;
 	private final IHeuristic heuristic;
-	private List<Action> lastMove;
+	private final List<Action> lastMove;
 
 	public GreedyTurnAI(IHeuristic heuristic) {
 		super();
 		this.heuristic = heuristic;
-		this.lastMove = new ArrayList<Action>();
+		lastMove = new ArrayList<Action>();
+		actions = new ArrayList<Action>();
 	}
 
 	@Override
@@ -37,9 +38,9 @@ public class GreedyTurnAI implements AI {
 
 		// actions = searcher.bestMove(state, pool, unitPool, heuristic);
 		// actions = searcher.bestMove(state, pool, null, heuristic);
-		long start = System.currentTimeMillis();
+		// long start = System.currentTimeMillis();
 		actions = searcher.bestMove(state, heuristic, lastMove);
-		System.out.println(System.currentTimeMillis() - start);
+		// System.out.println(System.currentTimeMillis() - start);
 		lastMove.clear();
 		if (actions == null || actions.isEmpty())
 			return SingletonAction.endTurnAction;

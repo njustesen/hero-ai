@@ -2,7 +2,6 @@ package game;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 
 import model.AttackType;
@@ -69,9 +68,8 @@ public class GameState {
 	}
 
 	public GameState(HaMap map, boolean p1Turn, int turn, int APLeft,
-			Unit[][] units, CardSet p1Hand, CardSet p2Hand,
-			CardSet p1Deck, CardSet p2Deck, List<Position> chainTargets,
-			boolean isTerminal) {
+			Unit[][] units, CardSet p1Hand, CardSet p2Hand, CardSet p1Deck,
+			CardSet p2Deck, List<Position> chainTargets, boolean isTerminal) {
 		super();
 		this.map = map;
 		this.p1Turn = p1Turn;
@@ -87,6 +85,10 @@ public class GameState {
 	}
 
 	public void init(DECK_SIZE deckSize) {
+		p1Hand = new CardSet();
+		p2Hand = new CardSet();
+		p1Deck = new CardSet();
+		p2Deck = new CardSet();
 		shuffleDecks(deckSize);
 		dealCards();
 		for (final Position pos : map.p1Crystals) {
@@ -100,7 +102,7 @@ public class GameState {
 	}
 
 	private void shuffleDecks(DECK_SIZE deckSize) {
-		for (final Card type : Council.deck(deckSize)){
+		for (final Card type : Council.deck(deckSize)) {
 			p1Deck.add(type);
 			p2Deck.add(type);
 		}
@@ -639,7 +641,7 @@ public class GameState {
 	}
 
 	public int getWinner() {
-		
+
 		if (turn >= TURN_LIMIT)
 			return 0;
 
@@ -668,7 +670,9 @@ public class GameState {
 	private boolean aliveOnCrystals(int player) {
 
 		for (final Position pos : crystals(player))
-			if (units[pos.x][pos.y] != null && units[pos.x][pos.y].unitClass.card == Card.CRYSTAL && units[pos.x][pos.y].hp > 0)
+			if (units[pos.x][pos.y] != null
+					&& units[pos.x][pos.y].unitClass.card == Card.CRYSTAL
+					&& units[pos.x][pos.y].hp > 0)
 				return true;
 
 		return false;
@@ -687,7 +691,7 @@ public class GameState {
 
 		if (deck(player).hasUnits() || hand(player).hasUnits())
 			return true;
-		
+
 		for (int x = 0; x < map.width; x++)
 			for (int y = 0; y < map.height; y++)
 				if (units[x][y] != null && units[x][y].p1Owner == (player == 1)
@@ -751,10 +755,10 @@ public class GameState {
 			ObjectPools.returnUnit(units[defPos.x][defPos.y]);
 			units[defPos.x][defPos.y] = null;
 		}
-		
+
 		if (units[newPos.x][newPos.y] != null)
 			ObjectPools.returnUnit(units[newPos.x][newPos.y]);
-		
+
 		units[newPos.x][newPos.y] = defender;
 
 	}
@@ -835,12 +839,12 @@ public class GameState {
 		if (player == 1) {
 			p1Deck.addAll(p1Hand);
 			p1Hand.clear();
-			//Collections.shuffle(p1Deck);
+			// Collections.shuffle(p1Deck);
 			drawHandFrom(p1Deck, p1Hand);
 		} else if (player == 2) {
 			p2Deck.addAll(p2Hand);
 			p2Hand.clear();
-			//Collections.shuffle(p2Hand);
+			// Collections.shuffle(p2Hand);
 			drawHandFrom(p2Deck, p2Hand);
 		}
 
@@ -907,54 +911,51 @@ public class GameState {
 			for (int y = 0; y < map.height; y++)
 				if (units[x][y] != null)
 					un[x][y] = units[x][y].copy();
-		CardSet p1h = new CardSet(p1Hand.seed);
+		final CardSet p1h = new CardSet(p1Hand.seed);
 		p1h.imitate(p1Hand);
-		CardSet p2h = new CardSet(p2Hand.seed);
+		final CardSet p2h = new CardSet(p2Hand.seed);
 		p2h.imitate(p2Hand);
-		CardSet p1d = new CardSet(p1Deck.seed);
+		final CardSet p1d = new CardSet(p1Deck.seed);
 		p1d.imitate(p1Deck);
-		CardSet p2d = new CardSet(p2Deck.seed);
+		final CardSet p2d = new CardSet(p2Deck.seed);
 		p2d.imitate(p2Deck);
-		
+
 		return new GameState(map, p1Turn, turn, APLeft, un, p1h, p2h, p1d, p2d,
 				chainTargets, isTerminal);
 	}
 
 	public void imitate(GameState state) {
-		
+
 		map = state.map;
-		if (units.length != state.units.length || (state.units.length > 0 && units[0].length != state.units[0].length))
+		if (units.length != state.units.length
+				|| (state.units.length > 0 && units[0].length != state.units[0].length))
 			units = new Unit[map.width][map.height];
-			
+
 		for (int x = 0; x < map.width; x++)
-			for (int y = 0; y < map.height; y++){
-				if (units[x][y] != null){
+			for (int y = 0; y < map.height; y++) {
+				if (units[x][y] != null) {
 					ObjectPools.returnUnit(units[x][y]);
 					units[x][y] = null;
 				}
-				if (state.units[x][y] != null){
+				if (state.units[x][y] != null) {
 					units[x][y] = ObjectPools.borrowUnit(null, false);
 					units[x][y].imitate(state.units[x][y]);
 				}
 			}
-		p1Hand.clear();
-		p1Hand.addAll(state.p1Hand);
-		p2Hand.clear();
-		p2Hand.addAll(state.p2Hand);
-		p1Deck.clear();
-		p1Deck.addAll(state.p1Deck);
-		p2Deck.clear();
-		p2Deck.addAll(state.p2Deck);
+		p1Hand.imitate(state.p1Hand);
+		p2Hand.imitate(state.p2Hand);
+		p1Deck.imitate(state.p1Deck);
+		p2Deck.imitate(state.p2Deck);
 		isTerminal = state.isTerminal;
 		p1Turn = state.p1Turn;
 		turn = state.turn;
 		APLeft = state.APLeft;
 		map = state.map;
-		//chainTargets.clear();
+		// chainTargets.clear();
 		// chainTargets.addAll(state.chainTargets); // NOT NECESSARY
 
 	}
-	
+
 	public long hash() {
 		final int prime = 1193;
 		long result = 1;
@@ -965,11 +966,11 @@ public class GameState {
 		result = prime * result + p2Deck.hashCode();
 		result = prime * result + p2Hand.hashCode();
 		result = prime * result + p1Deck.hashCode();
-		
+
 		for (int x = 0; x < map.width; x++)
 			for (int y = 0; y < map.height; y++)
 				if (units[x][y] != null)
-					result = prime * result + units[x][y].hash(x,y);
+					result = prime * result + units[x][y].hash(x, y);
 
 		return result;
 	}
@@ -1020,32 +1021,32 @@ public class GameState {
 			return false;
 		return true;
 	}
-	
-	public void print(){
-		List<Unit> p1Units = new ArrayList<Unit>();
-		List<Unit> p2Units = new ArrayList<Unit>();
-		for(int y=0; y < units[0].length; y++){
+
+	public void print() {
+		final List<Unit> p1Units = new ArrayList<Unit>();
+		final List<Unit> p2Units = new ArrayList<Unit>();
+		for (int y = 0; y < units[0].length; y++) {
 			System.out.print("|");
-			for(int x=0; x < units.length; x++){
-				if (units[x][y]==null)
+			for (int x = 0; x < units.length; x++)
+				if (units[x][y] == null)
 					System.out.print("__|");
 				else {
-					System.out.print(units[x][y].unitClass.card.name().substring(0,2) + "|");
+					System.out.print(units[x][y].unitClass.card.name()
+							.substring(0, 2) + "|");
 					if (units[x][y].p1Owner)
 						p1Units.add(units[x][y]);
 					else
 						p2Units.add(units[x][y]);
 				}
-			}
 			System.out.print("\n");
 		}
 		System.out.println(p1Hand);
-		for(Unit unit : p1Units)
+		for (final Unit unit : p1Units)
 			System.out.println(unit);
 		System.out.println(p2Hand);
-		for(Unit unit : p2Units)
+		for (final Unit unit : p2Units)
 			System.out.println(unit);
-		
+
 	}
 
 	public SquareType squareAt(Position pos) {
@@ -1076,6 +1077,5 @@ public class GameState {
 					units[x][y] = null;
 				}
 	}
-
 
 }

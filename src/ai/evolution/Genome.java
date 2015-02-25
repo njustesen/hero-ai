@@ -9,9 +9,12 @@ import java.util.Random;
 import action.Action;
 import action.EndTurnAction;
 import action.SingletonAction;
+import ai.util.ActionPruner;
 
 public abstract class Genome implements Comparable<Genome> {
 
+	static ActionPruner pruner = new ActionPruner();
+	
 	public static Random random = new Random();
 	public List<Action> actions;
 	public double value;
@@ -30,9 +33,9 @@ public abstract class Genome implements Comparable<Genome> {
 		visits = 0;
 		value = 0;
 		final boolean p1Turn = state.p1Turn;
-		state.possibleActions(possible);
 		while (!state.isTerminal && p1Turn == state.p1Turn) {
 			state.possibleActions(possible);
+			pruner.prune(possible, state);
 			if (p1Turn == state.p1Turn && possible.isEmpty()) {
 				actions.add(SingletonAction.endTurnAction);
 				break;

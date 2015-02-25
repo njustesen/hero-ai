@@ -44,6 +44,9 @@ public class RolloutEvaluation implements IHeuristic {
 	@Override
 	public double eval(GameState state, boolean p1) {
 		
+		if (state.isTerminal)
+			return heuristic.eval(state, p1);
+		
 		if (!copy)
 			return simulateGame(state, p1);
 		

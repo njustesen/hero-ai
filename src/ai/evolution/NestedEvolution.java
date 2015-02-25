@@ -5,7 +5,9 @@ import game.GameState;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.PriorityQueue;
 import java.util.Random;
+import java.util.TreeSet;
 
 import model.HaMap;
 import action.Action;
@@ -20,17 +22,16 @@ public class NestedEvolution implements AI {
 	public double killRate;
 	public double mutRate;
 	public IHeuristic heuristic;
-	public int nested;
+	public IHeuristic rolloutHeuristic;
 	
-	private final List<NestedGenome> pop;
+	private final List<List<MaxGenome>> pops;
 	private List<Action> actions;
 	private final Random random;
-	private NestedGenome bestGenome;
-	
+	private final int idx;
 	
 
 	public NestedEvolution(int popSize, int nestedPopSize, double mutRate,
-			double killRate, int generations, IHeuristic heuristic) {
+			double killRate, int generations, IHeuristic rolloutHeuristic, IHeuristic heuristic) {
 		super();
 		this.popSize = popSize;
 		this.nestedPopSize = nestedPopSize;
@@ -38,7 +39,9 @@ public class NestedEvolution implements AI {
 		this.generations = generations;
 		this.heuristic = heuristic;
 		this.killRate = killRate;
-		pop = new ArrayList<NestedGenome>();
+		this.rolloutHeuristic = rolloutHeuristic;
+		this.idx = popSize - (int) Math.floor(popSize * killRate);
+		pops = new ArrayList<List<MaxGenome>>();
 		actions = new ArrayList<Action>();
 		random = new Random();
 	}
@@ -58,68 +61,99 @@ public class NestedEvolution implements AI {
 
 		setup(state);
 
-		final List<NestedGenome> killed = new ArrayList<NestedGenome>();
-		final GameState clone = new GameState(state.map);
-		clone.imitate(state);
+		final List<MaxGenome> killed = new ArrayList<MaxGenome>();
+		final GameState clone = state.copy();
+		
+		List<MaxGenome> base = pops.get(0);
 		
 		for (int g = 0; g < generations; g++) {
-
-			//System.out.println("Generation=" + g + " Pop size=" + pop.size());
-
-			// Test pop
-			for (final NestedGenome genome : pop) {
-				// System.out.print("|");
-				clone.imitate(state);
-				genome.state = clone;
-				genome.run();
-				genome.visits++;
-			}
-
-			// Kill worst genomes
-			Collections.sort(pop);
-			killed.clear();
-			final int idx = (int) Math.floor(pop.size() * killRate);
-			for (int i = idx; i < pop.size(); i++)
-				killed.add(pop.get(i));
 			
-			if (!pop.get(0).equals(bestGenome))
-				bestGenome = pop.get(0);
-			
-			if (g != generations)
-				// Crossover new ones
-				for (final Genome genome : killed) {
-					final int a = random.nextInt(idx);
-					int b = random.nextInt(idx);
-					while (b == a)
-						b = random.nextInt(idx);
-
+			// Crossover new ones
+			if (g > 0){
+				int pa;
+				int pb;
+				int a;
+				int b;
+				for (final MaxGenome genome : killed) {
+					pa = random.nextInt(pops.size() - 1) + 1;
+					a = random.nextInt(pops.get(pa).size());
+					pb = random.nextInt(pops.size() - 1) + 1;
+					b = random.nextInt(pops.get(pb).size());
+					while (pa==pb && b == a){
+						pb = random.nextInt(pops.size() - 1) + 1;
+						b = random.nextInt(pops.get(pb).size());
+					}
 					clone.imitate(state);
-					genome.crossover(pop.get(a), pop.get(b), clone);
-
+					genome.clear();
+					genome.crossover(pops.get(pa).get(a), pops.get(pb).get(b), clone);
+					base.add(genome);
 					// Mutation
-					if (Math.random() < mutRate) {
+					if (random.nextFloat() < mutRate) {
 						clone.imitate(state);
 						genome.mutate(clone);
 					}
-
+	
 				}
+			}
 			
+			// Test
+			for (List<MaxGenome> pop : pops){
+				for (int i = 0; i < pop.size(); i++) {
+					clone.imitate(state);
+					clone.update(pop.get(i).actions);
+					pop.get(i).state = clone;
+					pop.get(i).run();
+					pop.get(i).visits++;
+				}
+				Collections.sort(pop);
+			}
+			
+			// Advance and kill
+			killed.clear();
+			for (int p = pops.size()-1; p >= 0; p--){
+				if (pops.get(p).size() <= 2)
+					continue;
+				for (int i = 0; i < pops.get(p).size(); i++) {
+					if (i <= (pops.get(p).size() / 2) - 1){
+						if (pops.size() == p+1)
+							pops.add(new ArrayList<MaxGenome>());
+						pops.get(p+1).add(pops.get(p).get(i));
+					} else if (p==0){
+						killed.add(pops.get(p).get(i));
+					} else {
+						pops.get(p-1).add(pops.get(p).get(i));
+					}
+				}
+				pops.get(p).clear();
+				Collections.sort(pops.get(p));
+			}
+			/*
+			System.out.println("---");
+			for(List<MaxGenome> pop : pops){
+				for(MaxGenome gen : pop)
+					System.out.print(gen.value + ", ");
+				System.out.print("\n");
+			}
+			*/
 		}
 
-		actions = pop.get(0).actions;
-
+		MaxGenome best = pops.get(pops.size()-1).get(0);
+		actions = best.actions;
+		
 	}
 
 	private void setup(GameState state) {
 
-		pop.clear();
-		final GameState clone = new GameState(null);
+		pops.clear();
+		pops.add(new ArrayList<MaxGenome>());
+		GameState clone = state.copy();
 
 		for (int i = 0; i < popSize; i++) {
-			clone.imitate(state);
-			final NestedGenome genome = new NestedGenome(nested, nestedPopSize, killRate, mutRate);
+			if (i > 0)
+				clone.imitate(state);
+			final MaxGenome genome = new MaxGenome(nestedPopSize, killRate, mutRate, rolloutHeuristic, heuristic);
 			genome.random(clone);
-			pop.add(genome);
+			pops.get(0).add(genome);
 		}
 
 	}
