@@ -6,8 +6,8 @@ import ai.GreedyActionAI;
 import ai.HeuristicAI;
 import ai.RandomAI;
 import ai.RandomHeuristicAI;
-import ai.heuristic.HeuristicEvaluation;
-import ai.heuristic.RolloutEvaluation;
+import ai.heuristic.HeuristicEvaluator;
+import ai.heuristic.RolloutEvaluatior;
 import ai.mcts.Mcts;
 import ai.util.ComplexActionComparator;
 import ai.util.RAND_METHOD;
@@ -22,13 +22,12 @@ public class MctsExperiment {
 
 	public static void main(String[] args) {
 		
-		AI random = new RandomAI(RAND_METHOD.TREE);
 		//AI p1 = new Mcts(5000, 1 / Math.sqrt(2), new RolloutEvaluation(1, 300, random, new WinEvaluation(), false));
-		AI p1 = new Mcts(10000, new RolloutEvaluation(1, 2, new RandomHeuristicAI(new ComplexActionComparator()), new HeuristicEvaluation(false), false));
+		AI p1 = new Mcts(10000, new RolloutEvaluatior(1, 2, new RandomHeuristicAI(0.5), new HeuristicEvaluator(false), false));
 		GameState state;
 		try {
 			state = new GameState(MapLoader.get("a"));
-			Game game = new Game(state, new GameArguments(true, p1, new GreedyActionAI(new HeuristicEvaluation(false)), "a", DECK_SIZE.STANDARD));
+			Game game = new Game(state, new GameArguments(true, p1, new GreedyActionAI(new HeuristicEvaluator(false)), "a", DECK_SIZE.STANDARD));
 			game.run();
 		} catch (IOException e) {
 			e.printStackTrace();

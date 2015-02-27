@@ -12,7 +12,7 @@ import java.util.TreeSet;
 import model.HaMap;
 import action.Action;
 import ai.AI;
-import ai.heuristic.IHeuristic;
+import ai.heuristic.IStateEvaluator;
 
 public class NestedEvolution implements AI {
 
@@ -21,25 +21,22 @@ public class NestedEvolution implements AI {
 	public int generations;
 	public double killRate;
 	public double mutRate;
-	public IHeuristic heuristic;
-	public IHeuristic rolloutHeuristic;
+	public IStateEvaluator evaluator;
 	
 	private final List<List<MaxGenome>> pops;
 	private List<Action> actions;
 	private final Random random;
 	private final int idx;
-	
 
 	public NestedEvolution(int popSize, int nestedPopSize, double mutRate,
-			double killRate, int generations, IHeuristic rolloutHeuristic, IHeuristic heuristic) {
+			double killRate, int generations, IStateEvaluator evaluator) {
 		super();
 		this.popSize = popSize;
 		this.nestedPopSize = nestedPopSize;
 		this.mutRate = mutRate;
 		this.generations = generations;
-		this.heuristic = heuristic;
 		this.killRate = killRate;
-		this.rolloutHeuristic = rolloutHeuristic;
+		this.evaluator = evaluator;
 		this.idx = popSize - (int) Math.floor(popSize * killRate);
 		pops = new ArrayList<List<MaxGenome>>();
 		actions = new ArrayList<Action>();
@@ -68,7 +65,7 @@ public class NestedEvolution implements AI {
 		
 		for (int g = 0; g < generations; g++) {
 			
-			// Crossover new ones
+			// Crossover - reuse killed genomes
 			if (g > 0){
 				int pa;
 				int pb;
@@ -84,7 +81,7 @@ public class NestedEvolution implements AI {
 						b = random.nextInt(pops.get(pb).size());
 					}
 					clone.imitate(state);
-					genome.clear();
+					genome.visits = 0;
 					genome.crossover(pops.get(pa).get(a), pops.get(pb).get(b), clone);
 					base.add(genome);
 					// Mutation
@@ -99,11 +96,13 @@ public class NestedEvolution implements AI {
 			// Test
 			for (List<MaxGenome> pop : pops){
 				for (int i = 0; i < pop.size(); i++) {
-					clone.imitate(state);
-					clone.update(pop.get(i).actions);
-					pop.get(i).state = clone;
-					pop.get(i).run();
-					pop.get(i).visits++;
+					//for(int r = 0; r < pops.indexOf(pop)+1; r++){
+						clone.imitate(state);
+						clone.update(pop.get(i).actions);
+						pop.get(i).state = clone;
+						pop.get(i).run();
+						pop.get(i).visits++;
+					//}
 				}
 				Collections.sort(pop);
 			}
@@ -151,7 +150,7 @@ public class NestedEvolution implements AI {
 		for (int i = 0; i < popSize; i++) {
 			if (i > 0)
 				clone.imitate(state);
-			final MaxGenome genome = new MaxGenome(nestedPopSize, killRate, mutRate, rolloutHeuristic, heuristic);
+			final MaxGenome genome = new MaxGenome(nestedPopSize, killRate, mutRate, evaluator);
 			genome.random(clone);
 			pops.get(0).add(genome);
 		}
@@ -159,9 +158,26 @@ public class NestedEvolution implements AI {
 	}
 
 	@Override
-	public Action init(GameState state, long ms) {
+	public void init(GameState state, long ms) {
+		// TODO
+	}
+	
+	@Override
+	public String header() {
+		String name = title()+"\n";
+		name += "Pop. size = " + popSize + "\n";
+		name += "Nested pop. size = " + nestedPopSize + "\n";
+		name += "Generations = " + generations + "\n";
+		name += "Mut. rate = " + mutRate + "\n";
+		name += "Kill rate = " + killRate + "\n";
+		name += "State evaluator = " + evaluator.title() + "\n";
+		
+		return name;
+	}
 
-		return null;
+	@Override
+	public String title() {
+		return "Nested Evolution";
 	}
 
 }

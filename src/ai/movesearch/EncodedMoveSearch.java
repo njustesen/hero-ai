@@ -8,14 +8,14 @@ import org.apache.commons.pool2.ObjectPool;
 import action.Action;
 import action.EndTurnAction;
 import action.SingletonAction;
-import ai.heuristic.HeuristicEvaluation;
+import ai.heuristic.HeuristicEvaluator;
 import ai.util.ActionEncoding;
 import ai.util.ActionPruner;
 import game.GameState;
 
 public class EncodedMoveSearch {
 
-	HeuristicEvaluation evalutator = new HeuristicEvaluation(false);
+	HeuristicEvaluator evalutator = new HeuristicEvaluator(false);
 	ActionPruner pruner = new ActionPruner();
 	List<String> moves;
 	ObjectPool<GameState> pool;

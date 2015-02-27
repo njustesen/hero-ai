@@ -8,7 +8,7 @@ import model.DECK_SIZE;
 import model.HaMap;
 import ai.AI;
 import ai.GreedyTurnAI;
-import ai.heuristic.HeuristicEvaluation;
+import ai.heuristic.HeuristicEvaluator;
 
 public class TranspositionStats {
 
@@ -17,7 +17,7 @@ public class TranspositionStats {
 		GameState state;
 		try {
 			state = new GameState(MapLoader.get("a"));
-			final AI p1 = new GreedyTurnAI(new HeuristicEvaluation(false));
+			final AI p1 = new GreedyTurnAI(new HeuristicEvaluator(false));
 			final Game game = new Game(state, new GameArguments(false, p1, p1, "a", DECK_SIZE.STANDARD));
 			game.run();
 		} catch (IOException e) {

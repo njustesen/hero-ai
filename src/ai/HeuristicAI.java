@@ -10,6 +10,7 @@ import action.Action;
 import action.SingletonAction;
 import ai.util.ActionComparator;
 import ai.util.ActionPruner;
+import ai.util.ComplexActionComparator;
 
 public class HeuristicAI implements AI {
 
@@ -17,10 +18,10 @@ public class HeuristicAI implements AI {
 	private final ActionComparator comparator;
 	ActionPruner pruner;
 
-	public HeuristicAI(ActionComparator comparator) {
+	public HeuristicAI() {
 		this.actions = new ArrayList<Action>();
 		this.pruner = new ActionPruner();
-		this.comparator = comparator;
+		this.comparator = new ComplexActionComparator();
 	}
 
 	@Override
@@ -41,9 +42,19 @@ public class HeuristicAI implements AI {
 	}
 
 	@Override
-	public Action init(GameState state, long ms) {
+	public void init(GameState state, long ms) {
 		// TODO Auto-generated method stub
-		return null;
+	}
+	
+	@Override
+	public String header() {
+		String name = title()+"\n";
+		return name;
+	}
+
+	@Override
+	public String title() {
+		return "Heuristic";
 	}
 
 }

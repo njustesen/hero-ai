@@ -7,18 +7,17 @@ import model.Card;
 import model.CardType;
 import model.SquareType;
 
-public class HeuristicEvaluation implements IHeuristic {
+public class HeuristicEvaluator implements IStateEvaluator {
 
 	private static final double MAX_VAL = 60000;
 	private boolean winVal;
 	
-	public HeuristicEvaluation(boolean winVal) {
+	public HeuristicEvaluator(boolean winVal) {
 		this.winVal = winVal;
 	}
 
 	public double eval(GameState state, boolean p1) {
 		
-		int hpDif = hpDif(state, p1);
 		
 		if (state.isTerminal){
 			int winner = state.getWinner();
@@ -30,6 +29,7 @@ public class HeuristicEvaluation implements IHeuristic {
 			return 0;
 		}
 		
+		int hpDif = hpDif(state, p1);
 		
 		
 		if (!winVal)
@@ -98,5 +98,10 @@ public class HeuristicEvaluation implements IHeuristic {
 	@Override
 	public double normalize(double delta) {
 		return NormUtil.normalize(delta, -MAX_VAL, MAX_VAL, 1, 0);
+	}
+
+	@Override
+	public String title() {
+		return "Heuristic Evaluator";
 	}
 }

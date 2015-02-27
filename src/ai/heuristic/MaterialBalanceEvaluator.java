@@ -9,7 +9,7 @@ import lib.UnitClassLib;
 import model.Card;
 import model.CardType;
 
-public class MaterialBalanceEvaluation implements IHeuristic {
+public class MaterialBalanceEvaluator implements IStateEvaluator {
 
 	private static int MAX_VAL = 0;
 	private static Map<Card, Double> values;
@@ -41,7 +41,7 @@ public class MaterialBalanceEvaluation implements IHeuristic {
 
 	private boolean winVal;
 	
-	public MaterialBalanceEvaluation(boolean winVal) {
+	public MaterialBalanceEvaluator(boolean winVal) {
 		this.winVal = winVal;
 	}
 
@@ -136,5 +136,12 @@ public class MaterialBalanceEvaluation implements IHeuristic {
 	public double normalize(double delta) {
 		return NormUtil.normalize(delta, -MAX_VAL, MAX_VAL, 1, 0);
 	}
+
+	@Override
+	public String title() {
+		return "Material Balance Evaluator";
+	}
+	
+	
 
 }

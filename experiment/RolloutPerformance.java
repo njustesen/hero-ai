@@ -24,12 +24,12 @@ public class RolloutPerformance {
 			AI p2 = null;
 			
 			System.out.println("## Random Heuristic AI SIMPLE ##");
-			p1 = new RandomHeuristicAI(new SimpleActionComparator());
+			p1 = new RandomHeuristicAI(0.5);
 			simulateGame(1000, p1, p1);
 			System.out.println("Done");
 
 			System.out.println("## Random Heuristic AI Complex ##");
-			p1 = new RandomHeuristicAI(new ComplexActionComparator());
+			p1 = new RandomHeuristicAI(0.5);
 			simulateGame(1000, p1, p1);
 			System.out.println("Done");
 			
@@ -39,8 +39,8 @@ public class RolloutPerformance {
 			System.out.println("Done");
 
 			System.out.println("## Heuristic AI ##");
-			p1 = new HeuristicAI(new ComplexActionComparator());
-			p2 = new HeuristicAI(new ComplexActionComparator());
+			p1 = new HeuristicAI();
+			p2 = new HeuristicAI();
 			simulateGame(1000, p1, p2);
 			System.out.println("Done");
 			

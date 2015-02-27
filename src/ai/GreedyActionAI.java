@@ -7,19 +7,19 @@ import java.util.Collections;
 import java.util.List;
 
 import action.Action;
-import ai.heuristic.HeuristicEvaluation;
-import ai.heuristic.IHeuristic;
+import ai.heuristic.HeuristicEvaluator;
+import ai.heuristic.IStateEvaluator;
 import ai.util.ActionPruner;
 
 public class GreedyActionAI implements AI {
 
 	private final List<Action> actions;
-	private final IHeuristic heuristic;
+	private final IStateEvaluator evaluator;
 	private final ActionPruner pruner;
 
-	public GreedyActionAI(IHeuristic heuristic) {
+	public GreedyActionAI(IStateEvaluator evaluator) {
 		super();
-		this.heuristic = heuristic;
+		this.evaluator = evaluator;
 		actions = new ArrayList<Action>();
 		this.pruner = new ActionPruner();
 	}
@@ -39,7 +39,7 @@ public class GreedyActionAI implements AI {
 			final GameState next = state.copy();
 			double val = 0.0;
 			next.update(action);
-			val = heuristic.eval(next, state.p1Turn);
+			val = evaluator.eval(next, state.p1Turn);
 			
 			if (val > bestValue) {
 				bestValue = val;
@@ -52,9 +52,20 @@ public class GreedyActionAI implements AI {
 	}
 
 	@Override
-	public Action init(GameState state, long ms) {
+	public void init(GameState state, long ms) {
 		// TODO Auto-generated method stub
-		return null;
+	}
+	
+	@Override
+	public String header() {
+		String name = title()+"\n";
+		name += "State evaluatior = " + evaluator.title() + "\n";
+		return name;
+	}
+
+	@Override
+	public String title() {
+		return "GreedyAction";
 	}
 
 }

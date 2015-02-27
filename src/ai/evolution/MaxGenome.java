@@ -6,13 +6,12 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import ai.heuristic.IHeuristic;
+import ai.heuristic.IStateEvaluator;
 
 public class MaxGenome extends Genome {
 
 	public GameState state;
-	public IHeuristic rolloutHeuristic;
-	public IHeuristic heuristic;
+	public IStateEvaluator heuristic;
 	public double killRate;
 	public int popSize;
 	public double mutRate;
@@ -22,13 +21,12 @@ public class MaxGenome extends Genome {
 	private List<Genome> killed;
 	private int idx;
 	
-	public MaxGenome(int popSize, double killRate, double mutRate, IHeuristic rolloutHeuristic, IHeuristic heuristic) {
+	public MaxGenome(int popSize, double killRate, double mutRate, IStateEvaluator heuristic) {
 		super();
 		this.popSize = popSize;
 		this.killRate = killRate;
 		this.mutRate = mutRate;
 		this.heuristic = heuristic;
-		this.rolloutHeuristic = rolloutHeuristic;
 		this.idx = popSize - (int) Math.floor(popSize * killRate);
 	}
 	
@@ -40,54 +38,53 @@ public class MaxGenome extends Genome {
 	public void run(){
 		
 		if (pop == null)
-			setupEvo();
+			setup();
 		
 		if (clone.isTerminal){
 			value = heuristic.eval(clone, !state.p1Turn);
 			return;
 		}
 
-		// Crossover - reuse killed
+		// Crossover - reuse killed genomes
 		if (visits > 0)
 			crossover(killed);
 		
-		for(int g = 0; g < 1; g++){
-			int to = g == 0 ? pop.size() : idx;
-			for (int i = 0; i < to; i++) {
+		// Test
+		for (int i = 0; i < pop.size(); i++) {
+			if (pop.get(i).visits == 0){
 				clone.imitate(state);
 				clone.update(pop.get(i).actions);
-				double val = rolloutHeuristic.eval(clone, !state.p1Turn);
-				// MAX of own next move 
-				if (pop.get(i).visits == 0 || val > pop.get(i).value)
-					pop.get(i).value = val;
+				pop.get(i).value = heuristic.eval(clone, !state.p1Turn);
 				pop.get(i).visits++;
 			}
-			Collections.sort(pop);
 		}
+		Collections.sort(pop);
 		
-		// MIN of opponent next move
-		value = pop.get(0).value;
-		
-		// Kill worst genomes
+		// Kill
 		killed.clear();
 		for (int i = idx; i < pop.size(); i++)
 			killed.add(pop.get(i));
 		
+		value = pop.get(0).value;
+		
 	}
 	
 	private void crossover(List<Genome> genomes) {
-		for (final Genome genome : genomes) {
-			final int a = random.nextInt(idx);
-			int b = random.nextInt(idx);
+		int a;
+		int b;
+		for (final Genome genome : killed) {
+			a = random.nextInt(idx-1);
+			b = random.nextInt(idx-1);
 			while (b == a)
-				b = random.nextInt(idx);
-
+				b = random.nextInt(idx-1);
+			
 			clone.imitate(state);
+			genome.visits = 0;
 			genome.crossover(pop.get(a), pop.get(b), clone);
 			
 			if (genome.actions.isEmpty())
 				continue;
-				
+			
 			// Mutation
 			if (Math.random() < mutRate) {
 				clone.imitate(state);
@@ -95,18 +92,14 @@ public class MaxGenome extends Genome {
 			}
 		}
 	}
-	
-	public void clear() {
-		setupEvo();
-		visits = 0;
-	}
 
-	private void setupEvo() {
+	private void setup() {
 		clone = state.copy();
-		pop = new ArrayList<Genome>(popSize);
+		pop = new ArrayList<Genome>();
 		killed = new ArrayList<Genome>();
 		for(int i = 0; i < popSize; i++){
-			clone.imitate(state);
+			if (i > 0)
+				clone.imitate(state);
 			Genome genome = new MinGenome();
 			genome.random(clone);
 			pop.add(genome);

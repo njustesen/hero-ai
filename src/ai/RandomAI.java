@@ -51,8 +51,6 @@ public class RandomAI implements AI {
 		case TREE:
 			selected = getActionLazy(state);
 			break;
-		case SCAN:
-			break; // NOT IMPLEMENTED HERE
 		}
 		return selected;
 	}
@@ -134,9 +132,20 @@ public class RandomAI implements AI {
 	}
 
 	@Override
-	public Action init(GameState state, long ms) {
+	public void init(GameState state, long ms) {
 		// TODO Auto-generated method stub
-		return null;
+	}
+	
+	@Override
+	public String header() {
+		String name = title()+"\n";
+		name += "Randomization method = " + randMethod.name().toLowerCase() + "\n";
+		return name;
+	}
+
+	@Override
+	public String title() {
+		return "Random";
 	}
 
 }

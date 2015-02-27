@@ -8,11 +8,10 @@ import ai.HeuristicAI;
 import ai.NmSearchAI;
 import ai.RandomAI;
 import ai.RandomHeuristicAI;
-import ai.ScanRandomAI;
 import ai.evolution.RollingHorizonEvolution;
-import ai.heuristic.HeuristicEvaluation;
-import ai.heuristic.MaterialBalanceEvaluation;
-import ai.heuristic.RolloutEvaluation;
+import ai.heuristic.HeuristicEvaluator;
+import ai.heuristic.MaterialBalanceEvaluator;
+import ai.heuristic.RolloutEvaluatior;
 import ai.mcts.Mcts;
 import ai.util.ComplexActionComparator;
 import ai.util.RAND_METHOD;
@@ -87,11 +86,9 @@ public class GameArguments {
 				else if (args[a].toLowerCase().equals("random"))
 					players[p] = new RandomAI(RAND_METHOD.TREE);
 				else if (args[a].toLowerCase().equals("randomheuristic"))
-					players[p] = new RandomHeuristicAI(new ComplexActionComparator());
+					players[p] = new RandomHeuristicAI(0.5);
 				else if (args[a].toLowerCase().equals("heuristic"))
-					players[p] = new HeuristicAI(new ComplexActionComparator());
-				else if (args[a].toLowerCase().equals("scanrandom"))
-					players[p] = new ScanRandomAI((p == 0));
+					players[p] = new HeuristicAI();
 				else if (args[a].toLowerCase().equals("nmsearch")) {
 					a++;
 					final int n = Integer.parseInt(args[a]);
@@ -100,16 +97,16 @@ public class GameArguments {
 					a++;
 					if (args[a].toLowerCase().equals("heuristic"))
 						players[p] = new NmSearchAI((p == 0), n, mm,
-								new HeuristicEvaluation(false));
+								new HeuristicEvaluator(false));
 					else {
 						a++;
 						final int rolls = Integer.parseInt(args[a]);
 						a++;
 						final int depth = Integer.parseInt(args[a]);
 						players[p] = new NmSearchAI((p == 0), n, mm,
-								new RolloutEvaluation(rolls, depth,
+								new RolloutEvaluatior(rolls, depth,
 										new RandomAI(RAND_METHOD.TREE),
-										new HeuristicEvaluation(false), true));
+										new HeuristicEvaluator(false), true));
 					}
 
 				}
@@ -117,43 +114,45 @@ public class GameArguments {
 					a++;
 					if (args[a].toLowerCase().equals("heuristic"))
 						players[p] = new GreedyActionAI(
-								new HeuristicEvaluation(false));
+								new HeuristicEvaluator(false));
 					else if (args[a].toLowerCase().equals("rollouts")) {
 						a++;
 						final int rolls = Integer.parseInt(args[a]);
 						a++;
 						final int depth = Integer.parseInt(args[a]);
-						players[p] = new GreedyActionAI(new RolloutEvaluation(
+						players[p] = new GreedyActionAI(new RolloutEvaluatior(
 								rolls, depth, new RandomAI(RAND_METHOD.TREE),
-								new HeuristicEvaluation(false), true));
+								new HeuristicEvaluator(false), true));
 					}
 				}
 				if (args[a].toLowerCase().equals("greedyturn")) {
 					a++;
 					if (args[a].toLowerCase().equals("heuristic"))
-						players[p] = new GreedyTurnAI(new HeuristicEvaluation(false));
+						players[p] = new GreedyTurnAI(new HeuristicEvaluator(false));
 					else if (args[a].toLowerCase().equals("rollouts")) {
 						a++;
 						final int rolls = Integer.parseInt(args[a]);
 						a++;
 						final int depth = Integer.parseInt(args[a]);
-						players[p] = new GreedyTurnAI(new RolloutEvaluation(
+						players[p] = new GreedyTurnAI(new RolloutEvaluatior(
 								rolls, depth, new RandomAI(RAND_METHOD.TREE),
-								new HeuristicEvaluation(false), true));
+								new HeuristicEvaluator(false), true));
 					}
 
 				}
 				if (args[a].toLowerCase().equals("mcts")) {
 					a++;
 					final int t = Integer.parseInt(args[a]);
-					players[p] = new Mcts(t, new RolloutEvaluation(
-							1, 1, new RandomHeuristicAI(new ComplexActionComparator()),
-							new HeuristicEvaluation(true), false));
+					players[p] = new Mcts(t, new RolloutEvaluatior(
+							1, 1, new RandomHeuristicAI(0.5),
+							new HeuristicEvaluator(true), false));
 				}
 				if (args[a].toLowerCase().equals("evolution"))
+					/*
 					players[p] = new RollingHorizonEvolution(200, .5, .35, 1200,
-							new RolloutEvaluation(5, 1, new RandomHeuristicAI(new ComplexActionComparator()),
+							new RolloutEvaluation(5, 1, new RandomHeuristicAI(0.5, new ComplexActionComparator()),
 									new HeuristicEvaluation(false), false, true), false);
+					 */
 				p = -1;
 			} else if (args[a].toLowerCase().equals("sleep")) {
 				a++;

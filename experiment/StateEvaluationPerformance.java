@@ -1,7 +1,7 @@
 import model.DECK_SIZE;
 import ai.AI;
 import ai.RandomAI;
-import ai.heuristic.HeuristicEvaluation;
+import ai.heuristic.HeuristicEvaluator;
 import ai.util.RAND_METHOD;
 import game.Game;
 import game.GameArguments;
@@ -11,12 +11,12 @@ public class StateEvaluationPerformance {
 	public static void main(String[] args){
 		
 		System.out.println("## STATE EVALUATIONS ##");
-		HeuristicEvaluation evaluator = new HeuristicEvaluation(false);
+		HeuristicEvaluator evaluator = new HeuristicEvaluator(false);
 		evalGameStates(evaluator, 1000);
 		
 	}
 	
-	private static void evalGameStates(HeuristicEvaluation evaluator, int n){
+	private static void evalGameStates(HeuristicEvaluator evaluator, int n){
 		long ns = 0;
 		int runs = 0;
 		AI p1 = new RandomAI(RAND_METHOD.BRUTE);

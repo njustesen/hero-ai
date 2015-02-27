@@ -9,11 +9,14 @@ import util.MapLoader;
 import ai.AI;
 import ai.GreedyActionAI;
 import ai.GreedyTurnAI;
+import ai.HeuristicAI;
+import ai.RandomAI;
 import ai.RandomHeuristicAI;
 import ai.evolution.NestedEvolution;
 import ai.evolution.RollingHorizonEvolution;
-import ai.heuristic.HeuristicEvaluation;
-import ai.heuristic.RolloutEvaluation;
+import ai.heuristic.HeuristicEvaluator;
+import ai.heuristic.RolloutEvaluatior;
+import ai.heuristic.WinLoseEvaluator;
 import ai.mcts.Mcts;
 import ai.util.ComplexActionComparator;
 
@@ -23,14 +26,16 @@ public class AiComparison {
 
 	public static void main(String[] args) {
 		
-		AI p1 = new GreedyTurnAI(new HeuristicEvaluation(false));
-		//AI p2 = new NestedEvolution(100, 20, 0.5, .50, 400, new HeuristicEvaluation(false));
-		AI p2 = new NestedEvolution(32, 16, 0.5, .35, 200, new RolloutEvaluation(1, 1, new RandomHeuristicAI(new ComplexActionComparator()), new HeuristicEvaluation(false)),new HeuristicEvaluation(false));
+		AI p1 = new GreedyActionAI(new HeuristicEvaluator(false));
+		//AI p2 = new Mcts(225, new RolloutEvaluation(1, 10000, new RandomHeuristicAI(0.5, new ComplexActionComparator()), new WinLoseEvaluation()));
+		//AI p2 = new Mcts(675, new RolloutEvaluation(1, 10000, new RandomHeuristicAI(0.5, new ComplexActionComparator()), new WinLoseEvaluation()));
+		//AI p2 = new Mcts(2025, new RolloutEvaluation(1, 10000, new RandomHeuristicAI(0.5, new ComplexActionComparator()), new WinLoseEvaluation()));
+		AI p2 = new Mcts(6075, new RolloutEvaluatior(1, 10000, new RandomHeuristicAI(0.5), new WinLoseEvaluator()));
 		
-		System.out.println("P1: greedyaction heuristic");
-		System.out.println("P2: Nested Evolution 100 20 .5 .35 100 rollout 5 1 randomheuristic heuristic");
-		System.out.println("TINY");
-		compare(p1, p2, 10, "a-tiny", DECK_SIZE.TINY);
+		System.out.println("P1: greedyturn heuristic");
+		System.out.println("P2: rollinghorizon 100 .5 .5 1000 rollout 1 1 randomheuristic heuristic");
+		System.out.println("STANDARD");
+		compare(p1, p2, 1, "a", DECK_SIZE.STANDARD);
 		
 	}
 

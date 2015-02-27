@@ -7,19 +7,19 @@ import java.util.List;
 
 import action.Action;
 import action.SingletonAction;
-import ai.heuristic.IHeuristic;
+import ai.heuristic.IStateEvaluator;
 import ai.movesearch.BestMoveSearch;
 
 public class GreedyTurnAI implements AI {
 
 	private final BestMoveSearch searcher = new BestMoveSearch();
 	private List<Action> actions;
-	private final IHeuristic heuristic;
+	private final IStateEvaluator evaluator;
 	private final List<Action> lastMove;
 
-	public GreedyTurnAI(IHeuristic heuristic) {
+	public GreedyTurnAI(IStateEvaluator evaluator) {
 		super();
-		this.heuristic = heuristic;
+		this.evaluator = evaluator;
 		lastMove = new ArrayList<Action>();
 		actions = new ArrayList<Action>();
 	}
@@ -39,7 +39,7 @@ public class GreedyTurnAI implements AI {
 		// actions = searcher.bestMove(state, pool, unitPool, heuristic);
 		// actions = searcher.bestMove(state, pool, null, heuristic);
 		// long start = System.currentTimeMillis();
-		actions = searcher.bestMove(state, heuristic, lastMove);
+		actions = searcher.bestMove(state, evaluator);
 		// System.out.println(System.currentTimeMillis() - start);
 		lastMove.clear();
 		if (actions == null || actions.isEmpty())
@@ -54,9 +54,20 @@ public class GreedyTurnAI implements AI {
 	}
 
 	@Override
-	public Action init(GameState state, long ms) {
+	public void init(GameState state, long ms) {
 		// TODO Auto-generated method stub
-		return null;
+	}
+	
+	@Override
+	public String header() {
+		String name = title()+"\n";
+		name += "State evaluatior = " + evaluator.title() + "\n";
+		return name;
+	}
+
+	@Override
+	public String title() {
+		return "GreedyTurn";
 	}
 
 }

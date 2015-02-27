@@ -9,8 +9,8 @@ import java.util.NoSuchElementException;
 import model.Card;
 import action.Action;
 import action.EndTurnAction;
-import ai.heuristic.HeuristicEvaluation;
-import ai.heuristic.IHeuristic;
+import ai.heuristic.HeuristicEvaluator;
+import ai.heuristic.IStateEvaluator;
 import ai.util.RAND_METHOD;
 
 public class NmSearchAI implements AI {
@@ -21,16 +21,16 @@ public class NmSearchAI implements AI {
 	private List<Action> foundActions;
 	private final int n;
 	private final int m;
-	private IHeuristic heuristic;
+	private IStateEvaluator evaluator;
 	
-	public NmSearchAI(boolean p1, int n, int m, IHeuristic heuristic) {
+	public NmSearchAI(boolean p1, int n, int m, IStateEvaluator evaluator) {
 		this.p1 = p1;
 		p1Ai = new RandomAI(RAND_METHOD.TREE);
 		p2Ai = new RandomAI(RAND_METHOD.TREE);
 		foundActions = new ArrayList<Action>();
 		this.n = n;
 		this.m = m;
-		this.heuristic = heuristic;
+		this.evaluator = evaluator;
 	}
 
 	@Override
@@ -134,7 +134,7 @@ public class NmSearchAI implements AI {
 					break;
 			}
 
-			final double value = heuristic.eval(state, !p1);
+			final double value = evaluator.eval(state, !p1);
 			if (value > oppBest)
 				oppBest = value;
 		}
@@ -143,9 +143,22 @@ public class NmSearchAI implements AI {
 	}
 
 	@Override
-	public Action init(GameState state, long ms) {
+	public void init(GameState state, long ms) {
 		// TODO Auto-generated method stub
-		return null;
+	}
+	
+	@Override
+	public String header() {
+		String name = title()+"\n";
+		name += "State evalutor = " + evaluator.title() + "\n";
+		name += "n = " + n + "\n";
+		name += "m = " + m + "\n";
+		return name;
+	}
+
+	@Override
+	public String title() {
+		return "NM-Search";
 	}
 
 }

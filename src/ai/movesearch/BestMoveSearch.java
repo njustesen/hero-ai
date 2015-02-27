@@ -10,8 +10,8 @@ import java.util.Map;
 import util.pool.ObjectPools;
 import action.Action;
 import action.SingletonAction;
-import ai.heuristic.HeuristicEvaluation;
-import ai.heuristic.IHeuristic;
+import ai.heuristic.HeuristicEvaluator;
+import ai.heuristic.IStateEvaluator;
 import ai.util.ActionPruner;
 import ai.util.GameStateHasher;
 
@@ -19,15 +19,14 @@ public class BestMoveSearch {
 
 	Map<Long, Integer> transTable = new HashMap<Long, Integer>();
 
-	HeuristicEvaluation evalutator = new HeuristicEvaluation(false);
+	HeuristicEvaluator evalutator = new HeuristicEvaluator(false);
 	ActionPruner pruner = new ActionPruner();
 	List<Action> bestMove = new ArrayList<Action>();
 	double bestValue;
-	private IHeuristic heuristic;
+	private IStateEvaluator heuristic;
 	private final GameStateHasher hasher = new GameStateHasher();
 
-	public List<Action> bestMove(GameState state, IHeuristic heuristic,
-			List<Action> lastMove) {
+	public List<Action> bestMove(GameState state, IStateEvaluator heuristic) {
 
 		this.heuristic = heuristic;
 
@@ -35,7 +34,7 @@ public class BestMoveSearch {
 		// FORCE GC?
 		bestValue = -100000000;
 		bestMove = null;
-		addMoves(state, new ArrayList<Action>(), 0, lastMove);
+		addMoves(state, new ArrayList<Action>(), 0);
 
 		// printStats();
 		if (bestMove == null)
@@ -57,8 +56,7 @@ public class BestMoveSearch {
 				/ ((double) (t + s)));
 	}
 
-	private void addMoves(GameState state, List<Action> move, int depth,
-			List<Action> lastMove) {
+	private void addMoves(GameState state, List<Action> move, int depth) {
 
 		// End turn
 		if (state.APLeft == 0) {
@@ -66,10 +64,8 @@ public class BestMoveSearch {
 			if (value > bestValue) {
 				final List<Action> nextMove = clone(move);
 				nextMove.add(SingletonAction.endTurnAction);
-				// if (!sameMove(nextMove, lastMove)) {
 				bestValue = value;
 				bestMove = nextMove;
-				// }
 			}
 			// ObjectPools.returnState(state);
 			state.returnUnits();
@@ -87,8 +83,8 @@ public class BestMoveSearch {
 
 		int i = 0;
 		for (final Action action : actions) {
-			// if (depth == 0)
-			// System.out.print("|");
+			if (depth == 0)
+				System.out.print("|");
 
 			if (i > 0)
 				next.imitate(state);
@@ -101,27 +97,11 @@ public class BestMoveSearch {
 				transTable.put(hash, 1);
 				final List<Action> nextMove = clone(move);
 				nextMove.add(action);
-				addMoves(next, nextMove, depth + 1, lastMove);
+				addMoves(next, nextMove, depth + 1);
 			}
 			i++;
 		}
 
-	}
-
-	private boolean sameMove(List<Action> a, List<Action> b) {
-		if (a == b)
-			return true;
-		if (a == null || b == null)
-			return false;
-		if (a.size() != b.size())
-			return false;
-		int i = 0;
-		for (final Action action : a) {
-			if (!action.equals(b.get(i)))
-				return false;
-			i++;
-		}
-		return true;
 	}
 
 	private List<Action> clone(List<Action> move) {

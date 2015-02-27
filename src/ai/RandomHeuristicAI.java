@@ -11,7 +11,7 @@ import model.Position;
 import action.Action;
 import action.SingletonAction;
 import ai.util.ActionComparator;
-import ai.util.RAND_METHOD;
+import ai.util.ComplexActionComparator;
 
 public class RandomHeuristicAI implements AI {
 
@@ -23,8 +23,9 @@ public class RandomHeuristicAI implements AI {
 	private final List<Position> positions;
 	private final List<Integer> idxs;
 	private final ActionComparator comparator;
+	private double prob;
 
-	public RandomHeuristicAI(ActionComparator comparator) {
+	public RandomHeuristicAI(double prob) {
 		positions = new ArrayList<Position>();
 		actions = new ArrayList<Action>();
 		idxs = new ArrayList<Integer>();
@@ -39,7 +40,8 @@ public class RandomHeuristicAI implements AI {
 			heightOrder.add(y);
 		for (int h = 0; h < 6; h++)
 			handOrder.add(h);
-		this.comparator = comparator;
+		this.comparator = new ComplexActionComparator();
+		this.prob = prob;
 	}
 
 	@Override
@@ -116,17 +118,26 @@ public class RandomHeuristicAI implements AI {
 	}
 
 	private Action semiRandom(List<Action> actions) {
-		while(true){
-			for(int i = 0; i < actions.size(); i++)
-				if (Math.random() < 1.5 / i)
-					return actions.get(i);
-		}
+		if (Math.random() < prob)
+			return actions.get(0);
+		else return actions.get((int) (Math.random() * actions.size()));
 	}
 
 	@Override
-	public Action init(GameState state, long ms) {
+	public void init(GameState state, long ms) {
 		// TODO Auto-generated method stub
-		return null;
+	}
+	
+	@Override
+	public String header() {
+		String name = title()+"\n";
+		name += "Probability = " + prob + "\n";
+		return name;
+	}
+
+	@Override
+	public String title() {
+		return "Random heuristic";
 	}
 
 }
