@@ -92,7 +92,7 @@ public class TestCase {
 		res += "############################\n";
 		System.out.print(res);
 		
-		saveToFile(out + res, "tests/"+name+ "-" + System.currentTimeMillis());
+		saveToFile(out + res, "tests/"+name+ "-" + System.currentTimeMillis() + ".hares");
 		
 	}
 
