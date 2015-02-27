@@ -9,12 +9,15 @@ import model.HaMap;
 import util.MapLoader;
 import ai.AI;
 import ai.GreedyActionAI;
+import ai.GreedyTurnAI;
+import ai.RandomAI;
 import ai.RandomHeuristicAI;
 import ai.heuristic.HeuristicEvaluator;
 import ai.heuristic.MaterialBalanceEvaluator;
 import ai.heuristic.RolloutEvaluator;
 import ai.heuristic.WinLoseEvaluator;
 import ai.mcts.Mcts;
+import ai.util.RAND_METHOD;
 
 public class TestCases {
 
@@ -42,7 +45,7 @@ public class TestCases {
 
 	private static void GreedyActionVsGreedyTurn(int runs, String size) {
 		AI p1 = new GreedyActionAI(new HeuristicEvaluator(false));
-		AI p2 = new GreedyActionAI(new HeuristicEvaluator(false));
+		AI p2 = new GreedyTurnAI(new HeuristicEvaluator(false));
 		
 		new TestCase(p1, p2, runs, "greedy-action-vs-greedy-turn", map(size), deck(size)).run();
 		
@@ -50,7 +53,7 @@ public class TestCases {
 
 	private static void GreedyActionVsRandom(int runs, String size) {
 		AI p1 = new GreedyActionAI(new HeuristicEvaluator(false));
-		AI p2 = new GreedyActionAI(new HeuristicEvaluator(false));
+		AI p2 = new RandomAI(RAND_METHOD.TREE);
 		
 		new TestCase(p1, p2, runs, "greedy-action-vs-random", map(size), deck(size)).run();
 	}
