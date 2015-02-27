@@ -36,7 +36,7 @@ public class AiComparison {
 		System.out.println("P2: rollinghorizon 100 .5 .5 1000 rollout 1 1 randomheuristic heuristic");
 		System.out.println("STANDARD");
 		compare(p1, p2, 1, "a", DECK_SIZE.STANDARD);
-		
+
 	}
 
 	private static void compare(AI p1, AI p2, int games, String mapName,
