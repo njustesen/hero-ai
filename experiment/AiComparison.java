@@ -9,9 +9,9 @@ import util.MapLoader;
 import ai.AI;
 import ai.GreedyTurnAI;
 import ai.RandomHeuristicAI;
+import ai.evolution.RollingHorizonEvolution;
 import ai.heuristic.HeuristicEvaluation;
 import ai.heuristic.RolloutEvaluation;
-import ai.mcts.Mcts;
 import ai.util.ComplexActionComparator;
 
 public class AiComparison {
@@ -21,21 +21,25 @@ public class AiComparison {
 	public static void main(String[] args) {
 
 		final AI p1 = new GreedyTurnAI(new HeuristicEvaluation(false));
-		final AI p2 = new Mcts(10000, new RolloutEvaluation(1, 1,
-				new RandomHeuristicAI(new ComplexActionComparator()),
-				new HeuristicEvaluation(true)));
+		final AI p2 = new RollingHorizonEvolution(200, .5, .35, 1000,
+				new RolloutEvaluation(1, 1, new RandomHeuristicAI(
+						new ComplexActionComparator()),
+						new HeuristicEvaluation(false)), false);
 		System.out.println("P1: greedyturn heuristic");
-		System.out.println("P2: mcts rollout 1 randomheuristic heuristic");
+		System.out
+				.println("P2: rolling horizon 200 .5 .35 1000 rollout  1 randomheuristic material balanc");
 		System.out.println("TINY");
 		compare(p1, p2, 32, "a-tiny", DECK_SIZE.TINY);
 
 		System.out.println("P1: greedyturn heuristic");
-		System.out.println("P2: mcts rollout 1 randomheuristic heuristic");
+		System.out
+				.println("P2: rolling horizon 200 .5 .35 1000 rollout  1 randomheuristic material balanc");
 		System.out.println("SMALL");
 		compare(p1, p2, 32, "a-small", DECK_SIZE.SMALL);
 
 		System.out.println("P1: greedyturn heuristic");
-		System.out.println("P2: mcts rollout 1 randomheuristic heuristic");
+		System.out
+				.println("P2: rolling horizon 200 .5 .35 1000 rollout  1 randomheuristic material balanc");
 		System.out.println("STANDARD");
 		compare(p1, p2, 32, "a", DECK_SIZE.STANDARD);
 
