@@ -81,8 +81,8 @@ public class BestMoveSearch {
 
 		int i = 0;
 		for (final Action action : actions) {
-			if (depth == 0)
-				System.out.print("|");
+			//if (depth == 0)
+			//	System.out.print("|");
 
 			if (i > 0)
 				next.imitate(state);
