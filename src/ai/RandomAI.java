@@ -10,6 +10,7 @@ import model.Card;
 import model.Position;
 import action.Action;
 import action.SingletonAction;
+import ai.util.AiStatistics;
 import ai.util.RAND_METHOD;
 
 public class RandomAI implements AI {

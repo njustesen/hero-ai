@@ -19,7 +19,7 @@ import ai.heuristic.WinLoseEvaluator;
 import ai.mcts.Mcts;
 import ai.util.RAND_METHOD;
 
-public class TestCases {
+public class TestSuite {
 
 	private static HaMap tiny;
 	private static HaMap small;

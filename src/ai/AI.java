@@ -4,13 +4,13 @@ import game.GameState;
 import action.Action;
 
 public interface AI {
-
+	
 	public Action act(GameState state, long ms);
-
-	public void init(GameState state, long ms);
 	
-	public String header();
+	public abstract void init(GameState state, long ms);
 	
-	public String title();
-
+	public abstract String header();
+	
+	public abstract String title();
+	
 }

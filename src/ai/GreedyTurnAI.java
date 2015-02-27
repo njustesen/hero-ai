@@ -5,10 +5,12 @@ import game.GameState;
 import java.util.ArrayList;
 import java.util.List;
 
+import util.Statistics;
 import action.Action;
 import action.SingletonAction;
 import ai.heuristic.IStateEvaluator;
 import ai.movesearch.BestMoveSearch;
+import ai.util.AiStatistics;
 
 public class GreedyTurnAI implements AI {
 
@@ -16,12 +18,15 @@ public class GreedyTurnAI implements AI {
 	private List<Action> actions;
 	private final IStateEvaluator evaluator;
 	private final List<Action> lastMove;
+	
+	public List<Double> moves;
 
 	public GreedyTurnAI(IStateEvaluator evaluator) {
 		super();
 		this.evaluator = evaluator;
 		lastMove = new ArrayList<Action>();
 		actions = new ArrayList<Action>();
+		this.moves = new ArrayList<Double>();
 	}
 
 	@Override
@@ -40,6 +45,8 @@ public class GreedyTurnAI implements AI {
 		// actions = searcher.bestMove(state, pool, null, heuristic);
 		// long start = System.currentTimeMillis();
 		actions = searcher.bestMove(state, evaluator);
+		moves.add((double)searcher.moves);
+		
 		// System.out.println(System.currentTimeMillis() - start);
 		lastMove.clear();
 		if (actions == null || actions.isEmpty())
@@ -49,6 +56,8 @@ public class GreedyTurnAI implements AI {
 
 		final Action action = actions.get(0);
 		actions.remove(0);
+		
+		
 		return action;
 
 	}
@@ -69,5 +78,5 @@ public class GreedyTurnAI implements AI {
 	public String title() {
 		return "GreedyTurn";
 	}
-
+	
 }

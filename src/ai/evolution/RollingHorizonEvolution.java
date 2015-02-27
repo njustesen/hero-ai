@@ -15,7 +15,7 @@ import ai.heuristic.IStateEvaluator;
 public class RollingHorizonEvolution implements AI {
 
 	public int popSize;
-	public int generations;
+	public int budget;
 	public double killRate;
 	public double mutRate;
 	public IStateEvaluator evaluator;
@@ -26,11 +26,11 @@ public class RollingHorizonEvolution implements AI {
 	private boolean strong;
 
 	public RollingHorizonEvolution(int popSize, double mutRate,
-			double killRate, int generations, IStateEvaluator evaluator, boolean strong) {
+			double killRate, int budget, IStateEvaluator evaluator, boolean strong) {
 		super();
 		this.popSize = popSize;
 		this.mutRate = mutRate;
-		this.generations = generations;
+		this.budget = budget;
 		this.evaluator = evaluator;
 		this.killRate = killRate;
 		pop = new ArrayList<Genome>();
@@ -52,15 +52,15 @@ public class RollingHorizonEvolution implements AI {
 
 	private void search(GameState state) {
 
+		Long start = System.currentTimeMillis();
+		
 		setup(state);
 
 		final List<Genome> killed = new ArrayList<Genome>();
 		final GameState clone = new GameState(state.map);
 		clone.imitate(state);
 		
-		for (int g = 0; g < generations; g++) {
-
-			//System.out.println("Generation=" + g + " Pop size=" + pop.size());
+		while (System.currentTimeMillis() < start + budget) {
 
 			// Test pop
 			double val = 0;
@@ -81,24 +81,23 @@ public class RollingHorizonEvolution implements AI {
 			for (int i = idx; i < pop.size(); i++)
 				killed.add(pop.get(i));
 			
-			if (g != generations)
-				// Crossover new ones
-				for (final Genome genome : killed) {
-					final int a = random.nextInt(idx);
-					int b = random.nextInt(idx);
-					while (b == a)
-						b = random.nextInt(idx);
+			// Crossover new ones
+			for (final Genome genome : killed) {
+				final int a = random.nextInt(idx);
+				int b = random.nextInt(idx);
+				while (b == a)
+					b = random.nextInt(idx);
 
+				clone.imitate(state);
+				genome.crossover(pop.get(a), pop.get(b), clone);
+
+				// Mutation
+				if (Math.random() < mutRate) {
 					clone.imitate(state);
-					genome.crossover(pop.get(a), pop.get(b), clone);
-
-					// Mutation
-					if (Math.random() < mutRate) {
-						clone.imitate(state);
-						genome.mutate(clone);
-					}
-
+					genome.mutate(clone);
 				}
+
+			}
 			
 		}
 
@@ -119,7 +118,7 @@ public class RollingHorizonEvolution implements AI {
 			clone.imitate(state);
 			final Genome genome;
 			if (strong)
-				genome = new StrongGenome(generations);
+				genome = new StrongGenome();
 			else
 				genome = new WeakGenome();
 			genome.random(clone);
@@ -137,7 +136,7 @@ public class RollingHorizonEvolution implements AI {
 	public String header() {
 		String name = title()+"\n";
 		name += "Pop. size = " + popSize + "\n";
-		name += "Generations = " + generations + "\n";
+		name += "Budget = " + budget + "ms.\n";
 		name += "Mut. rate = " + mutRate + "\n";
 		name += "Kill rate = " + killRate + "\n";
 		name += "State evaluator = " + evaluator.title() + "\n";

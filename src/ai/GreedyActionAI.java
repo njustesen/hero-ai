@@ -6,17 +6,22 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import util.Statistics;
 import action.Action;
 import ai.heuristic.HeuristicEvaluator;
 import ai.heuristic.IStateEvaluator;
 import ai.util.ActionPruner;
+import ai.util.AiStatistics;
 
 public class GreedyActionAI implements AI {
 
 	private final List<Action> actions;
 	private final IStateEvaluator evaluator;
 	private final ActionPruner pruner;
-
+	
+	private AiStatistics aiStatistics;
+	private List<Integer> times; 
+	
 	public GreedyActionAI(IStateEvaluator evaluator) {
 		super();
 		this.evaluator = evaluator;
@@ -47,7 +52,7 @@ public class GreedyActionAI implements AI {
 			}
 
 		}
-
+		
 		return best;
 	}
 

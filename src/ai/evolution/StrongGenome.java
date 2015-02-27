@@ -6,14 +6,13 @@ import action.Action;
 
 public class StrongGenome extends Genome {
 
-	public int g;
+	static int g = 1000;
 
-	public StrongGenome(int g) {
+	public StrongGenome() {
 		super();
 		actions = new ArrayList<Action>();
 		value = 0;
 		visits = 0;
-		this.g = g;
 	}
 
 	public double fitness() {

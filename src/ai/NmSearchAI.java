@@ -11,6 +11,7 @@ import action.Action;
 import action.EndTurnAction;
 import ai.heuristic.HeuristicEvaluator;
 import ai.heuristic.IStateEvaluator;
+import ai.util.AiStatistics;
 import ai.util.RAND_METHOD;
 
 public class NmSearchAI implements AI {

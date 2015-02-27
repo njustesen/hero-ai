@@ -13,7 +13,7 @@ import action.SingletonAction;
 import ai.heuristic.HeuristicEvaluator;
 import ai.heuristic.IStateEvaluator;
 import ai.util.ActionPruner;
-import ai.util.GameStateHasher;
+import ai.util.AiStatistics;
 
 public class BestMoveSearch {
 
@@ -24,37 +24,24 @@ public class BestMoveSearch {
 	List<Action> bestMove = new ArrayList<Action>();
 	double bestValue;
 	private IStateEvaluator evaluator;
-	private final GameStateHasher hasher = new GameStateHasher();
+	public Integer moves;
 
 	public List<Action> bestMove(GameState state, IStateEvaluator evaluator) {
 		this.evaluator = evaluator;
 
-		transTable.clear();
-		// FORCE GC?
 		bestValue = -100000000;
 		bestMove = null;
-		addMoves(state, new ArrayList<Action>(), 0);
-		//printStats();
+		moves = 0;
+		addMoves(state, new ArrayList<Action>(), 0, moves);
+		transTable.clear();
 		if (bestMove == null)
 			return new ArrayList<Action>();
 		return bestMove;
 
 	}
 
-	private void printStats() {
-		int s = 0;
-		int t = 0;
-		for (final Long l : transTable.keySet())
-			if (transTable.get(l) > 1)
-				t += transTable.get(l);
-			else
-				s++;
 
-		System.out.println(s + "\t" + t + "\t" + (double) t
-				/ ((double) (t + s)));
-	}
-
-	private void addMoves(GameState state, List<Action> move, int depth) {
+	private void addMoves(GameState state, List<Action> move, int depth, Integer moves) {
 
 		// End turn
 		if (state.APLeft == 0) {
@@ -62,11 +49,10 @@ public class BestMoveSearch {
 			if (value > bestValue) {
 				final List<Action> nextMove = clone(move);
 				nextMove.add(SingletonAction.endTurnAction);
+				moves++;
 				bestValue = value;
 				bestMove = nextMove;
 			}
-			// ObjectPools.returnState(state);
-			state.returnUnits();
 			return;
 		}
 
@@ -95,27 +81,11 @@ public class BestMoveSearch {
 				transTable.put(hash, 1);
 				final List<Action> nextMove = clone(move);
 				nextMove.add(action);
-				addMoves(next, nextMove, depth + 1);
+				addMoves(next, nextMove, depth + 1, moves);
 			}
 			i++;
 		}
 
-	}
-
-	private boolean sameMove(List<Action> a, List<Action> b) {
-		if (a == b)
-			return true;
-		if (a == null || b == null)
-			return false;
-		if (a.size() != b.size())
-			return false;
-		int i = 0;
-		for (final Action action : a) {
-			if (!action.equals(b.get(i)))
-				return false;
-			i++;
-		}
-		return true;
 	}
 
 	private List<Action> clone(List<Action> move) {
