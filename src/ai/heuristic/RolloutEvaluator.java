@@ -3,7 +3,7 @@ package ai.heuristic;
 import ai.AI;
 import game.GameState;
 
-public class RolloutEvaluatior implements IStateEvaluator {
+public class RolloutEvaluator implements IStateEvaluator {
 
 	public int rolls;
 	public int depth;	// In turns
@@ -12,7 +12,7 @@ public class RolloutEvaluatior implements IStateEvaluator {
 	public boolean copy;
 	public boolean worst;
 	
-	public RolloutEvaluatior(int rolls, int depth, AI policy, IStateEvaluator evaluator) {
+	public RolloutEvaluator(int rolls, int depth, AI policy, IStateEvaluator evaluator) {
 		super();
 		this.rolls = rolls;
 		this.depth = depth;
@@ -21,7 +21,7 @@ public class RolloutEvaluatior implements IStateEvaluator {
 		this.copy = false;
 	}
 	
-	public RolloutEvaluatior(int rolls, int depth, AI policy, IStateEvaluator evaluator, boolean copy) {
+	public RolloutEvaluator(int rolls, int depth, AI policy, IStateEvaluator evaluator, boolean copy) {
 		super();
 		this.rolls = rolls;
 		this.depth = depth;
@@ -31,7 +31,7 @@ public class RolloutEvaluatior implements IStateEvaluator {
 		this.worst = false;
 	}
 	
-	public RolloutEvaluatior(int rolls, int depth, AI policy, IStateEvaluator evaluator, boolean copy, boolean worst) {
+	public RolloutEvaluator(int rolls, int depth, AI policy, IStateEvaluator evaluator, boolean copy, boolean worst) {
 		super();
 		this.rolls = rolls;
 		this.depth = depth;
@@ -86,7 +86,7 @@ public class RolloutEvaluatior implements IStateEvaluator {
 
 	@Override
 	public String title() {
-		return "Rollout Evaluator [policy=" + policy.title() + ", evaluator=" + evaluator.title() + "]";
+		return "Rollout Evaluator [depth="+depth + " rolls="+rolls+ " policy=" + policy.title() + " evaluator=" + evaluator.title() + "]";
 	}
 
 }

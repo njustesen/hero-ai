@@ -111,7 +111,7 @@ public class MaterialBalanceEvaluator implements IStateEvaluator {
 		}
 		// TODO: Opponent hand should be hidden
 		for (final Card card : Card.values()){
-			if (card.type != CardType.UNIT)
+			if (card.type != CardType.UNIT || card == Card.CRYSTAL)
 				continue;
 			p1Units += values.get(card) * state.p1Deck.count(card);
 			p2Units += values.get(card) * state.p2Deck.count(card);

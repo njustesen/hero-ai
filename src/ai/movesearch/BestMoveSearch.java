@@ -23,32 +23,18 @@ public class BestMoveSearch {
 	ActionPruner pruner = new ActionPruner();
 	List<Action> bestMove = new ArrayList<Action>();
 	double bestValue;
-	private IStateEvaluator heuristic;
+	private IStateEvaluator evaluator;
 	private final GameStateHasher hasher = new GameStateHasher();
 
-<<<<<<< HEAD
-	public List<Action> bestMove(GameState state, IStateEvaluator heuristic) {
-=======
-	public List<Action> bestMove(GameState state, IHeuristic heuristic,
-			List<Action> lastMove) {
->>>>>>> ce224fe398055f94b94c8474c31c3dc05e2e61df
-
-		this.heuristic = heuristic;
+	public List<Action> bestMove(GameState state, IStateEvaluator evaluator) {
+		this.evaluator = evaluator;
 
 		transTable.clear();
 		// FORCE GC?
 		bestValue = -100000000;
 		bestMove = null;
-<<<<<<< HEAD
 		addMoves(state, new ArrayList<Action>(), 0);
-=======
-		printStats();
-		addMoves(state, new ArrayList<Action>(), 0, lastMove);
-
-		// printStats();
->>>>>>> ce224fe398055f94b94c8474c31c3dc05e2e61df
-
-		// printStats();
+		//printStats();
 		if (bestMove == null)
 			return new ArrayList<Action>();
 		return bestMove;
@@ -58,7 +44,6 @@ public class BestMoveSearch {
 	private void printStats() {
 		int s = 0;
 		int t = 0;
-<<<<<<< HEAD
 		for (final Long l : transTable.keySet())
 			if (transTable.get(l) > 1)
 				t += transTable.get(l);
@@ -70,27 +55,10 @@ public class BestMoveSearch {
 	}
 
 	private void addMoves(GameState state, List<Action> move, int depth) {
-=======
-		int tt = 0;
-		for (final String i : transTable.keySet()) {
-			c += transTable.get(i);
-			if (transTable.get(i) > 1) {
-				t++;
-				tt += transTable.get(i);
-			}
-		}
-
-		System.out.println(c + ";" + transTable.keySet().size() + ";" + t + ";"
-				+ tt + ";");
-	}
-
-	private void addMoves(GameState state, List<Action> move, int depth,
-			List<Action> lastMove) {
->>>>>>> ce224fe398055f94b94c8474c31c3dc05e2e61df
 
 		// End turn
 		if (state.APLeft == 0) {
-			final double value = heuristic.eval(state, state.p1Turn);
+			final double value = evaluator.eval(state, state.p1Turn);
 			if (value > bestValue) {
 				final List<Action> nextMove = clone(move);
 				nextMove.add(SingletonAction.endTurnAction);
@@ -114,11 +82,7 @@ public class BestMoveSearch {
 		int i = 0;
 		for (final Action action : actions) {
 			if (depth == 0)
-<<<<<<< HEAD
 				System.out.print("|");
-=======
-				System.out.print("|(" + transTable.size() + ")");
->>>>>>> ce224fe398055f94b94c8474c31c3dc05e2e61df
 
 			if (i > 0)
 				next.imitate(state);
@@ -135,9 +99,6 @@ public class BestMoveSearch {
 			}
 			i++;
 		}
-<<<<<<< HEAD
-
-=======
 
 	}
 
@@ -155,7 +116,6 @@ public class BestMoveSearch {
 			i++;
 		}
 		return true;
->>>>>>> ce224fe398055f94b94c8474c31c3dc05e2e61df
 	}
 
 	private List<Action> clone(List<Action> move) {

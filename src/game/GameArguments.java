@@ -11,7 +11,7 @@ import ai.RandomHeuristicAI;
 import ai.evolution.RollingHorizonEvolution;
 import ai.heuristic.HeuristicEvaluator;
 import ai.heuristic.MaterialBalanceEvaluator;
-import ai.heuristic.RolloutEvaluatior;
+import ai.heuristic.RolloutEvaluator;
 import ai.mcts.Mcts;
 import ai.util.ComplexActionComparator;
 import ai.util.RAND_METHOD;
@@ -104,7 +104,7 @@ public class GameArguments {
 						a++;
 						final int depth = Integer.parseInt(args[a]);
 						players[p] = new NmSearchAI((p == 0), n, mm,
-								new RolloutEvaluatior(rolls, depth,
+								new RolloutEvaluator(rolls, depth,
 										new RandomAI(RAND_METHOD.TREE),
 										new HeuristicEvaluator(false), true));
 					}
@@ -120,7 +120,7 @@ public class GameArguments {
 						final int rolls = Integer.parseInt(args[a]);
 						a++;
 						final int depth = Integer.parseInt(args[a]);
-						players[p] = new GreedyActionAI(new RolloutEvaluatior(
+						players[p] = new GreedyActionAI(new RolloutEvaluator(
 								rolls, depth, new RandomAI(RAND_METHOD.TREE),
 								new HeuristicEvaluator(false), true));
 					}
@@ -134,7 +134,7 @@ public class GameArguments {
 						final int rolls = Integer.parseInt(args[a]);
 						a++;
 						final int depth = Integer.parseInt(args[a]);
-						players[p] = new GreedyTurnAI(new RolloutEvaluatior(
+						players[p] = new GreedyTurnAI(new RolloutEvaluator(
 								rolls, depth, new RandomAI(RAND_METHOD.TREE),
 								new HeuristicEvaluator(false), true));
 					}
@@ -143,7 +143,7 @@ public class GameArguments {
 				if (args[a].toLowerCase().equals("mcts")) {
 					a++;
 					final int t = Integer.parseInt(args[a]);
-					players[p] = new Mcts(t, new RolloutEvaluatior(
+					players[p] = new Mcts(t, new RolloutEvaluator(
 							1, 1, new RandomHeuristicAI(0.5),
 							new HeuristicEvaluator(true), false));
 				}

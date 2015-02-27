@@ -78,7 +78,7 @@ public class MapLoader {
 			for(int x = 0; x < width; x++)
 				grid[x][y] = squareLists.get(y).get(x);
 		
-		final HaMap map = new HaMap(width, height, grid);
+		final HaMap map = new HaMap(width, height, grid, name);
 		
 		for (Position p : p1Crystals)
 			map.p1Crystals.add(p);

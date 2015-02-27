@@ -34,7 +34,7 @@ public class GameState {
 	private static final int POTION_REVIVE = 100;
 	private static final int POTION_HEAL = 1000;
 	private static final int TURN_LIMIT = 100;
-	private static final boolean RANDOMNESS = false;
+	public static final boolean RANDOMNESS = false;
 
 	public HaMap map;
 	public boolean p1Turn;

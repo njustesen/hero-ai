@@ -11,7 +11,7 @@ import game.GameState;
 import ai.AI;
 import ai.RandomAI;
 import ai.heuristic.HeuristicEvaluator;
-import ai.heuristic.RolloutEvaluatior;
+import ai.heuristic.RolloutEvaluator;
 import ai.heuristic.WinLoseEvaluator;
 import ai.util.RAND_METHOD;
 
@@ -23,11 +23,11 @@ public class RolloutDeviation {
 		AI p1 = new RandomAI(RAND_METHOD.TREE);
 		GameState state = createGameState(1, p1, p1);
 		
-		List<RolloutEvaluatior> rollers = new ArrayList<RolloutEvaluatior>();
+		List<RolloutEvaluator> rollers = new ArrayList<RolloutEvaluator>();
 		for(int i = 10; i <= 1000000; i=i*10)
-			rollers.add(new RolloutEvaluatior(i, 10000, new RandomAI(RAND_METHOD.TREE), new WinLoseEvaluator(), true));
+			rollers.add(new RolloutEvaluator(i, 10000, new RandomAI(RAND_METHOD.TREE), new WinLoseEvaluator(), true));
 		
-		for(RolloutEvaluatior roller : rollers)
+		for(RolloutEvaluator roller : rollers)
 			roller.eval(state.copy(), true);
 		
 	}

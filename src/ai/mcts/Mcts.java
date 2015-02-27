@@ -108,7 +108,7 @@ public class Mcts implements AI {
 			rolls++;
 		}
 
-		System.out.println(budget + "\t" + rolls);
+		//System.out.println(budget + "\t" + rolls);
 
 		// List<Integer> depths = new ArrayList<Integer>();
 		// root.depth(0, depths, new HashSet<MctsNode>());
@@ -311,11 +311,11 @@ public class Mcts implements AI {
 	@Override
 	public String header() {
 		String name = "MCTS\n";
-		name += "Time budget = " + budget;
-		name += "C = " + c;
-		name += "Leaf evaluation = " + defaultPolicy.title();
-		name += "Cut = " + cut;
-		name += "Collapse = " + collapse;
+		name += "Time budget = " + budget + "\n";
+		name += "C = " + c + "\n";
+		name += "Leaf evaluation = " + defaultPolicy.title() + "\n";
+		name += "Cut = " + cut + "\n";
+		name += "Collapse = " + collapse + "\n";
 		return name;
 	}
 

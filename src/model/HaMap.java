@@ -5,6 +5,7 @@ import java.util.List;
 
 public class HaMap {
 
+	public String name;
 	public int width;
 	public int height;
 	public SquareType[][] squares;
@@ -14,8 +15,9 @@ public class HaMap {
 	public List<Position> p1Crystals;
 	public List<Position> p2Crystals;
 
-	public HaMap(int width, int height, SquareType[][] squares) {
+	public HaMap(int width, int height, SquareType[][] squares, String name) {
 		super();
+		this.name = name;
 		this.width = width;
 		this.height = height;
 		this.squares = squares;

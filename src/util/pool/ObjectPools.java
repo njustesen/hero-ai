@@ -9,23 +9,24 @@ import model.Unit;
 
 public class ObjectPools {
 
-	public static GenericObjectPool<GameState> statePool;
-	public static GenericObjectPool<Unit> unitPool;
+	//public static GenericObjectPool<GameState> statePool;
+	//public static GenericObjectPool<Unit> unitPool;
 	public static boolean usePools = false;
 	static {
 		if (usePools){ 
-			unitPool = new GenericObjectPool<Unit>(new UnitFactory());
-			statePool = new GenericObjectPool<GameState>(new GameStateFactory());
-			statePool.setBlockWhenExhausted(false);
-			statePool.setMaxTotal(1000000);
-			unitPool.setBlockWhenExhausted(false);
-			unitPool.setMaxTotal(10000000);
+		//	unitPool = new GenericObjectPool<Unit>(new UnitFactory());
+		//	statePool = new GenericObjectPool<GameState>(new GameStateFactory());
+		//	statePool.setBlockWhenExhausted(false);
+		//	statePool.setMaxTotal(1000000);
+		//	unitPool.setBlockWhenExhausted(false);
+		//	unitPool.setMaxTotal(10000000);
 		}
 	}
 	
 	public static GameState borrowState(HaMap map){
-		if (statePool == null)
+		//if (statePool == null)
 			return new GameState(map);
+		/*
 		try {
 			GameState state = statePool.borrowObject();
 			state.map = map;
@@ -36,11 +37,13 @@ public class ObjectPools {
 			//e.printStackTrace();
 			return new GameState(null);
 		}
+		*/
 	}
 	
 	public static Unit borrowUnit(Card card, boolean p1){
-		if (unitPool == null)
+		//if (unitPool == null)
 			return new Unit(card, p1);
+		/*
 		try {
 			Unit unit = unitPool.borrowObject();
 			unit.init(card, p1);
@@ -49,26 +52,31 @@ public class ObjectPools {
 			e.printStackTrace();
 			return new Unit(card, p1);
 		}
+		*/
 	}
 	
 	public static void returnUnit(Unit unit) {
-		if (ObjectPools.unitPool == null)
+		//if (ObjectPools.unitPool == null)
 			return;
+		/*
 		try {
 			unitPool.returnObject(unit);
 		} catch (Exception e){
 			//e.printStackTrace();
 		}
+		*/
 	}
 
 	public static void returnState(GameState state) {
-		if (ObjectPools.statePool == null)
+		//if (ObjectPools.statePool == null)
 			return;
+		/*
 		try {
 			statePool.returnObject(state);
 		} catch (Exception e){
 			//e.printStackTrace();
 		}
+		*/
 	}
 	
 }
