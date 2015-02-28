@@ -7,7 +7,6 @@ import java.util.Collections;
 import java.util.List;
 
 import action.Action;
-import ai.heuristic.HeuristicEvaluator;
 import ai.heuristic.IStateEvaluator;
 import ai.util.ActionPruner;
 
@@ -16,12 +15,17 @@ public class GreedyActionAI implements AI {
 	private final List<Action> actions;
 	private final IStateEvaluator evaluator;
 	private final ActionPruner pruner;
-
+	
+	public List<Double> branching;
+	public List<Double> prunedBranching;
+	
 	public GreedyActionAI(IStateEvaluator evaluator) {
 		super();
 		this.evaluator = evaluator;
 		actions = new ArrayList<Action>();
 		this.pruner = new ActionPruner();
+		this.branching = new ArrayList<Double>();
+		this.prunedBranching = new ArrayList<Double>();
 	}
 
 	@Override
@@ -32,7 +36,9 @@ public class GreedyActionAI implements AI {
 
 		actions.clear();
 		state.possibleActions(actions);
+		branching.add((double)actions.size());
 		pruner.prune(actions, state);
+		prunedBranching.add((double)actions.size());
 		Collections.shuffle(actions);
 		for (final Action action : actions) {
 
@@ -47,7 +53,7 @@ public class GreedyActionAI implements AI {
 			}
 
 		}
-
+		
 		return best;
 	}
 

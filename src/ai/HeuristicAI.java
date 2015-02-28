@@ -10,6 +10,7 @@ import action.Action;
 import action.SingletonAction;
 import ai.util.ActionComparator;
 import ai.util.ActionPruner;
+import ai.util.AiStatistics;
 import ai.util.ComplexActionComparator;
 
 public class HeuristicAI implements AI {
@@ -17,15 +18,20 @@ public class HeuristicAI implements AI {
 	private final List<Action> actions;
 	private final ActionComparator comparator;
 	ActionPruner pruner;
+	AiStatistics aiStatistics;
+	List<Double> times;
 
 	public HeuristicAI() {
 		this.actions = new ArrayList<Action>();
 		this.pruner = new ActionPruner();
 		this.comparator = new ComplexActionComparator();
+		this.aiStatistics = new AiStatistics();
+		this.times = new ArrayList<Double>();
 	}
 
 	@Override
 	public Action act(GameState state, long ms) {
+		
 		actions.clear();
 		state.possibleActions(actions);
 		pruner.prune(actions, state);
@@ -36,7 +42,7 @@ public class HeuristicAI implements AI {
 
 		comparator.state = state;
 		Collections.sort(actions, comparator);
-
+		
 		return actions.get(0);
 
 	}

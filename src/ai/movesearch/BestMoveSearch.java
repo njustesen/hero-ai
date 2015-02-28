@@ -13,7 +13,6 @@ import action.SingletonAction;
 import ai.heuristic.HeuristicEvaluator;
 import ai.heuristic.IStateEvaluator;
 import ai.util.ActionPruner;
-import ai.util.GameStateHasher;
 
 public class BestMoveSearch {
 
@@ -24,40 +23,27 @@ public class BestMoveSearch {
 	List<Action> bestMove = new ArrayList<Action>();
 	double bestValue;
 	private IStateEvaluator evaluator;
-	private final GameStateHasher hasher = new GameStateHasher();
+	public int moves;
 
 	public List<Action> bestMove(GameState state, IStateEvaluator evaluator) {
 		this.evaluator = evaluator;
 
-		transTable.clear();
-		// FORCE GC?
 		bestValue = -100000000;
 		bestMove = null;
+		moves = 0;
 		addMoves(state, new ArrayList<Action>(), 0);
-		//printStats();
+		transTable.clear();
 		if (bestMove == null)
 			return new ArrayList<Action>();
 		return bestMove;
 
 	}
 
-	private void printStats() {
-		int s = 0;
-		int t = 0;
-		for (final Long l : transTable.keySet())
-			if (transTable.get(l) > 1)
-				t += transTable.get(l);
-			else
-				s++;
-
-		System.out.println(s + "\t" + t + "\t" + (double) t
-				/ ((double) (t + s)));
-	}
-
 	private void addMoves(GameState state, List<Action> move, int depth) {
 
 		// End turn
 		if (state.APLeft == 0) {
+			moves++;
 			final double value = evaluator.eval(state, state.p1Turn);
 			if (value > bestValue) {
 				final List<Action> nextMove = clone(move);
@@ -65,8 +51,6 @@ public class BestMoveSearch {
 				bestValue = value;
 				bestMove = nextMove;
 			}
-			// ObjectPools.returnState(state);
-			state.returnUnits();
 			return;
 		}
 
@@ -100,22 +84,6 @@ public class BestMoveSearch {
 			i++;
 		}
 
-	}
-
-	private boolean sameMove(List<Action> a, List<Action> b) {
-		if (a == b)
-			return true;
-		if (a == null || b == null)
-			return false;
-		if (a.size() != b.size())
-			return false;
-		int i = 0;
-		for (final Action action : a) {
-			if (!action.equals(b.get(i)))
-				return false;
-			i++;
-		}
-		return true;
 	}
 
 	private List<Action> clone(List<Action> move) {

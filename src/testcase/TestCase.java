@@ -4,12 +4,14 @@ import java.io.FileNotFoundException;
 import java.io.PrintWriter;
 import java.util.HashSet;
 
+import util.Statistics;
 import game.Game;
 import game.GameArguments;
 import game.GameState;
 import model.DECK_SIZE;
 import model.HaMap;
 import ai.AI;
+import ai.StatisticAi;
 import ai.mcts.MctsNode;
 
 public class TestCase {
@@ -89,6 +91,15 @@ public class TestCase {
 		res += "P1 = " + p1Wins + " = " + ((((p1Wins)+draws/2.0)/(double)runs)*100) + "%\n";
 		res += "P2 = " + p2Wins + " = " + ((((p2Wins)+draws/2.0)/(double)runs)*100) + "%\n";
 		res += "Dr = " + draws + "\n";
+		res += "~~~~~~~~~~~ STATS ~~~~~~~~~~\n";
+		if (p1 instanceof StatisticAi){
+			res += "P1 " + p1.title() + "\n";
+			res += ((StatisticAi)p1).toString();
+		}
+		if (p2 instanceof StatisticAi){
+			res += "P2 " + p2.title() + "\n";
+			res += ((StatisticAi)p2).toString();
+		} 
 		res += "############################\n";
 		System.out.print(res);
 		

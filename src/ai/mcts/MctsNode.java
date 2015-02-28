@@ -36,12 +36,12 @@ public class MctsNode {
 		return out.size() == 0;
 	}
 	
-	public void depth(int depth, List<Integer> depths, HashSet<MctsNode> visited){
+	public void depth(int depth, List<Double> depths, HashSet<MctsNode> visited){
 		if (visited.contains(this))
 			return;
 		visited.add(this);
 		if (isLeaf())
-			depths.add(depth);
+			depths.add((double)depth);
 		else 
 			for(MctsEdge edge : out)
 				edge.depth(depth, depths, visited);

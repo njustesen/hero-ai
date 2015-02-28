@@ -12,6 +12,7 @@ import ai.GreedyActionAI;
 import ai.GreedyTurnAI;
 import ai.RandomAI;
 import ai.RandomHeuristicAI;
+import ai.StatisticAi;
 import ai.heuristic.HeuristicEvaluator;
 import ai.heuristic.MaterialBalanceEvaluator;
 import ai.heuristic.RolloutEvaluator;
@@ -19,7 +20,7 @@ import ai.heuristic.WinLoseEvaluator;
 import ai.mcts.Mcts;
 import ai.util.RAND_METHOD;
 
-public class TestCases {
+public class TestSuite {
 
 	private static HaMap tiny;
 	private static HaMap small;
@@ -47,7 +48,7 @@ public class TestCases {
 		AI p1 = new GreedyActionAI(new HeuristicEvaluator(false));
 		AI p2 = new GreedyTurnAI(new HeuristicEvaluator(false));
 		
-		new TestCase(p1, p2, runs, "greedy-action-vs-greedy-turn", map(size), deck(size)).run();
+		new TestCase(new StatisticAi(p1), new StatisticAi(p2), runs, "greedy-action-vs-greedy-turn", map(size), deck(size)).run();
 		
 	}
 
@@ -66,9 +67,9 @@ public class TestCases {
 		Mcts mcts3 = new Mcts(6075, new RolloutEvaluator(1, 1, new RandomHeuristicAI(0.3), new MaterialBalanceEvaluator(true)));
 		Mcts mcts4 = new Mcts(6075, new RolloutEvaluator(1, 1, new RandomHeuristicAI(0.3), new HeuristicEvaluator(true)));
 		
-		tests.add(new TestCase(mcts1, mcts2, runs, "mcts-nodepth-vs-5-depth", map(size), deck(size)));
-		tests.add(new TestCase(mcts2, mcts3, runs, "mcts-5depth-vs-1depth", map(size), deck(size)));
-		tests.add(new TestCase(mcts3, mcts4, runs, "mcts-1depth-heuristic-vs-1depth-material", small, DECK_SIZE.SMALL));
+		tests.add(new TestCase(new StatisticAi(mcts1), new StatisticAi(mcts2), runs, "mcts-nodepth-vs-5-depth", map(size), deck(size)));
+		tests.add(new TestCase(new StatisticAi(mcts2), new StatisticAi(mcts3), runs, "mcts-5depth-vs-1depth", map(size), deck(size)));
+		tests.add(new TestCase(new StatisticAi(mcts3), new StatisticAi(mcts4), runs, "mcts-1depth-heuristic-vs-1depth-material", small, DECK_SIZE.SMALL));
 		
 		for(TestCase test : tests)
 			test.run();
