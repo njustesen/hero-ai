@@ -2,9 +2,12 @@ package ai.mcts;
 
 import game.GameState;
 
+import java.io.FileNotFoundException;
+import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 
@@ -19,18 +22,22 @@ import ai.util.ComplexActionComparator;
 public class Mcts implements AI {
 
 	Map<Long, MctsNode> transTable = new HashMap<Long, MctsNode>();
-	Map<Long, Integer> apTable = new HashMap<Long, Integer>();
 
 	public double c;
 	public long budget;
 	public IStateEvaluator defaultPolicy;
+	public boolean cut;
+	public boolean collapse;
+	
+	public List<Double> depths;
+	public List<Double> rollouts;
+	
 	private final ActionPruner pruner;
 	private final ActionComparator comparator;
 	private MctsNode root;
 	private List<Action> move;
 	private int ends;
-	public boolean cut;
-	public boolean collapse;
+	
 
 	public Mcts(long budget, IStateEvaluator defaultPolicy) {
 		this.budget = budget;
@@ -42,6 +49,8 @@ public class Mcts implements AI {
 		c = 1 / Math.sqrt(2);
 		cut = false;
 		collapse = false;
+		depths = new ArrayList<Double>();
+		rollouts = new ArrayList<Double>();
 	}
 
 	@Override
@@ -63,7 +72,6 @@ public class Mcts implements AI {
 		final GameState clone = state.copy();
 		int rolls = 0;
 		final List<MctsEdge> traversal = new ArrayList<MctsEdge>();
-		MctsNode node = null;
 		double delta = 0;
 		boolean collapsed = false;
 		final int startAp = state.APLeft;
@@ -73,28 +81,21 @@ public class Mcts implements AI {
 
 			// COLLAPSE
 			if (collapse && !collapsed && ends >= 20 * (budget / 1000.0)) {
-				// System.out.println("COLLAPSE! " + ends + " endpoints.");
 				collapse(root);
 				collapsed = true;
-				// System.out.println(root.toXml(0));
 			}
 
 			// CUT
 			if (cut && time < (budget / startAp) * (ap - 1)) {
-				// System.out.println(root.toXml(0));
 				cut(root, null, 0, startAp - ap);
-				// System.out.println("Cut");
-				// System.out.println(root.toXml(0));
 				ap--;
 			}
 
 			traversal.clear();
-			// if (rolls%1000==0)
-			// System.out.println(root.toXml(0));
 			clone.imitate(state);
 
 			// SELECTION + EXPANSION
-			node = treePolicy(root, clone, traversal);
+			treePolicy(root, clone, traversal);
 
 			// SIMULATION
 			delta = defaultPolicy.eval(clone, state.p1Turn);
@@ -102,29 +103,15 @@ public class Mcts implements AI {
 			// BACKPROPAGATION
 			backupNegaMax(traversal, delta, state.p1Turn);
 
-			// if (rolls % 100 == 0)
-			// System.out.println(root.toXml(0));
 			time = (start + budget) - System.currentTimeMillis();
 			rolls++;
 		}
 
-		//System.out.println(budget + "\t" + rolls);
-
-		// List<Integer> depths = new ArrayList<Integer>();
-		// root.depth(0, depths, new HashSet<MctsNode>());
-
-		// System.out.println("Avg. depth: " + Statistics.avgInteger(depths));
-		// System.out.println("Max. depth: " + Statistics.max(depths));
-		/*
-		 * PrintWriter out = null; try { out = new PrintWriter("mcts.xml");
-		 * out.print(root.toXml(0, new HashSet<MctsNode>(), 6)); } catch
-		 * (FileNotFoundException e) { e.printStackTrace(); } finally { if
-		 * (out!= null) out.close(); }
-		 */
-		// Save best move
-
-		// System.out.println(root.toXml(0));
-
+		root.depth(0, depths, new HashSet<MctsNode>());
+		rollouts.add((double)rolls);
+		
+		//saveTree();
+		
 		move = bestMove(state, rolls);
 		final Action action = move.get(0);
 		move.remove(0);
@@ -132,11 +119,23 @@ public class Mcts implements AI {
 		// Reset search
 		root = null;
 		transTable.clear();
-		apTable.clear();
 		ends = 0;
 
 		return action;
 
+	}
+
+	private void saveTree() {
+		PrintWriter out = null; 
+		try { 
+			out = new PrintWriter("mcts.xml");
+			out.print(root.toXml(0, new HashSet<MctsNode>(), 6)); 
+		} catch (FileNotFoundException e) { 
+			e.printStackTrace(); 
+		} finally { 
+			if (out!= null) 
+				out.close(); 
+		}
 	}
 
 	private void cut(MctsNode node, MctsEdge from, int depth, int cut) {
@@ -209,7 +208,6 @@ public class Mcts implements AI {
 
 		MctsEdge edge = null;
 		while (!clone.isTerminal)
-			// System.out.println(root.toXml(0, new HashSet<MctsNode>(), 20));
 			if (!node.isFullyExpanded()) {
 				// EXPANSION
 				edge = expand(node, clone);
@@ -223,11 +221,7 @@ public class Mcts implements AI {
 					break;
 				node = edge.to;
 				traversal.add(edge);
-				// TODO : HASH COLLISION?!
-				// int ap = clone.APLeft;
 				clone.update(edge.action);
-				// if (ap == clone.APLeft)
-				// System.out.println("!");
 			}
 		return node;
 	}
@@ -257,8 +251,7 @@ public class Mcts implements AI {
 		return edge;
 	}
 
-	private void backupNegaMax(List<MctsEdge> traversal, double delta,
-			boolean p1) {
+	private void backupNegaMax(List<MctsEdge> traversal, double delta, boolean p1) {
 		for (final MctsEdge edge : traversal) {
 			edge.visits++;
 			if (edge.to != null)
@@ -266,12 +259,9 @@ public class Mcts implements AI {
 			if (edge.from != null && edge.from.isRoot())
 				edge.from.visits++;
 			if (edge.p1 == p1)
-				edge.value += delta;
+				edge.value += delta;		// MAX
 			else
-				edge.value += (1 - delta);
-			/*
-			 * if (edge.p1 == p1) edge.value += delta; else edge.value -= delta;
-			 */
+				edge.value += (1 - delta);	// MIN
 		}
 	}
 

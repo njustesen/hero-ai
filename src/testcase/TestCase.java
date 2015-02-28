@@ -11,7 +11,7 @@ import game.GameState;
 import model.DECK_SIZE;
 import model.HaMap;
 import ai.AI;
-import ai.StatisticAI;
+import ai.StatisticAi;
 import ai.mcts.MctsNode;
 
 public class TestCase {
@@ -92,13 +92,13 @@ public class TestCase {
 		res += "P2 = " + p2Wins + " = " + ((((p2Wins)+draws/2.0)/(double)runs)*100) + "%\n";
 		res += "Dr = " + draws + "\n";
 		res += "~~~~~~~~~~~ STATS ~~~~~~~~~~\n";
-		if (p1 instanceof StatisticAI){
+		if (p1 instanceof StatisticAi){
 			res += "P1 " + p1.title() + "\n";
-			res += ((StatisticAI)p1).toString();
+			res += ((StatisticAi)p1).toString();
 		}
-		if (p2 instanceof StatisticAI){
+		if (p2 instanceof StatisticAi){
 			res += "P2 " + p2.title() + "\n";
-			res += ((StatisticAI)p2).toString();
+			res += ((StatisticAi)p2).toString();
 		} 
 		res += "############################\n";
 		System.out.print(res);

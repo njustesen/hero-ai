@@ -5,9 +5,11 @@ import java.util.List;
 
 import game.GameState;
 import action.Action;
+import ai.evolution.RollingHorizonEvolution;
+import ai.mcts.Mcts;
 import ai.util.AiStatistics;
 
-public class StatisticAI implements AI {
+public class StatisticAi implements AI {
 	
 	public AI ai;
 	public AiStatistics aiStatistics;
@@ -17,10 +19,11 @@ public class StatisticAI implements AI {
 	private Class<AI> aiClass;
 	
 	@SuppressWarnings("unchecked")
-	public StatisticAI(AI ai) {
+	public StatisticAi(AI ai) {
 		super();
 		this.aiStatistics = new AiStatistics();
 		this.times = new ArrayList<Double>();
+		aiStatistics.statsLists.put("Time spend", times);
 		this.ai = ai;
 		this.aiClass = (Class<AI>) ai.getClass();
 	}
@@ -29,8 +32,17 @@ public class StatisticAI implements AI {
 		Long start = System.currentTimeMillis();
 		action = ai.act(state, ms);
 		times.add((double)(System.currentTimeMillis() - start));
-		if (aiClass.equals(GreedyTurnAI.class))
+		if (aiClass.equals(RollingHorizonEvolution.class)){
+			aiStatistics.statsLists.put("Generations", ((RollingHorizonEvolution)ai).generations);
+			aiStatistics.statsLists.put("Vists (selected genome)", ((RollingHorizonEvolution)ai).bestVisits);
+		} else if (aiClass.equals(GreedyActionAI.class)){
+			aiStatistics.statsLists.put("Branching factor", ((GreedyActionAI)ai).branching);
+			aiStatistics.statsLists.put("Pruned branching factor", ((GreedyActionAI)ai).prunedBranching);
+		}else if (aiClass.equals(GreedyTurnAI.class)){
 			aiStatistics.statsLists.put("moves", ((GreedyTurnAI)ai).moves);
+		}else if (aiClass.equals(Mcts.class)){
+			aiStatistics.statsLists.put("depths", ((Mcts)ai).depths);
+		}
 		return action;
 	}
 	

@@ -13,7 +13,6 @@ import action.SingletonAction;
 import ai.heuristic.HeuristicEvaluator;
 import ai.heuristic.IStateEvaluator;
 import ai.util.ActionPruner;
-import ai.util.AiStatistics;
 
 public class BestMoveSearch {
 
@@ -24,7 +23,7 @@ public class BestMoveSearch {
 	List<Action> bestMove = new ArrayList<Action>();
 	double bestValue;
 	private IStateEvaluator evaluator;
-	public Integer moves;
+	public int moves;
 
 	public List<Action> bestMove(GameState state, IStateEvaluator evaluator) {
 		this.evaluator = evaluator;
@@ -32,7 +31,7 @@ public class BestMoveSearch {
 		bestValue = -100000000;
 		bestMove = null;
 		moves = 0;
-		addMoves(state, new ArrayList<Action>(), 0, moves);
+		addMoves(state, new ArrayList<Action>(), 0);
 		transTable.clear();
 		if (bestMove == null)
 			return new ArrayList<Action>();
@@ -40,16 +39,15 @@ public class BestMoveSearch {
 
 	}
 
-
-	private void addMoves(GameState state, List<Action> move, int depth, Integer moves) {
+	private void addMoves(GameState state, List<Action> move, int depth) {
 
 		// End turn
 		if (state.APLeft == 0) {
+			moves++;
 			final double value = evaluator.eval(state, state.p1Turn);
 			if (value > bestValue) {
 				final List<Action> nextMove = clone(move);
 				nextMove.add(SingletonAction.endTurnAction);
-				moves++;
 				bestValue = value;
 				bestMove = nextMove;
 			}
@@ -81,7 +79,7 @@ public class BestMoveSearch {
 				transTable.put(hash, 1);
 				final List<Action> nextMove = clone(move);
 				nextMove.add(action);
-				addMoves(next, nextMove, depth + 1, moves);
+				addMoves(next, nextMove, depth + 1);
 			}
 			i++;
 		}

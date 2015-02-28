@@ -51,11 +51,11 @@ public class MctsEdge {
 				+ ", a=" + action + "]";
 	}
 
-	public void depth(int depth, List<Integer> depths, HashSet<MctsNode> visited) {
+	public void depth(int depth, List<Double> depths, HashSet<MctsNode> visited) {
 		if (visits >= 1)
 			to.depth(depth+1, depths, visited);
 		else
-			depths.add(depth);
+			depths.add((double)depth);
 	}
 	
 }
