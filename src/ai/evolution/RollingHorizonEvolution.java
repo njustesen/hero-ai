@@ -26,11 +26,10 @@ public class RollingHorizonEvolution implements AI {
 	private final List<Genome> pop;
 	private List<Action> actions;
 	private final Random random;
-	private boolean strong;
 	
 
 	public RollingHorizonEvolution(int popSize, double mutRate,
-			double killRate, int budget, IStateEvaluator evaluator, boolean strong) {
+			double killRate, int budget, IStateEvaluator evaluator) {
 		super();
 		this.popSize = popSize;
 		this.mutRate = mutRate;
@@ -40,7 +39,6 @@ public class RollingHorizonEvolution implements AI {
 		pop = new ArrayList<Genome>();
 		actions = new ArrayList<Action>();
 		random = new Random();
-		this.strong = strong;
 		this.generations = new ArrayList<Double>();
 		this.bestVisits = new ArrayList<Double>();
 	}
@@ -129,11 +127,7 @@ public class RollingHorizonEvolution implements AI {
 
 		for (int i = 0; i < popSize; i++) {
 			clone.imitate(state);
-			final Genome genome;
-			if (strong)
-				genome = new StrongGenome();
-			else
-				genome = new WeakGenome();
+			final Genome genome = new WeakGenome();
 			genome.random(clone);
 			pop.add(genome);
 		}

@@ -1,0 +1,27 @@
+########### TEST ###########
+~~~~~~~~~ Player 1 ~~~~~~~~~
+MCTS
+Time budget = 6075
+C = 0.7071067811865475
+Leaf evaluation = Rollout Evaluator [depth=10000 rolls=1 policy=Random heuristic evaluator=Win Lose Evaluator]
+Cut = false
+Collapse = false
+~~~~~~~~~ Player 2 ~~~~~~~~~
+MCTS
+Time budget = 6075
+C = 0.7071067811865475
+Leaf evaluation = Rollout Evaluator [depth=5 rolls=1 policy=Random heuristic evaluator=Material Balance Evaluator]
+Cut = false
+Collapse = false
+~~~~~~~~~~~ SETUP ~~~~~~~~~~
+Map: a-small
+Deck Size: SMALL
+Randomness: false
+Runs: 100
+~~~~~~~~~~ RUNNING ~~~~~~~~~
+22222222222222222121122^[[D22221222222222222222212222211211111111111111111111111111111111111111111111111
+~~~~~~~~~~ RESULTS ~~~~~~~~~
+P1 = 6 = 6.0%
+P2 = 94 = 94.0%
+Dr = 0
+############################
