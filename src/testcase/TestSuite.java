@@ -59,12 +59,12 @@ public class TestSuite {
 		
 		List<TestCase> tests = new ArrayList<TestCase>();
 		
-		AI p2 = new RollingHorizonEvolution(100, .66, .5, 2000, new RolloutEvaluator(1, 1, new RandomHeuristicAI(0.3), new HeuristicEvaluator(false)));
-		AI p1 = new RollingHorizonEvolution(100, .33, .5, 2000, new RolloutEvaluator(1, 1, new RandomHeuristicAI(0.3), new HeuristicEvaluator(false)));
-		AI p3 = new RollingHorizonEvolution(100, .5, .5, 2000, new RolloutEvaluator(1, 1, new RandomHeuristicAI(0.3), new HeuristicEvaluator(false)));
+		AI p2 = new RollingHorizonEvolution(100, .66, .75, 2000, new RolloutEvaluator(1, 1, new RandomHeuristicAI(0.3), new HeuristicEvaluator(false)));
+		AI p1 = new RollingHorizonEvolution(100, .33, .75, 2000, new RolloutEvaluator(1, 1, new RandomHeuristicAI(0.3), new HeuristicEvaluator(false)));
+		//AI p3 = new RollingHorizonEvolution(100, .5, .75, 2000, new RolloutEvaluator(1, 1, new RandomHeuristicAI(0.3), new HeuristicEvaluator(false)));
 		
 		tests.add(new TestCase(new StatisticAi(p1), new StatisticAi(p2), runs, "rolling-mutrate", map(size), deck(size)));
-		tests.add(new TestCase(new StatisticAi(p1), new StatisticAi(p3), runs, "rolling-mutrate", map(size), deck(size)));
+		//tests.add(new TestCase(new StatisticAi(p1), new StatisticAi(p3), runs, "rolling-mutrate", map(size), deck(size)));
 		
 		for(TestCase test : tests)
 			test.run();
@@ -87,7 +87,7 @@ public class TestSuite {
 
 	private static void RollingVsGreedyAction(int runs, String size) {
 		AI p2 = new GreedyActionAI(new HeuristicEvaluator(false));
-		AI p1 = new RollingHorizonEvolution(100, .5, .5, 2000, new RolloutEvaluator(1, 1, new RandomHeuristicAI(0.3), new HeuristicEvaluator(false)));
+		AI p1 = new RollingHorizonEvolution(100, .5, .75, 2000, new RolloutEvaluator(1, 1, new RandomHeuristicAI(0.3), new HeuristicEvaluator(false)));
 		new TestCase(p1, p2, runs, "rolling-vs-greedy-action", map(size), deck(size)).run();
 		
 	}
