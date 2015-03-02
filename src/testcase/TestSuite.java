@@ -76,10 +76,10 @@ public class TestSuite {
 		
 		AI p2 = new RollingHorizonEvolution(100, .5, .66, 2000, new RolloutEvaluator(1, 1, new RandomHeuristicAI(0.3), new HeuristicEvaluator(false)));
 		AI p1 = new RollingHorizonEvolution(100, .5, .33, 2000, new RolloutEvaluator(1, 1, new RandomHeuristicAI(0.3), new HeuristicEvaluator(false)));
-		AI p3 = new RollingHorizonEvolution(100, .5, .5, 2000, new RolloutEvaluator(1, 1, new RandomHeuristicAI(0.3), new HeuristicEvaluator(false)));
+		AI p3 = new RollingHorizonEvolution(100, .5, .85, 2000, new RolloutEvaluator(1, 1, new RandomHeuristicAI(0.3), new HeuristicEvaluator(false)));
 		
-		tests.add(new TestCase(new StatisticAi(p1), new StatisticAi(p2), runs, "rolling-killrate", map(size), deck(size)));
-		tests.add(new TestCase(new StatisticAi(p1), new StatisticAi(p3), runs, "rolling-killrate", map(size), deck(size)));
+		//tests.add(new TestCase(new StatisticAi(p1), new StatisticAi(p2), runs, "rolling-killrate", map(size), deck(size)));
+		tests.add(new TestCase(new StatisticAi(p2), new StatisticAi(p3), runs, "rolling-killrate", map(size), deck(size)));
 		
 		for(TestCase test : tests)
 			test.run();
