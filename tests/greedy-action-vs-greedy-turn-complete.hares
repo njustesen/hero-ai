@@ -1,0 +1,19 @@
+########### TEST ###########
+~~~~~~~~~ Player 1 ~~~~~~~~~
+GreedyAction
+State evaluatior = Heuristic Evaluator
+~~~~~~~~~ Player 2 ~~~~~~~~~
+GreedyTurn
+State evaluatior = Heuristic Evaluator
+~~~~~~~~~~~ SETUP ~~~~~~~~~~
+Map: a
+Deck Size: STANDARD
+Randomness: false
+Runs: 100
+~~~~~~~~~~ RUNNING ~~~~~~~~~
+222112221212221022121212222122222222211222121222102212121222212222222222222222222222222122212210222
+~~~~~~~~~~ RESULTS ~~~~~~~~~
+P1: 75 (76.5%)
+P2: 21 (22.5%)
+Dr: 3
+############################
