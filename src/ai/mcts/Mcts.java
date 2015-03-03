@@ -207,7 +207,9 @@ public class Mcts implements AI {
 			List<MctsEdge> traversal) {
 
 		MctsEdge edge = null;
-		while (!clone.isTerminal)
+		while (!clone.isTerminal){
+			if (traversal.size() > 100)
+				return node;
 			if (!node.isFullyExpanded()) {
 				// EXPANSION
 				edge = expand(node, clone);
@@ -223,6 +225,7 @@ public class Mcts implements AI {
 				traversal.add(edge);
 				clone.update(edge.action);
 			}
+		}
 		return node;
 	}
 

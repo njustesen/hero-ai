@@ -54,12 +54,40 @@ public class TestSuite {
 			RollingKillRate(Integer.parseInt(args[1]), args[2]);
 		else if (args[0].equals("rolling-vs-greedyaction"))
 			RollingVsGreedyAction(Integer.parseInt(args[1]), args[2]);
+		else if (args[0].equals("rolling-vs-greedyaction-times"))
+			RollingVsGreedyActionTimes(Integer.parseInt(args[1]), args[2]);
+		else if (args[0].equals("rolling-vs-greedyturn-times"))
+			RollingVsGreedyTurnTimes(Integer.parseInt(args[1]), args[2]);
 		else if (args[0].equals("greedy-action-vs-random"))
 			GreedyActionVsRandom(Integer.parseInt(args[1]), args[2]);
-		if (args[0].equals("greedy-action-vs-greedy-turn"))
+		else if (args[0].equals("greedy-action-vs-greedy-turn"))
 			GreedyActionVsGreedyTurn(Integer.parseInt(args[1]), args[2]);
+		else if (args[0].equals("mcts-vs-greedy-turn"))
+			MctsVsGreedyTurn(Integer.parseInt(args[1]), args[2]);
+		else if (args[0].equals("mcts-vs-greedy-action"))
+			MctsVsGreedyAction(Integer.parseInt(args[1]), args[2]);
+		else if (args[0].equals("mcts-vs-greedy-action-long"))
+			MctsVsGreedyActionLong(Integer.parseInt(args[1]), args[2]);
 	}
 	
+	private static void MctsVsGreedyTurn(int runs, String size) {
+		AI p1 = new GreedyTurnAI(new HeuristicEvaluator(false));
+		Mcts mcts = new Mcts(6075, new RolloutEvaluator(1, 1, new RandomHeuristicAI(0.3), new MaterialBalanceEvaluator(true)));
+		new TestCase(new StatisticAi(p1), new StatisticAi(mcts), runs, "mcts-vs-greedyturn", map(size), deck(size));
+	}
+	
+	private static void MctsVsGreedyAction(int runs, String size) {
+		AI p1 = new GreedyActionAI(new HeuristicEvaluator(false));
+		Mcts mcts = new Mcts(6075, new RolloutEvaluator(1, 1, new RandomHeuristicAI(0.3), new MaterialBalanceEvaluator(true)));
+		new TestCase(new StatisticAi(p1), new StatisticAi(mcts), runs, "mcts-vs-greedyaction", map(size), deck(size));
+	}
+	
+	private static void MctsVsGreedyActionLong(int runs, String size) {
+		AI p1 = new GreedyActionAI(new HeuristicEvaluator(false));
+		Mcts mcts = new Mcts(60000, new RolloutEvaluator(1, 1, new RandomHeuristicAI(0.3), new MaterialBalanceEvaluator(true)));
+		new TestCase(new StatisticAi(p1), new StatisticAi(mcts), runs, "mcts-vs-greedyaction", map(size), deck(size));
+	}
+
 	private static void MctsLeafTests(int runs, String size) {
 		
 		RolloutEvaluator evaluator1 = new RolloutEvaluator(1, 1, new RandomHeuristicAI(0.3), new MaterialBalanceEvaluator(true));
@@ -109,6 +137,44 @@ public class TestSuite {
 		AI p2 = new GreedyActionAI(new HeuristicEvaluator(false));
 		AI p1 = new RollingHorizonEvolution(100, .5, .75, 2000, new RolloutEvaluator(1, 1, new RandomHeuristicAI(0.3), new HeuristicEvaluator(false)));
 		new TestCase(p1, p2, runs, "rolling-vs-greedy-action", map(size), deck(size)).run();
+		
+	}
+	
+	private static void RollingVsGreedyActionTimes(int runs, String size) {
+		List<TestCase> tests = new ArrayList<TestCase>();
+		
+		AI p2 = new GreedyActionAI(new HeuristicEvaluator(false));
+		AI rolling1 = new RollingHorizonEvolution(100, .5, .75, 100, new RolloutEvaluator(1, 1, new RandomHeuristicAI(0.3), new HeuristicEvaluator(false)));
+		AI rolling2 = new RollingHorizonEvolution(100, .5, .75, 500, new RolloutEvaluator(1, 1, new RandomHeuristicAI(0.3), new HeuristicEvaluator(false)));
+		AI rolling3 = new RollingHorizonEvolution(100, .5, .75, 1000, new RolloutEvaluator(1, 1, new RandomHeuristicAI(0.3), new HeuristicEvaluator(false)));
+		AI rolling4 = new RollingHorizonEvolution(100, .5, .75, 4000, new RolloutEvaluator(1, 1, new RandomHeuristicAI(0.3), new HeuristicEvaluator(false)));
+		
+		tests.add(new TestCase(rolling1, p2, runs, "rolling-vs-greedy-action", map(size), deck(size)));
+		tests.add(new TestCase(rolling2, p2, runs, "rolling-vs-greedy-action", map(size), deck(size)));
+		tests.add(new TestCase(rolling3, p2, runs, "rolling-vs-greedy-action", map(size), deck(size)));
+		tests.add(new TestCase(rolling4, p2, runs, "rolling-vs-greedy-action", map(size), deck(size)));
+		
+		for(TestCase test : tests)
+			test.run();
+		
+	}
+	
+	private static void RollingVsGreedyTurnTimes(int runs, String size) {
+		List<TestCase> tests = new ArrayList<TestCase>();
+		
+		AI p2 = new GreedyTurnAI(new HeuristicEvaluator(false));
+		AI rolling1 = new RollingHorizonEvolution(100, .5, .75, 100, new RolloutEvaluator(1, 1, new RandomHeuristicAI(0.3), new HeuristicEvaluator(false)));
+		AI rolling2 = new RollingHorizonEvolution(100, .5, .75, 500, new RolloutEvaluator(1, 1, new RandomHeuristicAI(0.3), new HeuristicEvaluator(false)));
+		AI rolling3 = new RollingHorizonEvolution(100, .5, .75, 1000, new RolloutEvaluator(1, 1, new RandomHeuristicAI(0.3), new HeuristicEvaluator(false)));
+		AI rolling4 = new RollingHorizonEvolution(100, .5, .75, 4000, new RolloutEvaluator(1, 1, new RandomHeuristicAI(0.3), new HeuristicEvaluator(false)));
+		
+		tests.add(new TestCase(rolling1, p2, runs, "rolling-vs-greedy-action", map(size), deck(size)));
+		tests.add(new TestCase(rolling2, p2, runs, "rolling-vs-greedy-action", map(size), deck(size)));
+		tests.add(new TestCase(rolling3, p2, runs, "rolling-vs-greedy-action", map(size), deck(size)));
+		tests.add(new TestCase(rolling4, p2, runs, "rolling-vs-greedy-action", map(size), deck(size)));
+		
+		for(TestCase test : tests)
+			test.run();
 		
 	}
 
