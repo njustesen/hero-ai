@@ -73,19 +73,19 @@ public class TestSuite {
 	private static void MctsVsGreedyTurn(int runs, String size) {
 		AI p1 = new GreedyTurnAI(new HeuristicEvaluator(false));
 		Mcts mcts = new Mcts(6075, new RolloutEvaluator(1, 1, new RandomHeuristicAI(0.3), new MaterialBalanceEvaluator(true)));
-		new TestCase(new StatisticAi(p1), new StatisticAi(mcts), runs, "mcts-vs-greedyturn", map(size), deck(size));
+		new TestCase(new StatisticAi(p1), new StatisticAi(mcts), runs, "mcts-vs-greedyturn", map(size), deck(size)).run();
 	}
 	
 	private static void MctsVsGreedyAction(int runs, String size) {
 		AI p1 = new GreedyActionAI(new HeuristicEvaluator(false));
 		Mcts mcts = new Mcts(6075, new RolloutEvaluator(1, 1, new RandomHeuristicAI(0.3), new MaterialBalanceEvaluator(true)));
-		new TestCase(new StatisticAi(p1), new StatisticAi(mcts), runs, "mcts-vs-greedyaction", map(size), deck(size));
+		new TestCase(new StatisticAi(p1), new StatisticAi(mcts), runs, "mcts-vs-greedyaction", map(size), deck(size)).run();
 	}
 	
 	private static void MctsVsGreedyActionLong(int runs, String size) {
 		AI p1 = new GreedyActionAI(new HeuristicEvaluator(false));
 		Mcts mcts = new Mcts(60000, new RolloutEvaluator(1, 1, new RandomHeuristicAI(0.3), new MaterialBalanceEvaluator(true)));
-		new TestCase(new StatisticAi(p1), new StatisticAi(mcts), runs, "mcts-vs-greedyaction", map(size), deck(size));
+		new TestCase(new StatisticAi(p1), new StatisticAi(mcts), runs, "mcts-vs-greedyaction-long", map(size), deck(size)).run();
 	}
 
 	private static void MctsLeafTests(int runs, String size) {
