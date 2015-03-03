@@ -153,7 +153,7 @@ public class RollingHorizonEvolution implements AI {
 
 	@Override
 	public String title() {
-		return "Nested Evolution";
+		return "Rolling Horizon Evolution";
 	}
 
 }

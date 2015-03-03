@@ -42,7 +42,7 @@ public class BestMoveSearch {
 	private void addMoves(GameState state, List<Action> move, int depth) {
 
 		// End turn
-		if (state.APLeft == 0) {
+		if (state.APLeft == 0 || move.size() > 5) {
 			moves++;
 			final double value = evaluator.eval(state, state.p1Turn);
 			if (value > bestValue) {
