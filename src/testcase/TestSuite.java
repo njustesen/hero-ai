@@ -13,12 +13,15 @@ import ai.GreedyTurnAI;
 import ai.RandomAI;
 import ai.RandomHeuristicAI;
 import ai.StatisticAi;
+import ai.evolution.LeafParallelizer;
 import ai.evolution.RollingHorizonEvolution;
+import ai.evolution.LeafParallelizer.LEAF_METHOD;
 import ai.heuristic.HeuristicEvaluator;
 import ai.heuristic.MaterialBalanceEvaluator;
 import ai.heuristic.RolloutEvaluator;
 import ai.heuristic.WinLoseEvaluator;
 import ai.mcts.Mcts;
+import ai.util.AiStatistics;
 import ai.util.RAND_METHOD;
 
 public class TestSuite {
@@ -43,7 +46,9 @@ public class TestSuite {
 			MctsCTests(Integer.parseInt(args[1]), args[2]);
 		else if (args[0].equals("mcts-cut"))
 			MctsCutTests(Integer.parseInt(args[1]), args[2]);
-		else if (args[0].equals("rolling-MutRate"))
+		else if (args[0].equals("mcts-leaf"))
+			MctsLeafTests(Integer.parseInt(args[1]), args[2]);
+		else if (args[0].equals("rolling-mutrate"))
 			RollingMutRate(Integer.parseInt(args[1]), args[2]);
 		else if (args[0].equals("rolling-killrate"))
 			RollingKillRate(Integer.parseInt(args[1]), args[2]);
@@ -55,6 +60,21 @@ public class TestSuite {
 			GreedyActionVsGreedyTurn(Integer.parseInt(args[1]), args[2]);
 	}
 	
+	private static void MctsLeafTests(int runs, String size) {
+		
+		RolloutEvaluator evaluator1 = new RolloutEvaluator(1, 1, new RandomHeuristicAI(0.3), new MaterialBalanceEvaluator(true));
+		RolloutEvaluator evaluator2 = new RolloutEvaluator(1, 10000, new RandomHeuristicAI(0.3), new WinLoseEvaluator());
+		
+		Mcts mcts1 = new Mcts(2075, evaluator1);
+		Mcts mcts2 = new Mcts(2075, new LeafParallelizer(evaluator1, LEAF_METHOD.AVERAGE));
+		
+		Mcts mcts3 = new Mcts(2075, evaluator2);
+		Mcts mcts4 = new Mcts(2075, new LeafParallelizer(evaluator2, LEAF_METHOD.AVERAGE));
+		
+		new TestCase(new StatisticAi(mcts1), new StatisticAi(mcts2), runs, "mcts-vs-mcts-leaf", map(size), deck(size)).run();
+		new TestCase(new StatisticAi(mcts3), new StatisticAi(mcts4), runs, "mcts-vs-mcts-leaf", map(size), deck(size)).run();
+	}
+
 	private static void RollingMutRate(int runs, String size) {
 		
 		List<TestCase> tests = new ArrayList<TestCase>();
