@@ -1,0 +1,51 @@
+########### TEST ###########
+~~~~~~~~~ Player 1 ~~~~~~~~~
+MCTS
+Time budget = 6075
+C = 0.7071067811865475
+Leaf evaluation = Rollout Evaluator [depth=1 rolls=1 policy=Random heuristic evaluator=Material Balance Evaluator]
+Cut = false
+Collapse = false
+~~~~~~~~~ Player 2 ~~~~~~~~~
+MCTS
+Time budget = 6075
+C = 0.7071067811865475
+Leaf evaluation = Rollout Evaluator [depth=1 rolls=1 policy=Random heuristic evaluator=Material Balance Evaluator]
+Cut = true
+Collapse = false
+~~~~~~~~~~~ SETUP ~~~~~~~~~~
+Map: a-small
+Deck Size: SMALL
+Randomness: false
+Runs: 100
+~~~~~~~~~~ RUNNING ~~~~~~~~~
+~~~~~~~~~~ RESULTS ~~~~~~~~~
+P1 = 44 = 44.0%
+P2 = 56 = 56.00000000000001%
+Dr = 0
+~~~~~~~~~~~ STATS ~~~~~~~~~~
+P1 MCTS
+depths (avg) = 7.405870915034076
+depths (std.dev) = 2.1140553780896063
+depths (min) = 0.0
+depths (max) = 23.0
+depths (datapoints) = 40950005
+Time spend (avg) = 1297.424593495935
+Time spend (std.dev) = 2820.962874450763
+Time spend (min) = 0.0
+Time spend (max) = 16400.0
+Time spend (datapoints) = 4920
+
+P2 MCTS
+depths (avg) = 9.877810832823299
+depths (std.dev) = 2.1453980386461953
+depths (min) = 1.0
+depths (max) = 32.0
+depths (datapoints) = 13793154
+Time spend (avg) = 1288.9536397711581
+Time spend (std.dev) = 3170.5861556733926
+Time spend (min) = 0.0
+Time spend (max) = 63064.0
+Time spend (datapoints) = 5069
+
+############################
