@@ -1,0 +1,23 @@
+########### TEST ###########
+~~~~~~~~~ Player 1 ~~~~~~~~~
+Nested Evolution
+Pop. size = 100
+Budget = 2000ms.
+Mut. rate = 0.5
+Kill rate = 0.75
+State evaluator = Rollout Evaluator [depth=1 rolls=1 policy=Random heuristic evaluator=Heuristic Evaluator]
+~~~~~~~~~ Player 2 ~~~~~~~~~
+GreedyAction
+State evaluatior = Heuristic Evaluator
+~~~~~~~~~~~ SETUP ~~~~~~~~~~
+Map: a
+Deck Size: STANDARD
+Randomness: false
+Runs: 100
+~~~~~~~~~~ RUNNING ~~~~~~~~~
+~~~~~~~~~~ RESULTS ~~~~~~~~~
+P1 = 87 = 90.0%
+P2 = 7 = 10.0%
+Dr = 6
+~~~~~~~~~~~ STATS ~~~~~~~~~~
+############################

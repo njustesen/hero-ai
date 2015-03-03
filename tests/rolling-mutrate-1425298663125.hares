@@ -1,0 +1,61 @@
+########### TEST ###########
+~~~~~~~~~ Player 1 ~~~~~~~~~
+Nested Evolution
+Pop. size = 100
+Budget = 2000ms.
+Mut. rate = 0.33
+Kill rate = 0.75
+State evaluator = Rollout Evaluator [depth=1 rolls=1 policy=Random heuristic evaluator=Heuristic Evaluator]
+~~~~~~~~~ Player 2 ~~~~~~~~~
+Nested Evolution
+Pop. size = 100
+Budget = 2000ms.
+Mut. rate = 0.66
+Kill rate = 0.75
+State evaluator = Rollout Evaluator [depth=1 rolls=1 policy=Random heuristic evaluator=Heuristic Evaluator]
+~~~~~~~~~~~ SETUP ~~~~~~~~~~
+Map: a-small
+Deck Size: SMALL
+Randomness: false
+Runs: 50
+~~~~~~~~~~ RUNNING ~~~~~~~~~
+~~~~~~~~~~ RESULTS ~~~~~~~~~
+P1 = 22 = 44.0%
+P2 = 28 = 56.00000000000001%
+Dr = 0
+~~~~~~~~~~~ STATS ~~~~~~~~~~
+P1 Nested Evolution
+Time spend (avg) = 338.21503922099
+Time spend (std.dev) = 749.8284445471799
+Time spend (min) = 0.0
+Time spend (max) = 2016.0
+Time spend (datapoints) = 3697
+Vists (selected genome) (avg) = 141.8704
+Vists (selected genome) (std.dev) = 975.3630548692279
+Vists (selected genome) (min) = 1.0
+Vists (selected genome) (max) = 15151.0
+Vists (selected genome) (datapoints) = 625
+Generations (avg) = 1174.8448
+Generations (std.dev) = 898.1924550523458
+Generations (min) = 299.0
+Generations (max) = 15151.0
+Generations (datapoints) = 625
+
+P2 Nested Evolution
+Time spend (avg) = 338.71649484536084
+Time spend (std.dev) = 750.3138885097396
+Time spend (min) = 0.0
+Time spend (max) = 2018.0
+Time spend (datapoints) = 3686
+Vists (selected genome) (avg) = 132.06570512820514
+Vists (selected genome) (std.dev) = 846.6812514259276
+Vists (selected genome) (min) = 1.0
+Vists (selected genome) (max) = 11938.0
+Vists (selected genome) (datapoints) = 624
+Generations (avg) = 1046.3733974358975
+Generations (std.dev) = 777.94850407815
+Generations (min) = 302.0
+Generations (max) = 11938.0
+Generations (datapoints) = 624
+
+############################
