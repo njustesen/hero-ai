@@ -59,6 +59,8 @@ public class TestSuite {
 			RollingVsGreedyActionTimes(Integer.parseInt(args[1]), args[2]);
 		else if (args[0].equals("rolling-vs-greedyturn-times"))
 			RollingVsGreedyTurnTimes(Integer.parseInt(args[1]), args[2]);
+		else if (args[0].equals("rolling-vs-greedyturn"))
+			RollingVsGreedyTurn(Integer.parseInt(args[1]), args[2]);
 		else if (args[0].equals("greedy-action-vs-random"))
 			GreedyActionVsRandom(Integer.parseInt(args[1]), args[2]);
 		else if (args[0].equals("greedy-action-vs-greedy-turn"))
@@ -213,6 +215,22 @@ public class TestSuite {
 
 	}
 
+	private static void RollingVsGreedyTurn(int runs, String size) {
+		final List<TestCase> tests = new ArrayList<TestCase>();
+
+		final AI p2 = new GreedyTurnAI(new HeuristicEvaluator(false));
+		final AI rolling4 = new RollingHorizonEvolution(100, .5, .75, 6000,
+				new RolloutEvaluator(1, 1, new RandomHeuristicAI(0.3),
+						new HeuristicEvaluator(false)));
+
+		new TestCase(rolling4, p2, runs, "rolling-vs-greedy-action",
+				map(size), deck(size)).run();
+
+		for (final TestCase test : tests)
+			test.run();
+
+	}
+	
 	private static void RollingVsGreedyTurnTimes(int runs, String size) {
 		final List<TestCase> tests = new ArrayList<TestCase>();
 
