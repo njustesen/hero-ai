@@ -8,7 +8,7 @@ import org.apache.commons.pool2.ObjectPool;
 import action.Action;
 import action.EndTurnAction;
 import action.SingletonAction;
-import ai.heuristic.HeuristicEvaluation;
+import ai.heuristic.HeuristicEvaluator;
 import ai.util.ActionPruner;
 import game.GameState;
 
@@ -75,7 +75,7 @@ public class TreeMoveSearch {
 		}
 	}
 
-	HeuristicEvaluation evalutator = new HeuristicEvaluation(false);
+	HeuristicEvaluator evalutator = new HeuristicEvaluator(false);
 	ActionPruner pruner = new ActionPruner();
 
 	public List<List<Action>> possibleMoves(GameState state,

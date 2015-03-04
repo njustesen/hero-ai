@@ -8,7 +8,7 @@ import game.GameState;
 import model.Card;
 import model.CardType;
 
-public class MaterialEvaluation implements IHeuristic {
+public class MaterialEvaluator implements IStateEvaluator {
 
 	private static int MAX_VAL = 0;
 	private static Map<Card, Double> values;
@@ -40,7 +40,7 @@ public class MaterialEvaluation implements IHeuristic {
 
 	private boolean winVal;
 	
-	public MaterialEvaluation(boolean winVal) {
+	public MaterialEvaluator(boolean winVal) {
 		this.winVal = winVal;
 	}
 
@@ -110,6 +110,11 @@ public class MaterialEvaluation implements IHeuristic {
 	@Override
 	public double normalize(double delta) {
 		return NormUtil.normalize(delta, -MAX_VAL, MAX_VAL, 1, 0);
+	}
+
+	@Override
+	public String title() {
+		return "Material Evaluator";
 	}
 
 }

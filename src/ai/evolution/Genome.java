@@ -3,19 +3,27 @@ package ai.evolution;
 import game.GameState;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Random;
 
 import action.Action;
 import action.EndTurnAction;
 import action.SingletonAction;
+import ai.util.ActionPruner;
+import ai.util.ComplexActionComparator;
 
 public abstract class Genome implements Comparable<Genome> {
+
+	static ActionPruner pruner = new ActionPruner();
+	static ComplexActionComparator comparator = new ComplexActionComparator();
 
 	public static Random random = new Random();
 	public List<Action> actions;
 	public double value;
 	public int visits;
+
 
 	public Genome() {
 		super();
@@ -30,16 +38,23 @@ public abstract class Genome implements Comparable<Genome> {
 		visits = 0;
 		value = 0;
 		final boolean p1Turn = state.p1Turn;
-		state.possibleActions(possible);
 		while (!state.isTerminal && p1Turn == state.p1Turn) {
 			state.possibleActions(possible);
+			pruner.prune(possible, state);
 			if (p1Turn == state.p1Turn && possible.isEmpty()) {
 				actions.add(SingletonAction.endTurnAction);
 				break;
 			}
-			final int idx = (int) (Math.random() * possible.size());
-			actions.add(possible.get(idx));
-			state.update(possible.get(idx));
+			/*
+			if (random.nextFloat() <= 0.2){
+				comparator.state = state;
+				Collections.sort(possible, comparator);
+				actions.add(possible.get(0));
+			} else {*/
+				final int idx = (int) (Math.random() * possible.size());
+				actions.add(possible.get(idx));
+				state.update(possible.get(idx));
+			//}
 		}
 
 	}
@@ -51,27 +66,35 @@ public abstract class Genome implements Comparable<Genome> {
 		final ArrayList<Action> possible = new ArrayList<Action>();
 		for (int i = 0; i < a.actions.size(); i++) {
 			state.possibleActions(possible);
+			pruner.prune(possible, state);
 			if (possible.isEmpty()){
 				actions.add(new EndTurnAction());
 				break;
 			}
-			if (random.nextBoolean() && hasMove(a, possible, i))
+			if (random.nextBoolean() && hasAction(a, possible, i))
 				actions.add(a.actions.get(i));
-			else if (hasMove(b, possible, i))
+			else if (hasAction(b, possible, i))
 				actions.add(b.actions.get(i));
-			else if (hasMove(a, possible, i))
+			else if (hasAction(a, possible, i))
 				actions.add(a.actions.get(i));
-			else
-				actions.add(possible.get(random.nextInt(possible.size())));
+			else {
+				if (hasAction(a, possible, i+1))
+					actions.add(a.actions.get(i+1));
+				else if (hasAction(b, possible, i+1))
+					actions.add(b.actions.get(i+1));
+				else
+					actions.add(possible.get(random.nextInt(possible.size())));
+			}
+				
 			state.update(actions.get(i));
 		}
 	}
 
-	private boolean hasMove(Genome g, ArrayList<Action> possible, int i) {
-		if (g.actions.size() <= i)
+	private boolean hasAction(Genome genome, ArrayList<Action> possible, int index) {
+		if (genome.actions.size() <= index)
 			return false;
 
-		if (possible.contains(g.actions.get(i)))
+		if (possible.contains(genome.actions.get(index)))
 			return true;
 
 		return false;
@@ -88,23 +111,33 @@ public abstract class Genome implements Comparable<Genome> {
 			else if (i > mutIdx) {
 				state.possibleActions(possible);
 				if (!possible.contains(action))
-					actions.set(i, newAction(state, action));
+					if (actions.size() < i+1 && possible.contains(actions.get(i+1)))
+						actions.set(i, actions.get(i+1));
+					else
+						actions.set(i, newAction(state, action));
 			}
 			state.update(actions.get(i));
 			i++;
 		}
-
+		
 	}
 
 	private Action newAction(GameState state, Action action) {
 
 		final List<Action> possibleActions = new ArrayList<Action>();
 		state.possibleActions(possibleActions);
+		pruner.prune(possibleActions, state);
 		possibleActions.remove(action);
 
 		if (possibleActions.isEmpty())
 			return SingletonAction.endTurnAction;
-
+		/*
+		if (random.nextFloat() <= 0.4){
+			comparator.state = state;
+			Collections.sort(possibleActions, comparator);
+			return possibleActions.get(0);
+		}
+		*/
 		final int idx = (int) (Math.random() * possibleActions.size());
 
 		return possibleActions.get(idx);
@@ -142,5 +175,7 @@ public abstract class Genome implements Comparable<Genome> {
 	public String toString() {
 		return "Genome [value=" + value + ", visits="+ visits + ", fitness=" + fitness() + "]";
 	}
+
+	
 	
 }

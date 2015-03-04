@@ -11,7 +11,7 @@ import java.util.Map;
 import action.Action;
 import action.SingletonAction;
 import ai.AI;
-import ai.heuristic.IHeuristic;
+import ai.heuristic.IStateEvaluator;
 import ai.util.ActionComparator;
 import ai.util.ActionPruner;
 import ai.util.ComplexActionComparator;
@@ -23,7 +23,7 @@ public class Mcts implements AI {
 
 	public double c;
 	public long budget;
-	public IHeuristic defaultPolicy;
+	public IStateEvaluator defaultPolicy;
 	private final ActionPruner pruner;
 	private final ActionComparator comparator;
 	private MctsNode root;
@@ -32,7 +32,7 @@ public class Mcts implements AI {
 	public boolean cut;
 	public boolean collapse;
 
-	public Mcts(long budget, IHeuristic defaultPolicy) {
+	public Mcts(long budget, IStateEvaluator defaultPolicy) {
 		this.budget = budget;
 		this.defaultPolicy = defaultPolicy;
 		pruner = new ActionPruner();
@@ -108,7 +108,7 @@ public class Mcts implements AI {
 			rolls++;
 		}
 
-		// System.out.println("Rolls=" + rolls + ", ends=" + ends);
+		System.out.println(budget + "\t" + rolls);
 
 		// List<Integer> depths = new ArrayList<Integer>();
 		// root.depth(0, depths, new HashSet<MctsNode>());
@@ -304,9 +304,24 @@ public class Mcts implements AI {
 	}
 
 	@Override
-	public Action init(GameState state, long ms) {
+	public void init(GameState state, long ms) {
 		// TODO Auto-generated method stub
-		return null;
+	}
+
+	@Override
+	public String header() {
+		String name = "MCTS\n";
+		name += "Time budget = " + budget;
+		name += "C = " + c;
+		name += "Leaf evaluation = " + defaultPolicy.title();
+		name += "Cut = " + cut;
+		name += "Collapse = " + collapse;
+		return name;
+	}
+
+	@Override
+	public String title() {
+		return "MCTS";
 	}
 
 }

@@ -2,9 +2,9 @@ package ai.heuristic;
 
 import game.GameState;
 
-public class WinLoseEvaluation implements IHeuristic {
+public class WinLoseEvaluator implements IStateEvaluator {
 	
-	public WinLoseEvaluation() {
+	public WinLoseEvaluator() {
 		super();
 	}
 	
@@ -35,6 +35,11 @@ public class WinLoseEvaluation implements IHeuristic {
 	@Override
 	public double normalize(double delta) {
 		return (delta+1)/2;
+	}
+
+	@Override
+	public String title() {
+		return "Win Lose Evaluator";
 	}
 
 }

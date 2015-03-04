@@ -8,13 +8,13 @@ import org.apache.commons.pool2.ObjectPool;
 import action.Action;
 import action.EndTurnAction;
 import action.SingletonAction;
-import ai.heuristic.HeuristicEvaluation;
+import ai.heuristic.HeuristicEvaluator;
 import ai.util.ActionPruner;
 import game.GameState;
 
 public class MoveSearch {
 
-	HeuristicEvaluation evalutator = new HeuristicEvaluation(false);
+	HeuristicEvaluator evalutator = new HeuristicEvaluator(false);
 	ActionPruner pruner = new ActionPruner();
 	List<List<Action>> moves;
 	ObjectPool<GameState> pool;

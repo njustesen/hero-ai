@@ -7,11 +7,23 @@ import java.io.IOException;
 import model.DECK_SIZE;
 import util.MapLoader;
 import ai.AI;
+import ai.GreedyActionAI;
 import ai.GreedyTurnAI;
+import ai.HeuristicAI;
+import ai.RandomAI;
 import ai.RandomHeuristicAI;
+<<<<<<< HEAD
 import ai.evolution.RollingHorizonEvolution;
 import ai.heuristic.HeuristicEvaluation;
 import ai.heuristic.RolloutEvaluation;
+=======
+import ai.evolution.NestedEvolution;
+import ai.evolution.RollingHorizonEvolution;
+import ai.heuristic.HeuristicEvaluator;
+import ai.heuristic.RolloutEvaluatior;
+import ai.heuristic.WinLoseEvaluator;
+import ai.mcts.Mcts;
+>>>>>>> 73522d6f138dec6529bb43873c7c188a4d492878
 import ai.util.ComplexActionComparator;
 
 public class AiComparison {
@@ -19,6 +31,7 @@ public class AiComparison {
 	private static final boolean GFX = true;
 
 	public static void main(String[] args) {
+<<<<<<< HEAD
 
 		final AI p1 = new GreedyTurnAI(new HeuristicEvaluation(false));
 		final AI p2 = new RollingHorizonEvolution(200, .5, .35, 1000,
@@ -40,9 +53,20 @@ public class AiComparison {
 		System.out.println("P1: greedyturn heuristic");
 		System.out
 				.println("P2: rolling horizon 200 .5 .35 1000 rollout  1 randomheuristic material balanc");
+=======
+		
+		AI p1 = new GreedyActionAI(new HeuristicEvaluator(false));
+		//AI p2 = new Mcts(225, new RolloutEvaluation(1, 10000, new RandomHeuristicAI(0.5, new ComplexActionComparator()), new WinLoseEvaluation()));
+		//AI p2 = new Mcts(675, new RolloutEvaluation(1, 10000, new RandomHeuristicAI(0.5, new ComplexActionComparator()), new WinLoseEvaluation()));
+		//AI p2 = new Mcts(2025, new RolloutEvaluation(1, 10000, new RandomHeuristicAI(0.5, new ComplexActionComparator()), new WinLoseEvaluation()));
+		AI p2 = new Mcts(6075, new RolloutEvaluatior(1, 10000, new RandomHeuristicAI(0.5), new WinLoseEvaluator()));
+		
+		System.out.println("P1: greedyturn heuristic");
+		System.out.println("P2: rollinghorizon 100 .5 .5 1000 rollout 1 1 randomheuristic heuristic");
+>>>>>>> 73522d6f138dec6529bb43873c7c188a4d492878
 		System.out.println("STANDARD");
-		compare(p1, p2, 32, "a", DECK_SIZE.STANDARD);
-
+		compare(p1, p2, 1, "a", DECK_SIZE.STANDARD);
+		
 	}
 
 	private static void compare(AI p1, AI p2, int games, String mapName,
