@@ -143,9 +143,14 @@ public class GameArguments {
 				if (args[a].toLowerCase().equals("mcts")) {
 					a++;
 					final int t = Integer.parseInt(args[a]);
+					/*
 					players[p] = new Mcts(t, new RolloutEvaluator(
 							1, 1, new RandomHeuristicAI(0.5),
 							new HeuristicEvaluator(true), false));
+					*/
+					players[p] = new Mcts(t, new RolloutEvaluator(
+							1, 10, new RandomHeuristicAI(0.2),
+							new MaterialBalanceEvaluator(true), false));
 				}
 				if (args[a].toLowerCase().equals("evolution"))
 					/*

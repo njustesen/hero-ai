@@ -26,15 +26,17 @@ import action.UnitAction;
 import action.UnitActionType;
 
 public class GameState {
-
+	
+	public static int TURN_LIMIT = 100;
+	public static final boolean RANDOMNESS = false;
+	public static int STARTING_AP = 3;
+	public static int ACTION_POINTS = 5;
+	
 	private static final int ASSAULT_BONUS = 300;
 	private static final double INFERNO_DAMAGE = 350;
-	private static final int STARTING_AP = 3;
 	private static final int REQUIRED_UNITS = 3;
 	private static final int POTION_REVIVE = 100;
 	private static final int POTION_HEAL = 1000;
-	private static final int TURN_LIMIT = 100;
-	public static final boolean RANDOMNESS = false;
 
 	public HaMap map;
 	public boolean p1Turn;
@@ -822,7 +824,7 @@ public class GameState {
 		if (!isTerminal) {
 			drawCards();
 			p1Turn = !p1Turn;
-			APLeft = 5;
+			APLeft = ACTION_POINTS;
 			turn++;
 		}
 	}

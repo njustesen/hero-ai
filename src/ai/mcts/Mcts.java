@@ -11,6 +11,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 
+import util.Statistics;
 import action.Action;
 import action.SingletonAction;
 import ai.AI;
@@ -29,15 +30,17 @@ public class Mcts implements AI {
 	public boolean cut;
 	public boolean collapse;
 	
-	public List<Double> depths;
+	public List<Double> avgDepths;
+	public List<Double> minDepths;
+	public List<Double> maxDepths;
 	public List<Double> rollouts;
 	
+	private List<Double> depths;
 	private final ActionPruner pruner;
 	private final ActionComparator comparator;
 	private MctsNode root;
 	private List<Action> move;
 	private int ends;
-	
 
 	public Mcts(long budget, IStateEvaluator defaultPolicy) {
 		this.budget = budget;
@@ -50,6 +53,9 @@ public class Mcts implements AI {
 		cut = false;
 		collapse = false;
 		depths = new ArrayList<Double>();
+		avgDepths = new ArrayList<Double>();
+		minDepths = new ArrayList<Double>();
+		maxDepths = new ArrayList<Double>();
 		rollouts = new ArrayList<Double>();
 	}
 
@@ -107,7 +113,13 @@ public class Mcts implements AI {
 			rolls++;
 		}
 
+		// TODO: Runs out of memory -- of course..
 		root.depth(0, depths, new HashSet<MctsNode>());
+		avgDepths.add(Statistics.avgDouble(depths));
+		minDepths.add(Collections.min(depths));
+		maxDepths.add(Collections.max(depths));
+		depths.clear();
+		
 		rollouts.add((double)rolls);
 		
 		//saveTree();
@@ -129,7 +141,7 @@ public class Mcts implements AI {
 		PrintWriter out = null; 
 		try { 
 			out = new PrintWriter("mcts.xml");
-			out.print(root.toXml(0, new HashSet<MctsNode>(), 6)); 
+			out.print(root.toXml(0, new HashSet<MctsNode>(), 12)); 
 		} catch (FileNotFoundException e) { 
 			e.printStackTrace(); 
 		} finally { 

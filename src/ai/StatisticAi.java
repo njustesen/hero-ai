@@ -41,7 +41,9 @@ public class StatisticAi implements AI {
 		}else if (aiClass.equals(GreedyTurnAI.class)){
 			aiStatistics.statsLists.put("moves", ((GreedyTurnAI)ai).moves);
 		}else if (aiClass.equals(Mcts.class)){
-			aiStatistics.statsLists.put("depths", ((Mcts)ai).depths);
+			aiStatistics.statsLists.put("Avg. depths", ((Mcts)ai).avgDepths);
+			aiStatistics.statsLists.put("Min. depths", ((Mcts)ai).minDepths);
+			aiStatistics.statsLists.put("Max. depths", ((Mcts)ai).maxDepths);
 		}
 		return action;
 	}

@@ -24,6 +24,8 @@ public class AiStatistics {
 		for(String key : stats.keySet())
 			str += key + " = "+ stats.get(key) + "\n";
 		for(String key : statsLists.keySet()){
+			if (statsLists.get(key) == null || statsLists.get(key).isEmpty())
+				continue;
 			str += key + " (avg) = "+ Statistics.avgDouble(statsLists.get(key)) + "\n";
 			str += key + " (std.dev) = "+ Statistics.stdDevDouble(statsLists.get(key)) + "\n";
 			str += key + " (min) = "+ Collections.min(statsLists.get(key)) + "\n";

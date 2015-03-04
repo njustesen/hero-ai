@@ -16,6 +16,7 @@ import ai.mcts.MctsNode;
 
 public class TestCase {
 
+	public static boolean GFX = false;
 	public AI p1;
 	public AI p2;
 	public int runs;
@@ -37,6 +38,8 @@ public class TestCase {
 		
 		String out = "";
 		out += "########### TEST ###########\n";
+		out += "AP: " + GameState.ACTION_POINTS + "\n";
+		out += "SAP: " + GameState.STARTING_AP + "\n";
 		out += "~~~~~~~~~ Player 1 ~~~~~~~~~\n";
 		out += p1.header();
 		out += "~~~~~~~~~ Player 2 ~~~~~~~~~\n";
@@ -57,7 +60,7 @@ public class TestCase {
 		GameState state;
 		state = new GameState(map);
 		final GameState clone = state.copy();
-		final Game game = new Game(state, new GameArguments(false, p1, p2, map.name, deckSize));
+		final Game game = new Game(state, new GameArguments(GFX, p1, p2, map.name, deckSize));
 		boolean p1Starting;
 		for (int i = 0; i < runs; i++) {
 			p1Starting = (i == 0 || i < runs / 2.0);

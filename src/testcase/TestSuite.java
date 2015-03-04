@@ -1,5 +1,7 @@
 package testcase;
 
+import game.GameState;
+
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -67,6 +69,19 @@ public class TestSuite {
 			MctsVsGreedyAction(Integer.parseInt(args[1]), args[2]);
 		else if (args[0].equals("mcts-vs-greedy-action-long"))
 			MctsVsGreedyActionLong(Integer.parseInt(args[1]), args[2]);
+		else if (args[0].equals("mcts-vs-greedy-turn-AP"))
+			MctsVsGreedyTurnAP(Integer.parseInt(args[1]), args[2], Integer.parseInt(args[3]));
+	}
+	
+	private static void MctsVsGreedyTurnAP(int runs, String size, int ap) {
+		AI p1 = new GreedyTurnAI(new HeuristicEvaluator(false));
+		Mcts mcts = new Mcts(3075, new RolloutEvaluator(1, 8, new RandomHeuristicAI(0.3), new MaterialBalanceEvaluator(true)));
+		//mcts.c = mcts.c / 2;
+		GameState.STARTING_AP = Math.max(1, ap - 1);
+		GameState.ACTION_POINTS = ap;
+		GameState.TURN_LIMIT = 500;
+		TestCase.GFX = true;
+		new TestCase(new StatisticAi(p1), new StatisticAi(mcts), runs, "mcts-vs-greedyturn-ap2", map(size), deck(size)).run();
 	}
 
 	private static void MctsVsGreedyTurn(int runs, String size) {
