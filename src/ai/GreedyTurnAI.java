@@ -7,7 +7,7 @@ import java.util.List;
 
 import action.Action;
 import action.SingletonAction;
-import ai.heuristic.IStateEvaluator;
+import ai.evaluation.IStateEvaluator;
 import ai.movesearch.BestMoveSearch;
 
 public class GreedyTurnAI implements AI {

@@ -10,8 +10,8 @@ import java.util.Map;
 import util.pool.ObjectPools;
 import action.Action;
 import action.SingletonAction;
-import ai.heuristic.HeuristicEvaluator;
-import ai.heuristic.IStateEvaluator;
+import ai.evaluation.HeuristicEvaluator;
+import ai.evaluation.IStateEvaluator;
 import ai.util.ActionPruner;
 
 public class BestMoveSearch {

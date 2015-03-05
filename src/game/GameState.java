@@ -122,7 +122,7 @@ public class GameState {
 		for (int x = 0; x < map.width; x++)
 			for (int y = 0; y < map.height; y++)
 				if (units[x][y] != null)
-					possibleActions(units[x][y], new Position(x, y), actions);
+					possibleActions(units[x][y], SingletonAction.positions[x][y], actions);
 
 		final List<Card> visited = new ArrayList<Card>();
 		for (final Card card : Card.values())
@@ -152,26 +152,24 @@ public class GameState {
 							if (card != Card.REVIVE_POTION
 									&& units[x][y].hp == 0)
 								continue;
-							actions.add(new DropAction(card, new Position(x, y)));
+							actions.add(new DropAction(card, SingletonAction.positions[x][y]));
 						}
 					}
 		} else if (card.type == CardType.SPELL)
 			for (int x = 0; x < map.width; x++)
 				for (int y = 0; y < map.height; y++)
-					actions.add(new DropAction(card, new Position(x, y)));
+					actions.add(new DropAction(card, SingletonAction.positions[x][y]));
 		else if (card.type == CardType.UNIT)
 			if (p1Turn) {
 				for (final Position pos : map.p1DeploySquares)
 					if (units[pos.x][pos.y] == null
 							|| units[pos.x][pos.y].hp == 0)
-						actions.add(new DropAction(card, new Position(pos.x,
-								pos.y)));
+						actions.add(new DropAction(card, SingletonAction.positions[pos.x][pos.y]));
 			} else
 				for (final Position pos : map.p2DeploySquares)
 					if (units[pos.x][pos.y] == null
 							|| units[pos.x][pos.y].hp == 0)
-						actions.add(new DropAction(card, new Position(pos.x,
-								pos.y)));
+						actions.add(new DropAction(card, SingletonAction.positions[pos.x][pos.y]));
 
 		if (!currentDeck().isEmpty())
 			actions.add(SingletonAction.swapActions.get(card));
@@ -197,11 +195,11 @@ public class GameState {
 			d = Math.max(map.width, map.height);
 		for (int x = d * (-1); x <= d; x++)
 			for (int y = d * (-1); y <= d; y++) {
-				final Position to = new Position(from.x + x, from.y + y);
-				if (to.x >= map.width || to.x < 0 || to.y >= map.height
-						|| to.y < 0)
+				if (from.x + x >= map.width || from.x + x < 0 || from.y + y >= map.height || from.y + y < 0)
 					continue;
-
+				
+				final Position to = SingletonAction.positions[from.x + x][from.y +y];
+				
 				if (to.equals(from))
 					continue;
 
@@ -444,10 +442,9 @@ public class GameState {
 
 		for (int x = -1; x <= 1; x++)
 			for (int y = -1; y <= 1; y++) {
-				final Position pos = new Position(to.x + x, to.y + y);
-				if (pos.x < 0 || pos.x >= map.width || pos.y < 0
-						|| pos.y >= map.height)
+				if (to.x + x < 0 || to.x + x >= map.width || to.y + y < 0 || to.y + y >= map.height)
 					continue;
+				final Position pos = SingletonAction.positions[to.x + x][to.y + y];
 				if (units[pos.x][pos.y] != null
 						&& units[pos.x][pos.y].p1Owner != p1Turn) {
 					if (units[pos.x][pos.y].hp == 0) {
@@ -571,11 +568,11 @@ public class GameState {
 				if (newDirX == 0 && newDirY == 0)
 					continue;
 
-				final Position newPos = new Position(from.x + newDirX, from.y
-						+ newDirY);
-				if (newPos.x < 0 || newPos.x >= map.width || newPos.y < 0
-						|| newPos.y >= map.height)
+				if (from.x + newDirX < 0 || from.x + newDirX >= map.width || from.y + newDirY < 0 || from.y + newDirY >= map.height)
 					continue;
+				
+				final Position newPos = SingletonAction.positions[from.x + newDirX][from.y + newDirY];
+				
 				if (units[newPos.x][newPos.y] != null
 						&& units[newPos.x][newPos.y].p1Owner != p1Turn
 						&& units[newPos.x][newPos.y].hp > 0) {
@@ -738,11 +735,11 @@ public class GameState {
 		if (attPos.y < defPos.y)
 			y = 1;
 
-		final Position newPos = new Position(defPos.x + x, defPos.y + y);
-		if (newPos.x >= map.width || newPos.x < 0 || newPos.y >= map.height
-				|| newPos.y < 0)
+		if (defPos.x + x >= map.width || defPos.x + x < 0 || defPos.y + y >= map.height || defPos.y + y < 0)
 			return;
 
+		final Position newPos = SingletonAction.positions[defPos.x + x][defPos.y + y];
+		
 		if (units[newPos.x][newPos.y] != null
 				&& units[newPos.x][newPos.y].hp > 0)
 			return;

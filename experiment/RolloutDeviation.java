@@ -10,9 +10,9 @@ import game.GameArguments;
 import game.GameState;
 import ai.AI;
 import ai.RandomAI;
-import ai.heuristic.HeuristicEvaluator;
-import ai.heuristic.RolloutEvaluator;
-import ai.heuristic.WinLoseEvaluator;
+import ai.evaluation.HeuristicEvaluator;
+import ai.evaluation.RolloutEvaluator;
+import ai.evaluation.WinLoseEvaluator;
 import ai.util.RAND_METHOD;
 
 

@@ -1,7 +1,7 @@
 import model.DECK_SIZE;
 import ai.AI;
 import ai.RandomAI;
-import ai.heuristic.HeuristicEvaluator;
+import ai.evaluation.HeuristicEvaluator;
 import ai.util.RAND_METHOD;
 import game.Game;
 import game.GameArguments;

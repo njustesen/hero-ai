@@ -12,7 +12,7 @@ import java.util.TreeSet;
 import model.HaMap;
 import action.Action;
 import ai.AI;
-import ai.heuristic.IStateEvaluator;
+import ai.evaluation.IStateEvaluator;
 
 public class NestedEvolution implements AI {
 

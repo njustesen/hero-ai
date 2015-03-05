@@ -6,7 +6,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import ai.heuristic.IStateEvaluator;
+import ai.evaluation.IStateEvaluator;
 
 public class TieredMaxGenome extends Genome {
 

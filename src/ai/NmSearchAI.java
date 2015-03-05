@@ -9,8 +9,8 @@ import java.util.NoSuchElementException;
 import model.Card;
 import action.Action;
 import action.EndTurnAction;
-import ai.heuristic.HeuristicEvaluator;
-import ai.heuristic.IStateEvaluator;
+import ai.evaluation.HeuristicEvaluator;
+import ai.evaluation.IStateEvaluator;
 import ai.util.AiStatistics;
 import ai.util.RAND_METHOD;
 

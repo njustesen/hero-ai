@@ -92,12 +92,11 @@ public class RandomHeuristicAI implements AI {
 							&& state.units[x][y].p1Owner == state.p1Turn
 							&& state.units[x][y].hp > 0
 							&& state.units[x][y].unitClass.card != Card.CRYSTAL)
-						positions.add(new Position(x, y));
+						positions.add(SingletonAction.positions[x][y]);
 			Collections.shuffle(positions);
 			for (final Position pos : positions) {
 				actions.clear();
-				state.possibleActions(state.units[pos.x][pos.y], pos,
-						actions);
+				state.possibleActions(state.units[pos.x][pos.y], pos, actions);
 				if (!actions.isEmpty()){
 					comparator.sort(actions, state);
 					return semiRandom(actions);

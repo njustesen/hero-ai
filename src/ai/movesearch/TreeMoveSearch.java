@@ -8,7 +8,7 @@ import org.apache.commons.pool2.ObjectPool;
 import action.Action;
 import action.EndTurnAction;
 import action.SingletonAction;
-import ai.heuristic.HeuristicEvaluator;
+import ai.evaluation.HeuristicEvaluator;
 import ai.util.ActionPruner;
 import game.GameState;
 

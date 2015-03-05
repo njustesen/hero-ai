@@ -7,7 +7,7 @@ import java.util.Collections;
 import java.util.List;
 
 import action.Action;
-import ai.heuristic.IStateEvaluator;
+import ai.evaluation.IStateEvaluator;
 import ai.util.ActionPruner;
 
 public class GreedyActionAI implements AI {

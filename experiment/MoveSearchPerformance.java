@@ -14,7 +14,7 @@ import action.Action;
 import ai.AI;
 import ai.GreedyActionAI;
 import ai.RandomAI;
-import ai.heuristic.HeuristicEvaluator;
+import ai.evaluation.HeuristicEvaluator;
 import ai.movesearch.TreeMoveSearch;
 import ai.util.RAND_METHOD;
 

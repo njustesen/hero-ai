@@ -1,0 +1,84 @@
+########### TEST ###########
+AP: 5
+SAP: 3
+TURN LIMT: 100
+~~~~~~~~~ Player 1 ~~~~~~~~~
+MCTS
+Time budget = 2075
+C = 0.7071067811865475
+Leaf evaluation = Rollout Evaluator [depth=10000 rolls=1 policy=Random heuristic evaluator=Win Lose Evaluator]
+Cut = false
+Collapse = false
+~~~~~~~~~ Player 2 ~~~~~~~~~
+MCTS
+Time budget = 2075
+C = 0.7071067811865475
+Leaf evaluation = Leaf parallelization: Rollout Evaluator [depth=10000 rolls=1 policy=Random heuristic evaluator=Win Lose Evaluator]
+Cut = false
+Collapse = false
+~~~~~~~~~~~ SETUP ~~~~~~~~~~
+Map: a
+Deck Size: STANDARD
+Randomness: false
+Runs: 1
+~~~~~~~~~~ RUNNING ~~~~~~~~~
+~~~~~~~~~~ RESULTS ~~~~~~~~~
+P1 = 1 = 100.0%
+P2 = 0 = 0.0%
+Dr = 0
+~~~~~~~~~~~ STATS ~~~~~~~~~~
+P1 MCTS
+Time spend (avg) = 567.4011627906976
+Time spend (std.dev) = 939.209759739188
+Time spend (min) = 0.0
+Time spend (max) = 2212.0
+Time spend (datapoints) = 172
+Iterations (avg) = 5580.45652173913
+Iterations (std.dev) = 17895.29885279143
+Iterations (min) = 1059.0
+Iterations (max) = 124459.0
+Iterations (datapoints) = 46
+Max. depths (avg) = 3.239130434782609
+Max. depths (std.dev) = 0.6654446897832162
+Max. depths (min) = 2.0
+Max. depths (max) = 6.0
+Max. depths (datapoints) = 46
+Avg. depths (avg) = 2.563001046299903
+Avg. depths (std.dev) = 0.5298649549833676
+Avg. depths (min) = 2.0
+Avg. depths (max) = 4.790637191157347
+Avg. depths (datapoints) = 46
+Min. depths (avg) = 2.260869565217391
+Min. depths (std.dev) = 0.5289358721998452
+Min. depths (min) = 1.0
+Min. depths (max) = 4.0
+Min. depths (datapoints) = 46
+
+P2 MCTS
+Time spend (avg) = 671.2357142857143
+Time spend (std.dev) = 975.2989256831854
+Time spend (min) = 0.0
+Time spend (max) = 2120.0
+Time spend (datapoints) = 140
+Iterations (avg) = 777.5333333333333
+Iterations (std.dev) = 742.8154728239489
+Iterations (min) = 251.0
+Iterations (max) = 3613.0
+Iterations (datapoints) = 45
+Max. depths (avg) = 2.1777777777777776
+Max. depths (std.dev) = 0.38232556742411694
+Max. depths (min) = 2.0
+Max. depths (max) = 3.0
+Max. depths (datapoints) = 45
+Avg. depths (avg) = 2.103505922613773
+Avg. depths (std.dev) = 0.2895252327955311
+Avg. depths (min) = 2.0
+Avg. depths (max) = 3.0
+Avg. depths (datapoints) = 45
+Min. depths (avg) = 2.066666666666667
+Min. depths (std.dev) = 0.24944382578492902
+Min. depths (min) = 2.0
+Min. depths (max) = 3.0
+Min. depths (datapoints) = 45
+
+############################

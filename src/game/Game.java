@@ -61,6 +61,9 @@ public class Game {
 			}
 		}
 		
+		if (SingletonAction.positions == null)
+			SingletonAction.init(state.map);
+		
 		if (gameArgs.gfx)
 			this.ui = new UI(this.state, (this.player1 == null),
 					(this.player2 == null));

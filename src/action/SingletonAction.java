@@ -4,6 +4,8 @@ import java.util.HashMap;
 import java.util.Map;
 
 import model.Card;
+import model.HaMap;
+import model.Position;
 
 public class SingletonAction {
 
@@ -24,6 +26,18 @@ public class SingletonAction {
 		swapActions.put(Card.SHINING_HELM,
 				new SwapCardAction(Card.SHINING_HELM));
 		swapActions.put(Card.WIZARD, new SwapCardAction(Card.WIZARD));
+	}
+	
+	public static Position[][] positions;
+	
+	public static void init(HaMap map){
+		
+		positions = new Position[map.width + 10][map.height + 10];
+		
+		for(int x = 0; x < map.width; x++)
+			for(int y = 0; y < map.height; y++)
+				positions[x][y] = new Position(x,y);
+		
 	}
 
 }

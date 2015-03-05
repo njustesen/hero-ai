@@ -15,7 +15,7 @@ import util.Statistics;
 import action.Action;
 import action.SingletonAction;
 import ai.AI;
-import ai.heuristic.IStateEvaluator;
+import ai.evaluation.IStateEvaluator;
 import ai.util.ActionComparator;
 import ai.util.ActionPruner;
 import ai.util.ComplexActionComparator;

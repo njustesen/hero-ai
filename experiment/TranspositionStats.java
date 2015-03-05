@@ -8,7 +8,7 @@ import model.DECK_SIZE;
 import model.HaMap;
 import ai.AI;
 import ai.GreedyTurnAI;
-import ai.heuristic.HeuristicEvaluator;
+import ai.evaluation.HeuristicEvaluator;
 
 public class TranspositionStats {
 

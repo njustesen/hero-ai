@@ -10,7 +10,7 @@ import java.util.Random;
 import model.HaMap;
 import action.Action;
 import ai.AI;
-import ai.heuristic.IStateEvaluator;
+import ai.evaluation.IStateEvaluator;
 
 public class RollingHorizonEvolution implements AI {
 
