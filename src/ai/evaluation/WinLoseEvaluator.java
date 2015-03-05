@@ -42,4 +42,9 @@ public class WinLoseEvaluator implements IStateEvaluator {
 		return "Win Lose Evaluator";
 	}
 
+	@Override
+	public IStateEvaluator copy() {
+		return new WinLoseEvaluator();
+	}
+
 }

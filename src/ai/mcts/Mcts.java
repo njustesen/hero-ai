@@ -347,4 +347,9 @@ public class Mcts implements AI {
 		return "MCTS";
 	}
 
+	@Override
+	public AI copy() {
+		return new Mcts(budget, defaultPolicy.copy());
+	}
+
 }

@@ -139,4 +139,9 @@ public class RandomHeuristicAI implements AI {
 		return "Random heuristic";
 	}
 
+	@Override
+	public AI copy() {
+		return new RandomHeuristicAI(prob);
+	}
+
 }

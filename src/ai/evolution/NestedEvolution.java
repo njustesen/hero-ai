@@ -180,4 +180,9 @@ public class NestedEvolution implements AI {
 		return "Nested Evolution";
 	}
 
+	@Override
+	public AI copy() {
+		return new NestedEvolution(popSize, nestedPopSize, mutRate, killRate, generations, evaluator.copy());
+	}
+
 }

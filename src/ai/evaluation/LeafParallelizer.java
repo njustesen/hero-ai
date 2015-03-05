@@ -49,7 +49,6 @@ public class LeafParallelizer implements IStateEvaluator {
 	public LeafParallelizer(RolloutEvaluator evaluator, LEAF_METHOD method) {
 		super();
 		this.evaluator = evaluator;
-		this.executor = Executors.newSingleThreadExecutor();
 		this.method = method;
 		this.threads = new ArrayList<RolloutThread>();
 		this.futures = new ArrayList<Future<Double>>();
@@ -60,8 +59,9 @@ public class LeafParallelizer implements IStateEvaluator {
 		
 		int processors = Runtime.getRuntime().availableProcessors();
 		System.out.println("Processors: " + processors);
+		this.executor = Executors.newFixedThreadPool(processors);
 		for(int i=0; i < processors; i++) 
-			threads.add(new RolloutThread(evaluator, new GameState(null), false));
+			threads.add(new RolloutThread(((RolloutEvaluator)evaluator.copy()), new GameState(null), false));
 		
 	}
 
@@ -78,6 +78,7 @@ public class LeafParallelizer implements IStateEvaluator {
 		sum = 0;
 		val = 0;
 		try {
+			futures.clear();
 			futures = executor.invokeAll(threads);
 			for(Future<Double> f : futures){
 				val = f.get();
@@ -107,6 +108,11 @@ public class LeafParallelizer implements IStateEvaluator {
 	@Override
 	public String title() {
 		return "Leaf parallelization: " + evaluator.title();
+	}
+
+	@Override
+	public IStateEvaluator copy() {
+		return new LeafParallelizer(((RolloutEvaluator)evaluator.copy()), method);
 	}
 	
 	

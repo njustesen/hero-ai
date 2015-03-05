@@ -135,4 +135,11 @@ public class CompressedNeatAI extends NeatAI{
 		return "Compressed NEAT AI";
 	}
 
+	@Override
+	public AI copy() {
+		//return new CompressedNeatAI(net);
+		// TODO: clone net
+		return null;
+	}
+
 }

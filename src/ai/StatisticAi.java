@@ -65,5 +65,10 @@ public class StatisticAi implements AI {
 	public String toString() {
 		return aiStatistics.toString();
 	}
+
+	@Override
+	public AI copy() {
+		return new StatisticAi(ai.copy());
+	}
 	
 }

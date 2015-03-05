@@ -9,6 +9,8 @@ public interface AI {
 	
 	public abstract void init(GameState state, long ms);
 	
+	public abstract AI copy();
+	
 	public abstract String header();
 	
 	public abstract String title();

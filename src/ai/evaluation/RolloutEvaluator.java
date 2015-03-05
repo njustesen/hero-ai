@@ -78,6 +78,11 @@ public class RolloutEvaluator implements IStateEvaluator {
 			state.update(policy.act(state, -1));
 		return evaluator.eval(state, p1);
 	}
+	
+	@Override
+	public IStateEvaluator copy(){
+		return new RolloutEvaluator(rolls, depth, policy.copy(), evaluator.copy());
+	}
 
 	@Override
 	public double normalize(double delta) {

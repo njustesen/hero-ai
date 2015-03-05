@@ -64,5 +64,10 @@ public class GreedyTurnAI implements AI {
 	public String title() {
 		return "GreedyTurn";
 	}
+
+	@Override
+	public AI copy() {
+		return new GreedyTurnAI(evaluator.copy());
+	}
 	
 }

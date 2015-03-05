@@ -149,4 +149,9 @@ public class RandomAI implements AI {
 		return "Random";
 	}
 
+	@Override
+	public AI copy() {
+		return new RandomAI(randMethod);
+	}
+
 }

@@ -117,4 +117,9 @@ public class MaterialEvaluator implements IStateEvaluator {
 		return "Material Evaluator";
 	}
 
+	@Override
+	public IStateEvaluator copy() {
+		return new MaterialEvaluator(winVal);
+	}
+
 }

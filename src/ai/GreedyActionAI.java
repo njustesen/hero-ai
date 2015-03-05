@@ -74,4 +74,9 @@ public class GreedyActionAI implements AI {
 		return "GreedyAction";
 	}
 
+	@Override
+	public AI copy() {
+		return new GreedyActionAI(evaluator.copy());
+	}
+
 }

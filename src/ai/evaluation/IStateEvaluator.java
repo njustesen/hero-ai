@@ -9,5 +9,7 @@ public interface IStateEvaluator {
 	public double normalize(double delta);
 
 	public String title();
+
+	public IStateEvaluator copy();
 	
 }

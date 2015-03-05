@@ -104,4 +104,9 @@ public class HeuristicEvaluator implements IStateEvaluator {
 	public String title() {
 		return "Heuristic Evaluator";
 	}
+
+	@Override
+	public IStateEvaluator copy() {
+		return new HeuristicEvaluator(winVal);
+	}
 }

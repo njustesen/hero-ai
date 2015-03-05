@@ -162,4 +162,9 @@ public class NmSearchAI implements AI {
 		return "NM-Search";
 	}
 
+	@Override
+	public AI copy() {
+		return new NmSearchAI(p1, n, m, evaluator.copy());
+	}
+
 }

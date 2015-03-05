@@ -130,4 +130,11 @@ public class NaiveNeatAI extends NeatAI{
 		return "Naive AI";
 	}
 
+	@Override
+	public AI copy() {
+		//return new NaiveNeatAI(net.);
+		// TODO: how to copy network?
+		return null;
+	}
+
 }

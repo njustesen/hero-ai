@@ -63,4 +63,9 @@ public class HeuristicAI implements AI {
 		return "Heuristic";
 	}
 
+	@Override
+	public AI copy() {
+		return new HeuristicAI();
+	}
+
 }

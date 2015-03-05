@@ -141,6 +141,11 @@ public class MaterialBalanceEvaluator implements IStateEvaluator {
 	public String title() {
 		return "Material Balance Evaluator";
 	}
+
+	@Override
+	public IStateEvaluator copy() {
+		return new MaterialBalanceEvaluator(winVal);
+	}
 	
 	
 

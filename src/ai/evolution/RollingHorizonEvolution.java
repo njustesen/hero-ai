@@ -151,9 +151,15 @@ public class RollingHorizonEvolution implements AI {
 		return name;
 	}
 
+
 	@Override
 	public String title() {
 		return "Rolling Horizon Evolution";
+	}
+
+	@Override
+	public AI copy() {
+		return new RollingHorizonEvolution(popSize, mutRate, killRate, budget, evaluator.copy());
 	}
 
 }
