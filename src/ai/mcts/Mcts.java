@@ -29,13 +29,13 @@ public class Mcts implements AI {
 	public IStateEvaluator defaultPolicy;
 	public boolean cut;
 	public boolean collapse;
-	
+
 	public List<Double> avgDepths;
 	public List<Double> minDepths;
 	public List<Double> maxDepths;
 	public List<Double> rollouts;
-	
-	private List<Double> depths;
+
+	private final List<Double> depths;
 	private final ActionPruner pruner;
 	private final ActionComparator comparator;
 	private MctsNode root;
@@ -111,9 +111,9 @@ public class Mcts implements AI {
 
 			time = (start + budget) - System.currentTimeMillis();
 			rolls++;
-			
-			//saveTree();
-			
+
+			// saveTree();
+
 		}
 
 		// TODO: Runs out of memory -- of course..
@@ -122,11 +122,11 @@ public class Mcts implements AI {
 		minDepths.add(Collections.min(depths));
 		maxDepths.add(Collections.max(depths));
 		depths.clear();
-		
-		rollouts.add((double)rolls);
-		
-		saveTree();
-		
+
+		rollouts.add((double) rolls);
+
+		// saveTree();
+
 		move = bestMove(state, rolls);
 		final Action action = move.get(0);
 		move.remove(0);
@@ -141,15 +141,15 @@ public class Mcts implements AI {
 	}
 
 	private void saveTree() {
-		PrintWriter out = null; 
-		try { 
+		PrintWriter out = null;
+		try {
 			out = new PrintWriter("mcts.xml");
-			out.print(root.toXml(0, new HashSet<MctsNode>(), 12)); 
-		} catch (FileNotFoundException e) { 
-			e.printStackTrace(); 
-		} finally { 
-			if (out!= null) 
-				out.close(); 
+			out.print(root.toXml(0, new HashSet<MctsNode>(), 12));
+		} catch (final FileNotFoundException e) {
+			e.printStackTrace();
+		} finally {
+			if (out != null)
+				out.close();
 		}
 	}
 
@@ -183,15 +183,15 @@ public class Mcts implements AI {
 
 		return bestEdge;
 	}
-	
+
 	/**
 	 * 
 	 * @param edge
-	 * takes the role as child node
+	 *            takes the role as child node
 	 * @param node
-	 * takes the role as parent
+	 *            takes the role as parent
 	 * @param urgent
-	 * whether to pick most urgent node or the best
+	 *            whether to pick most urgent node or the best
 	 * @return
 	 */
 	private double uct(MctsEdge edge, MctsNode node, boolean urgent) {
@@ -232,7 +232,7 @@ public class Mcts implements AI {
 			List<MctsEdge> traversal) {
 
 		MctsEdge edge = null;
-		while (!clone.isTerminal){
+		while (!clone.isTerminal) {
 			if (traversal.size() > 100)
 				return node;
 			if (!node.isFullyExpanded()) {
@@ -283,7 +283,8 @@ public class Mcts implements AI {
 		return edge;
 	}
 
-	private void backupNegaMax(List<MctsEdge> traversal, double delta, boolean p1) {
+	private void backupNegaMax(List<MctsEdge> traversal, double delta,
+			boolean p1) {
 		for (final MctsEdge edge : traversal) {
 			edge.visits++;
 			if (edge.to != null)
@@ -291,9 +292,9 @@ public class Mcts implements AI {
 			if (edge.from != null && edge.from.isRoot())
 				edge.from.visits++;
 			if (edge.p1 == p1)
-				edge.value += delta;		// MAX
+				edge.value += delta; // MAX
 			else
-				edge.value += (1 - delta);	// MIN
+				edge.value += (1 - delta); // MIN
 		}
 	}
 
