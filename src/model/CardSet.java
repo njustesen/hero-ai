@@ -90,13 +90,24 @@ public class CardSet {
 				units += cards[card.ordinal()];
 		return units;
 	}
+	
+
+	public boolean has(Card card) {
+		if (cards.length > card.ordinal())
+			return cards[card.ordinal()] > 0 ? true : false;
+		return false;
+	}
 
 	public boolean contains(Card card) {
-		return cards[card.ordinal()] > 0;
+		if (cards.length > card.ordinal())
+			return cards[card.ordinal()] > 0;
+		return false;
 	}
 
 	public int count(Card card) {
-		return cards[card.ordinal()];
+		if (cards.length > card.ordinal())
+			return cards[card.ordinal()];
+		return 0;
 	}
 
 	@Override
@@ -126,5 +137,6 @@ public class CardSet {
 	public String toString() {
 		return Arrays.toString(cards).replaceAll(" ", "");
 	}
+
 
 }

@@ -51,9 +51,16 @@ public class Game {
 		this.player1 = gameArgs.players[0];
 		this.player2 = gameArgs.players[1];
 		history = new Stack<GameState>();
-		if (state != null)
-			this.state = state;
+		this.state = state;
 
+		if (state.map == null){
+			try {
+				state.map = MapLoader.get(gameArgs.mapName);
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
+		
 		if (gameArgs.gfx)
 			this.ui = new UI(this.state, (this.player1 == null),
 					(this.player2 == null));

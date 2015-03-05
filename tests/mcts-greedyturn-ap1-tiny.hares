@@ -1,0 +1,61 @@
+########### TEST ###########
+AP: 1
+SAP: 1
+~~~~~~~~~ Player 1 ~~~~~~~~~
+GreedyTurn
+State evaluatior = Heuristic Evaluator
+~~~~~~~~~ Player 2 ~~~~~~~~~
+MCTS
+Time budget = 3075
+C = 0.7071067811865475
+Leaf evaluation = Rollout Evaluator [depth=1 rolls=1 policy=Random heuristic evaluator=Heuristic Evaluator]
+Cut = false
+Collapse = false
+~~~~~~~~~~~ SETUP ~~~~~~~~~~
+Map: a-tiny
+Deck Size: TINY
+Randomness: false
+Runs: 10
+~~~~~~~~~~ RUNNING ~~~~~~~~~
+BasePath = /Users/noju/Documents/hero-ai/
+2020201011
+~~~~~~~~~~ RESULTS ~~~~~~~~~
+P1 = 0 = 20.0%
+P2 = 6 = 80.0%
+Dr = 4
+~~~~~~~~~~~ STATS ~~~~~~~~~~
+P1 GreedyTurn
+Time spend (avg) = 0.10751445086705202
+Time spend (std.dev) = 0.3314029663291379
+Time spend (min) = 0.0
+Time spend (max) = 4.0
+Time spend (datapoints) = 865
+moves (avg) = 17.566820276497698
+moves (std.dev) = 6.621526515212534
+moves (min) = 0.0
+moves (max) = 35.0
+moves (datapoints) = 434
+
+P2 MCTS
+Time spend (avg) = 2879.113557358053
+Time spend (std.dev) = 3010.754724748782
+Time spend (min) = 0.0
+Time spend (max) = 10126.0
+Time spend (datapoints) = 863
+Max. depths (avg) = 8.340277777777779
+Max. depths (std.dev) = 4.9518466361575415
+Max. depths (min) = 1.0
+Max. depths (max) = 36.0
+Max. depths (datapoints) = 432
+Avg. depths (avg) = 5.943306261337908
+Avg. depths (std.dev) = 3.048435558452589
+Avg. depths (min) = 1.0
+Avg. depths (max) = 23.433392051084443
+Avg. depths (datapoints) = 432
+Min. depths (avg) = 3.5856481481481484
+Min. depths (std.dev) = 0.8536834927711211
+Min. depths (min) = 1.0
+Min. depths (max) = 6.0
+Min. depths (datapoints) = 432
+
+############################

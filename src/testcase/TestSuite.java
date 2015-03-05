@@ -77,11 +77,15 @@ public class TestSuite {
 	
 	private static void MctsVsGreedyTurnAP(int runs, String size, int ap) {
 		AI p1 = new GreedyTurnAI(new HeuristicEvaluator(false));
-		Mcts mcts = new Mcts(3075, new RolloutEvaluator(1, 8, new RandomHeuristicAI(0.3), new MaterialBalanceEvaluator(true)));
+		Mcts mcts = new Mcts(3075, new RolloutEvaluator(1, 1, new RandomHeuristicAI(0.3), new HeuristicEvaluator(true)));
 		//mcts.c = mcts.c / 2;
 		GameState.STARTING_AP = Math.max(1, ap - 1);
 		GameState.ACTION_POINTS = ap;
-		GameState.TURN_LIMIT = 500;
+		GameState.TURN_LIMIT = 100;
+		if (size.equals("small"))
+			GameState.TURN_LIMIT = 400;
+		if (size.equals("standard"))
+			GameState.TURN_LIMIT = 600;
 		TestCase.GFX = true;
 		new TestCase(new StatisticAi(p1), new StatisticAi(mcts), runs, "mcts-vs-greedyturn-ap2", map(size), deck(size)).run();
 	}

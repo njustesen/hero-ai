@@ -40,6 +40,7 @@ public class TestCase {
 		out += "########### TEST ###########\n";
 		out += "AP: " + GameState.ACTION_POINTS + "\n";
 		out += "SAP: " + GameState.STARTING_AP + "\n";
+		out += "TURN LIMT: " + GameState.TURN_LIMIT + "\n";
 		out += "~~~~~~~~~ Player 1 ~~~~~~~~~\n";
 		out += p1.header();
 		out += "~~~~~~~~~ Player 2 ~~~~~~~~~\n";

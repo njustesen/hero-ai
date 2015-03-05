@@ -111,6 +111,9 @@ public class Mcts implements AI {
 
 			time = (start + budget) - System.currentTimeMillis();
 			rolls++;
+			
+			//saveTree();
+			
 		}
 
 		// TODO: Runs out of memory -- of course..
@@ -122,7 +125,7 @@ public class Mcts implements AI {
 		
 		rollouts.add((double)rolls);
 		
-		//saveTree();
+		saveTree();
 		
 		move = bestMove(state, rolls);
 		final Action action = move.get(0);
@@ -180,7 +183,17 @@ public class Mcts implements AI {
 
 		return bestEdge;
 	}
-
+	
+	/**
+	 * 
+	 * @param edge
+	 * takes the role as child node
+	 * @param node
+	 * takes the role as parent
+	 * @param urgent
+	 * whether to pick most urgent node or the best
+	 * @return
+	 */
 	private double uct(MctsEdge edge, MctsNode node, boolean urgent) {
 
 		if (urgent)
@@ -236,6 +249,8 @@ public class Mcts implements AI {
 				node = edge.to;
 				traversal.add(edge);
 				clone.update(edge.action);
+				if (clone.APLeft == 0)
+					clone.update(SingletonAction.endTurnAction);
 			}
 		}
 		return node;
@@ -246,7 +261,9 @@ public class Mcts implements AI {
 		node.out.add(edge);
 		final int ap = clone.APLeft;
 		clone.update(edge.action);
-		if (ap == clone.APLeft) {
+		if (clone.APLeft == 0)
+			clone.update(SingletonAction.endTurnAction);
+		else if (ap == clone.APLeft) {
 			// System.out.print("!");
 			node.out.remove(edge);
 			return null;
@@ -296,7 +313,7 @@ public class Mcts implements AI {
 			move.add(SingletonAction.endTurnAction);
 			return move;
 		}
-		while (edge.action != SingletonAction.endTurnAction) {
+		while (edge.p1 == state.p1Turn) {
 			move.add(edge.action);
 			if (edge.isLeaf())
 				break;
@@ -304,7 +321,8 @@ public class Mcts implements AI {
 			if (edge == null || edge.isLeaf())
 				break;
 		}
-		move.add(SingletonAction.endTurnAction);
+		if (!move.contains(SingletonAction.endTurnAction))
+			move.add(SingletonAction.endTurnAction);
 		return move;
 	}
 

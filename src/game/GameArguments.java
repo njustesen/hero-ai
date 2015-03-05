@@ -27,6 +27,7 @@ public class GameArguments {
 	private int p;
 	private boolean m = false;
 	private boolean d = false;
+	private boolean aa = false;
 	
 	public GameArguments(String[] args) {
 		players = new AI[2];
@@ -36,7 +37,7 @@ public class GameArguments {
 		gfx = true;
 		setup(args);
 	}
-
+	
 	public GameArguments(boolean gfx, AI p1, AI p2, String mapName, DECK_SIZE deckSize) {
 		players = new AI[2];
 		players[0] = p1;
@@ -48,10 +49,32 @@ public class GameArguments {
 		this.deckSize = deckSize;
 	}
 
+	public GameArguments(boolean gfx, AI p1, AI p2, String mapName, DECK_SIZE deckSize, int ap) {
+		players = new AI[2];
+		players[0] = p1;
+		players[1] = p2;
+		this.mapName = mapName;
+		p = -1;
+		this.gfx = gfx;
+		sleep = 40;
+		this.deckSize = deckSize;
+		setAP(ap);
+	}
+
+	private void setAP(int ap) {
+		GameState.STARTING_AP = Math.max(1, ap - 1);
+		GameState.ACTION_POINTS = ap;
+		GameState.TURN_LIMIT = 100 * Math.max(1, (6-ap));
+	}
+
 	private void setup(String[] args) {
 		for (int a = 0; a < args.length; a++) {
 			if (args[a].toLowerCase().equals("map")) {
 				m = true;
+				continue;
+			}
+			if (args[a].toLowerCase().equals("ap")) {
+				aa = true;
 				continue;
 			}
 			if (args[a].toLowerCase().equals("deck")) {
@@ -68,6 +91,11 @@ public class GameArguments {
 			if (m){
 				mapName = args[a];
 				m = false;
+				continue;
+			}
+			if (aa){
+				setAP(Integer.parseInt(args[a]));
+				aa = false;
 				continue;
 			}
 			if (d){

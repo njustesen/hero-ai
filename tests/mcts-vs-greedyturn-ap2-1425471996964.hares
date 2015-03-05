@@ -1,0 +1,59 @@
+########### TEST ###########
+AP: 1
+SAP: 1
+~~~~~~~~~ Player 1 ~~~~~~~~~
+GreedyTurn
+State evaluatior = Material Balance Evaluator
+~~~~~~~~~ Player 2 ~~~~~~~~~
+MCTS
+Time budget = 3075
+C = 0.7071067811865475
+Leaf evaluation = Rollout Evaluator [depth=8 rolls=1 policy=Random heuristic evaluator=Material Balance Evaluator]
+Cut = false
+Collapse = false
+~~~~~~~~~~~ SETUP ~~~~~~~~~~
+Map: a-tiny
+Deck Size: TINY
+Randomness: false
+Runs: 10
+~~~~~~~~~~ RUNNING ~~~~~~~~~
+~~~~~~~~~~ RESULTS ~~~~~~~~~
+P1 = 5 = 50.0%
+P2 = 5 = 50.0%
+Dr = 0
+~~~~~~~~~~~ STATS ~~~~~~~~~~
+P1 GreedyTurn
+Time spend (avg) = 0.08045977011494253
+Time spend (std.dev) = 0.3293459490090678
+Time spend (min) = 0.0
+Time spend (max) = 4.0
+Time spend (datapoints) = 348
+moves (avg) = 4.592
+moves (std.dev) = 5.0447533140878065
+moves (min) = 0.0
+moves (max) = 18.0
+moves (datapoints) = 250
+
+P2 MCTS
+Time spend (avg) = 654.7152317880794
+Time spend (std.dev) = 1262.5329757806558
+Time spend (min) = 0.0
+Time spend (max) = 3138.0
+Time spend (datapoints) = 453
+Max. depths (avg) = 4.0
+Max. depths (std.dev) = 0.7637626158259734
+Max. depths (min) = 3.0
+Max. depths (max) = 6.0
+Max. depths (datapoints) = 96
+Avg. depths (avg) = 3.3104598275605457
+Avg. depths (std.dev) = 0.5102323164153013
+Avg. depths (min) = 2.947976878612717
+Avg. depths (max) = 5.259206798866855
+Avg. depths (datapoints) = 96
+Min. depths (avg) = 2.9895833333333335
+Min. depths (std.dev) = 0.39514743204980546
+Min. depths (min) = 1.0
+Min. depths (max) = 4.0
+Min. depths (datapoints) = 96
+
+############################

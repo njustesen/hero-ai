@@ -126,7 +126,7 @@ public class GameState {
 
 		final List<Card> visited = new ArrayList<Card>();
 		for (final Card card : Card.values())
-			if (currentHand().contains(card) && !visited.contains(card)) {
+			if (currentHand().contains(card)) {
 				possibleActions(card, actions);
 				visited.add(card);
 			}

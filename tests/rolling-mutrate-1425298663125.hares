@@ -25,11 +25,11 @@ P2 = 28 = 56.00000000000001%
 Dr = 0
 ~~~~~~~~~~~ STATS ~~~~~~~~~~
 P1 Nested Evolution
-Time spend (avg) = 338.21503922099
-Time spend (std.dev) = 749.8284445471799
-Time spend (min) = 0.0
-Time spend (max) = 2016.0
-Time spend (datapoints) = 3697
+Time spent (avg) = 338.21503922099
+Time spent (std.dev) = 749.8284445471799
+Time spent (min) = 0.0
+Time spent (max) = 2016.0
+Time spent (datapoints) = 3697
 Vists (selected genome) (avg) = 141.8704
 Vists (selected genome) (std.dev) = 975.3630548692279
 Vists (selected genome) (min) = 1.0
@@ -42,11 +42,11 @@ Generations (max) = 15151.0
 Generations (datapoints) = 625
 
 P2 Nested Evolution
-Time spend (avg) = 338.71649484536084
-Time spend (std.dev) = 750.3138885097396
-Time spend (min) = 0.0
-Time spend (max) = 2018.0
-Time spend (datapoints) = 3686
+Time spent (avg) = 338.71649484536084
+Time spent (std.dev) = 750.3138885097396
+Time spent (min) = 0.0
+Time spent (max) = 2018.0
+Time spent (datapoints) = 3686
 Vists (selected genome) (avg) = 132.06570512820514
 Vists (selected genome) (std.dev) = 846.6812514259276
 Vists (selected genome) (min) = 1.0
