@@ -8,22 +8,35 @@ import java.util.List;
 import action.Action;
 import action.SingletonAction;
 import ai.evaluation.IStateEvaluator;
-import ai.movesearch.BestMoveSearch;
+import ai.movesearch.BestMoveSearcher;
 
 public class GreedyTurnAI implements AI {
 
-	private final BestMoveSearch searcher;
+	private final BestMoveSearcher searcher;
 	private List<Action> actions;
 	private final IStateEvaluator evaluator;
 	
 	public List<Double> moves;
+	private boolean anytime;
+	public int budget;
 
 	public GreedyTurnAI(IStateEvaluator evaluator) {
 		super();
 		this.evaluator = evaluator;
-		actions = new ArrayList<Action>();
+		this.actions = new ArrayList<Action>();
 		this.moves = new ArrayList<Double>();
-		this.searcher = new BestMoveSearch();
+		this.searcher = new BestMoveSearcher();
+		this.anytime = false;
+		this.budget = -1;
+	}
+	
+	public GreedyTurnAI(IStateEvaluator evaluator, int budget) {
+		super();
+		this.evaluator = evaluator;
+		this.actions = new ArrayList<Action>();
+		this.moves = new ArrayList<Double>();
+		this.searcher = new BestMoveSearcher();
+		this.anytime = false;
 	}
 
 	@Override
@@ -35,7 +48,9 @@ public class GreedyTurnAI implements AI {
 			return action;
 		}
 		
-		actions = searcher.bestMove(state, evaluator);
+		if(!anytime)
+			actions = searcher.bestMove(state, evaluator, budget);
+		
 		moves.add((double)searcher.moves);
 		
 		if (actions == null || actions.isEmpty())

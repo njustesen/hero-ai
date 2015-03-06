@@ -22,6 +22,8 @@ import ai.util.ComplexActionComparator;
 
 public class Mcts implements AI {
 
+	public static boolean RECORD_DEPTHS = true;
+
 	Map<Long, MctsNode> transTable = new HashMap<Long, MctsNode>();
 
 	public double c;
@@ -117,12 +119,13 @@ public class Mcts implements AI {
 		}
 
 		// TODO: Runs out of memory -- of course..
-		root.depth(0, depths, new HashSet<MctsNode>());
-		avgDepths.add(Statistics.avgDouble(depths));
-		minDepths.add(Collections.min(depths));
-		maxDepths.add(Collections.max(depths));
-		depths.clear();
-
+		if (RECORD_DEPTHS){
+			root.depth(0, depths, new HashSet<MctsNode>());
+			avgDepths.add(Statistics.avgDouble(depths));
+			minDepths.add(Collections.min(depths));
+			maxDepths.add(Collections.max(depths));
+			depths.clear();
+		}
 		rollouts.add((double) rolls);
 
 		// saveTree();

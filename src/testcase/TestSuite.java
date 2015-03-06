@@ -108,6 +108,7 @@ public class TestSuite {
 		AI p1 = new GreedyActionAI(new HeuristicEvaluator(false));
 		Mcts mcts = new Mcts(60000, new RolloutEvaluator(1, 1, new RandomHeuristicAI(0.3), new MaterialBalanceEvaluator(true)));
 		mcts.c = mcts.c / 2;
+		Mcts.RECORD_DEPTHS = false;
 		new TestCase(new StatisticAi(p1), new StatisticAi(mcts), runs, "mcts-vs-greedyaction-long", map(size), deck(size)).run();
 	}
 

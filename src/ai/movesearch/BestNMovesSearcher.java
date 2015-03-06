@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.PriorityQueue;
 
 import util.pool.ObjectPools;
 import action.Action;
@@ -14,28 +15,33 @@ import ai.evaluation.HeuristicEvaluator;
 import ai.evaluation.IStateEvaluator;
 import ai.util.ActionPruner;
 
-public class BestMoveSearch {
+public class BestNMovesSearcher {
 
 	Map<Long, Integer> transTable = new HashMap<Long, Integer>();
 
 	HeuristicEvaluator evalutator = new HeuristicEvaluator(false);
 	ActionPruner pruner = new ActionPruner();
-	List<Action> bestMove = new ArrayList<Action>();
-	double bestValue;
 	private IStateEvaluator evaluator;
-	public int moves;
+	//public int moves;
+	private int n;
+	private PriorityQueue<ValuedMove> valuedMoves;
+	
+	public BestNMovesSearcher(int n){
+		this.n = n;
+	}
 
-	public List<Action> bestMove(GameState state, IStateEvaluator evaluator) {
+	public List<ValuedMove> bestMoves(GameState state, IStateEvaluator evaluator) {
 		this.evaluator = evaluator;
 
-		bestValue = -100000000;
-		bestMove = null;
-		moves = 0;
+		//moves = 0;
 		addMoves(state, new ArrayList<Action>(), 0);
 		transTable.clear();
-		if (bestMove == null)
-			return new ArrayList<Action>();
-		return bestMove;
+		
+		List<ValuedMove> moves = new ArrayList<ValuedMove>();
+		for(ValuedMove move : valuedMoves)
+			moves.add(move);
+		
+		return moves;
 
 	}
 
@@ -43,13 +49,16 @@ public class BestMoveSearch {
 
 		// End turn
 		if (state.APLeft == 0 || move.size() > 5) {
-			moves++;
+			//moves++;
 			final double value = evaluator.eval(state, state.p1Turn);
-			if (value > bestValue) {
+			ValuedMove posMove = new ValuedMove(null, value);
+			valuedMoves.add(posMove);
+			if (valuedMoves.size() > n)
+				valuedMoves.poll();
+			if (valuedMoves.contains(posMove)){
 				final List<Action> nextMove = clone(move);
 				nextMove.add(SingletonAction.endTurnAction);
-				bestValue = value;
-				bestMove = nextMove;
+				posMove.ations = nextMove;
 			}
 			return;
 		}
