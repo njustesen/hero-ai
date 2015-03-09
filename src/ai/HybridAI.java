@@ -21,13 +21,12 @@ public class HybridAI implements AI {
 	private List<ValuedMove> moves;
 	private final IStateEvaluator evaluator;
 	private int n;
-	private RolloutEvaluator rolloutEvaluator;
-	private int rolls;
 	private int m;
+	private RolloutEvaluator rolloutEvaluator;
 	private RollingHorizonEvolution evolution;
 	private int searchBudget;
 	
-	public HybridAI(IStateEvaluator evaluator, int searchBudget, int n, RolloutEvaluator rolloutEvaluator, int rolls, int m, RollingHorizonEvolution evolution) {
+	public HybridAI(IStateEvaluator evaluator, int searchBudget, int n, RolloutEvaluator rolloutEvaluator, int m, RollingHorizonEvolution evolution) {
 		super();
 		this.evaluator = evaluator;
 		this.moves = new ArrayList<ValuedMove>();
@@ -37,7 +36,6 @@ public class HybridAI implements AI {
 		this.n = n;
 		this.m = m;
 		this.searchBudget = searchBudget;
-		this.rolls = rolls;
 		this.evolution = evolution;
 	}
 
@@ -72,37 +70,41 @@ public class HybridAI implements AI {
 
 	private void rollingPhase(GameState state) {
 		
-		GameState p1Turn = new GameState(null);
-		GameState p2Turn = new GameState(null);
+		GameState clone = new GameState(state.map);
 		
 		for(ValuedMove move : moves){
-			p1Turn.imitate(state);
-			p1Turn.update(move.ations);
-			evolution.act(p2Turn, -1);
-			move.value = evaluator.eval(p2Turn, state.p1Turn);
+			clone.imitate(state);
+			clone.update(move.ations);
+			if (!clone.isTerminal){
+				evolution.search(clone);
+				if (evolution.actions.isEmpty())
+					System.out.println("EMPTY");
+				clone.update(evolution.actions);
+			}
+			move.value = evaluator.eval(clone, state.p1Turn);
 		}
 		
 		Collections.sort(moves);
-		moves = moves.subList(moves.size()-1, moves.size());
+		List<ValuedMove> newMoves = new ArrayList<ValuedMove>();
+		newMoves.addAll(moves.subList(moves.size()-1, moves.size()));
+		moves = newMoves;
 		
 	}
 
 	private void rolloutPhase(GameState state) {
 		
-		GameState p1Turn = new GameState(null);
-		GameState p2Turn = new GameState(null);
+		GameState clone = new GameState(null);
 		
 		for(ValuedMove move : moves){
-			p1Turn.imitate(state);
-			p1Turn.update(move.ations);
-			for(int i = 0; i < rolls; i++){
-				p2Turn.imitate(p1Turn);
-				move.value = rolloutEvaluator.eval(p1Turn, state.p1Turn);
-			}
+			clone.imitate(state);
+			clone.update(move.ations);
+			move.value = rolloutEvaluator.eval(clone, state.p1Turn);
 		}
 		
 		Collections.sort(moves);
-		moves = moves.subList(moves.size()-m, moves.size());
+		List<ValuedMove> newMoves = new ArrayList<ValuedMove>();
+		newMoves.addAll(moves.subList(moves.size()-m, moves.size()));
+		moves = newMoves;
 		
 	}
 
@@ -120,12 +122,12 @@ public class HybridAI implements AI {
 
 	@Override
 	public String title() {
-		return "GreedyTurn";
+		return "Hybrid";
 	}
 
 	@Override
 	public AI copy() {
-		return new HybridAI(evaluator.copy(), searchBudget, n, (RolloutEvaluator)(rolloutEvaluator.copy()), rolls, m, (RollingHorizonEvolution)(evolution.copy()));
+		return new HybridAI(evaluator.copy(), searchBudget, n, (RolloutEvaluator)(rolloutEvaluator.copy()), m, (RollingHorizonEvolution)(evolution.copy()));
 	}
 	
 }

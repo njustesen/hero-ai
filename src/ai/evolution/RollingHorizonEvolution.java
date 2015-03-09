@@ -24,12 +24,11 @@ public class RollingHorizonEvolution implements AI {
 	public List<Double> bestVisits;
 	
 	private final List<Genome> pop;
-	private List<Action> actions;
+	public List<Action> actions;
 	private final Random random;
 	
 
-	public RollingHorizonEvolution(int popSize, double mutRate,
-			double killRate, int budget, IStateEvaluator evaluator) {
+	public RollingHorizonEvolution(int popSize, double mutRate, double killRate, int budget, IStateEvaluator evaluator) {
 		super();
 		this.popSize = popSize;
 		this.mutRate = mutRate;
@@ -54,7 +53,7 @@ public class RollingHorizonEvolution implements AI {
 		return next;
 	}
 
-	private void search(GameState state) {
+	public void search(GameState state) {
 
 		Long start = System.currentTimeMillis();
 		
@@ -123,7 +122,7 @@ public class RollingHorizonEvolution implements AI {
 	private void setup(GameState state) {
 
 		pop.clear();
-		final GameState clone = new GameState(null);
+		final GameState clone = new GameState(state.map);
 
 		for (int i = 0; i < popSize; i++) {
 			clone.imitate(state);

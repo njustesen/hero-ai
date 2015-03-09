@@ -32,8 +32,8 @@ public class BestMoveSearcher {
 	private ActionComparator comparator;
 
 	public List<Action> bestMove(GameState state, IStateEvaluator evaluator, int budget) {
-		evaluator = evaluator;
-		budget = budget;
+		this.evaluator = evaluator;
+		this.budget = budget;
 		start = System.currentTimeMillis();
 		bestValue = -100000000;
 		bestMove = null;

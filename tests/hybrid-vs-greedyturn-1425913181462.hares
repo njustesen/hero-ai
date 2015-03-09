@@ -1,0 +1,46 @@
+########### TEST ###########
+AP: 5
+SAP: 3
+TURN LIMT: 400
+~~~~~~~~~ Player 1 ~~~~~~~~~
+GreedyAction
+State evaluatior = Heuristic Evaluator
+~~~~~~~~~ Player 2 ~~~~~~~~~
+Hybrid
+State evaluatior = Heuristic Evaluator
+~~~~~~~~~~~ SETUP ~~~~~~~~~~
+Map: a-small
+Deck Size: SMALL
+Randomness: false
+Runs: 1
+~~~~~~~~~~ RUNNING ~~~~~~~~~
+~~~~~~~~~~ RESULTS ~~~~~~~~~
+P1 = 0 = 0.0%
+P2 = 1 = 100.0%
+Dr = 0
+~~~~~~~~~~~ STATS ~~~~~~~~~~
+P1 GreedyAction
+Time spend (avg) = 0.5
+Time spend (std.dev) = 0.7833494518006403
+Time spend (min) = 0.0
+Time spend (max) = 3.0
+Time spend (datapoints) = 22
+Branching factor (avg) = 19.181818181818183
+Branching factor (std.dev) = 10.977813839477095
+Branching factor (min) = 1.0
+Branching factor (max) = 34.0
+Branching factor (datapoints) = 22
+Pruned branching factor (avg) = 16.545454545454547
+Pruned branching factor (std.dev) = 10.236864189279451
+Pruned branching factor (min) = 1.0
+Pruned branching factor (max) = 31.0
+Pruned branching factor (datapoints) = 22
+
+P2 Hybrid
+Time spend (avg) = 1955.2272727272727
+Time spend (std.dev) = 4336.694729355508
+Time spend (min) = 0.0
+Time spend (max) = 14054.0
+Time spend (datapoints) = 22
+
+############################
