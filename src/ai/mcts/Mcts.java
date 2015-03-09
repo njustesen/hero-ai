@@ -128,7 +128,7 @@ public class Mcts implements AI {
 		}
 		rollouts.add((double) rolls);
 
-		// saveTree();
+		saveTree();
 
 		move = bestMove(state, rolls);
 		final Action action = move.get(0);

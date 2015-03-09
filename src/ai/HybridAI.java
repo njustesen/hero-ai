@@ -25,8 +25,9 @@ public class HybridAI implements AI {
 	private int rolls;
 	private int m;
 	private RollingHorizonEvolution evolution;
+	private int searchBudget;
 	
-	public HybridAI(IStateEvaluator evaluator, int n, RolloutEvaluator rolloutEvaluator, int rolls, int m, RollingHorizonEvolution evolution) {
+	public HybridAI(IStateEvaluator evaluator, int searchBudget, int n, RolloutEvaluator rolloutEvaluator, int rolls, int m, RollingHorizonEvolution evolution) {
 		super();
 		this.evaluator = evaluator;
 		this.moves = new ArrayList<ValuedMove>();
@@ -35,6 +36,7 @@ public class HybridAI implements AI {
 		this.rolloutEvaluator = rolloutEvaluator;
 		this.n = n;
 		this.m = m;
+		this.searchBudget = searchBudget;
 		this.rolls = rolls;
 		this.evolution = evolution;
 	}
@@ -49,7 +51,7 @@ public class HybridAI implements AI {
 		}
 		
 		// 1. GreedySearch
-		moves = searcher.bestMoves(state, evaluator);
+		moves = searcher.bestMoves(state, evaluator, searchBudget);
 		
 		// 2. Rollout phase
 		rolloutPhase(state);
@@ -123,7 +125,7 @@ public class HybridAI implements AI {
 
 	@Override
 	public AI copy() {
-		return new HybridAI(evaluator.copy(), n, (RolloutEvaluator)(rolloutEvaluator.copy()), rolls, m, (RollingHorizonEvolution)(evolution.copy()));
+		return new HybridAI(evaluator.copy(), searchBudget, n, (RolloutEvaluator)(rolloutEvaluator.copy()), rolls, m, (RollingHorizonEvolution)(evolution.copy()));
 	}
 	
 }

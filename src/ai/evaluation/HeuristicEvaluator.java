@@ -21,11 +21,17 @@ public class HeuristicEvaluator implements IStateEvaluator {
 		
 		if (state.isTerminal){
 			int winner = state.getWinner();
-			if (winner == 1)
+			if (!winVal && winner == 1)
 				return p1 ? MAX_VAL : -MAX_VAL;
-			else if (winner == 2){
+			else if (!winVal && winner == 2)
 				return p1 ? -MAX_VAL : MAX_VAL;
-			}
+			else if (winVal && winner == 1)
+				return p1 ? 1 : 0;
+			else if (winVal && winner == 2)
+				return p1 ? 0 : 1;
+			
+			if (winVal)
+				return 0.5;
 			return 0;
 		}
 		
@@ -35,12 +41,7 @@ public class HeuristicEvaluator implements IStateEvaluator {
 		if (!winVal)
 			return hpDif;
 		
-		if (hpDif == 0)
-			return 0.5;
-		else if (hpDif > 0)
-			return 1;
-		
-		return 0;
+		return NormUtil.normalize(hpDif, -MAX_VAL, MAX_VAL, 1, 0);
 
 	}
 

@@ -73,8 +73,54 @@ public class TestSuite {
 			MctsVsGreedyActionLong(Integer.parseInt(args[1]), args[2]);
 		else if (args[0].equals("mcts-vs-greedy-turn-AP"))
 			MctsVsGreedyTurnAP(Integer.parseInt(args[1]), args[2], Integer.parseInt(args[3]));
+		else if (args[0].equals("mcts-greedy-action-AP"))
+			MctsVsGreedyActionAp(Integer.parseInt(args[1]), args[2], Integer.parseInt(args[3]), Integer.parseInt(args[4]));
+		else if (args[0].equals("rolling-greedy-action-AP"))
+			RollingVsGreedyActionAp(Integer.parseInt(args[1]), args[2], Integer.parseInt(args[3]), Integer.parseInt(args[4]));
+
 	}
 	
+	private static void RollingVsGreedyActionAp(int runs, String size, int apFrom, int apTo) {
+
+		AI p1 = new GreedyActionAI(new HeuristicEvaluator(false));
+		AI rolling = new RollingHorizonEvolution(100, .5, .75, 3075, new RolloutEvaluator(1, 1, new RandomHeuristicAI(0.3), new HeuristicEvaluator(false)));
+		
+		for(int ap = apFrom; ap < apTo; ap++){
+
+			GameState.STARTING_AP = Math.max(1, ap - 1);
+			GameState.ACTION_POINTS = ap;
+			GameState.TURN_LIMIT = 100;
+			if (size.equals("small") || ap < 3)
+				GameState.TURN_LIMIT = 400;
+			if (size.equals("standard") || ap < 1)
+				GameState.TURN_LIMIT = 600;
+			//TestCase.GFX = true;
+			new TestCase(new StatisticAi(p1), new StatisticAi(rolling), runs, "rolling-vs-greedyaction-ap-"+ap, map(size), deck(size)).run();
+			
+		}
+
+	}
+
+	private static void MctsVsGreedyActionAp(int runs, String size, int apFrom, int apTo) {
+		
+		AI p1 = new GreedyActionAI(new HeuristicEvaluator(false));
+		Mcts mcts = new Mcts(3075, new RolloutEvaluator(1, 1, new RandomHeuristicAI(0.3), new HeuristicEvaluator(true)));
+		mcts.c = mcts.c / 2;
+		for(int ap = apFrom; ap < apTo; ap++){
+
+			GameState.STARTING_AP = Math.max(1, ap - 1);
+			GameState.ACTION_POINTS = ap;
+			GameState.TURN_LIMIT = 100;
+			if (size.equals("small") || ap < 3)
+				GameState.TURN_LIMIT = 400;
+			if (size.equals("standard") || ap < 1)
+				GameState.TURN_LIMIT = 600;
+			TestCase.GFX = true;
+			new TestCase(new StatisticAi(p1), new StatisticAi(mcts), runs, "mcts-vs-greedyaction-ap-"+ap, map(size), deck(size)).run();
+			
+		}
+	}
+
 	private static void MctsVsGreedyTurnAP(int runs, String size, int ap) {
 		AI p1 = new GreedyTurnAI(new HeuristicEvaluator(false));
 		Mcts mcts = new Mcts(3075, new RolloutEvaluator(1, 1, new RandomHeuristicAI(0.3), new HeuristicEvaluator(true)));

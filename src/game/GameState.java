@@ -48,8 +48,13 @@ public class GameState {
 	public CardSet p1Hand;
 	public CardSet p2Hand;
 	public boolean isTerminal;
+	
+	public long lastP1State;
+	public long lastP2State;
 
 	public List<Position> chainTargets;
+	public boolean p1RecurringLoss;
+	public boolean p2RecurringLoss;
 
 	public GameState(HaMap map) {
 		super();
@@ -67,11 +72,16 @@ public class GameState {
 			units = new Unit[map.width][map.height];
 		else
 			units = new Unit[0][0];
+		lastP1State = simpleHash();
+		lastP2State = simpleHash();
+		p1RecurringLoss = false;
+		p2RecurringLoss = false;
 	}
 
 	public GameState(HaMap map, boolean p1Turn, int turn, int APLeft,
 			Unit[][] units, CardSet p1Hand, CardSet p2Hand, CardSet p1Deck,
-			CardSet p2Deck, List<Position> chainTargets, boolean isTerminal) {
+			CardSet p2Deck, List<Position> chainTargets, boolean isTerminal, 
+			long lastP1State, long lastP2State, boolean p1RecurringLoss, boolean p2RecurringLoss) {
 		super();
 		this.map = map;
 		this.p1Turn = p1Turn;
@@ -84,6 +94,11 @@ public class GameState {
 		this.p2Deck = p2Deck;
 		this.chainTargets = chainTargets;
 		this.isTerminal = isTerminal;
+		this.lastP1State = lastP1State;
+		this.lastP2State = lastP1State;
+		this.p1RecurringLoss = p1RecurringLoss;
+		this.p2RecurringLoss = p2RecurringLoss;
+		
 	}
 
 	public void init(DECK_SIZE deckSize) {
@@ -643,7 +658,13 @@ public class GameState {
 
 		if (turn >= TURN_LIMIT)
 			return 0;
-
+		
+		if (p1RecurringLoss)
+			return 2;
+		
+		if (p2RecurringLoss)
+			return 1;
+		
 		boolean p1Alive = true;
 		boolean p2Alive = true;
 
@@ -823,7 +844,24 @@ public class GameState {
 			p1Turn = !p1Turn;
 			APLeft = ACTION_POINTS;
 			turn++;
+			long hash = simpleHash();
+			if (p1Turn){
+				if (hash == lastP1State){
+					isTerminal = true;
+					p1RecurringLoss = true;
+				} else {
+					lastP1State = hash();
+				}
+			} else {
+				if (hash == lastP2State){
+					isTerminal = true;
+					p2RecurringLoss = true;
+				} else {
+					lastP2State = hash();
+				}
+			}
 		}
+		
 	}
 
 	public void dealCards() {
@@ -920,7 +958,7 @@ public class GameState {
 		p2d.imitate(p2Deck);
 
 		return new GameState(map, p1Turn, turn, APLeft, un, p1h, p2h, p1d, p2d,
-				chainTargets, isTerminal);
+				chainTargets, isTerminal, lastP1State, lastP2State, p1RecurringLoss, p2RecurringLoss);
 	}
 
 	public void imitate(GameState state) {
@@ -953,6 +991,23 @@ public class GameState {
 		// chainTargets.clear();
 		// chainTargets.addAll(state.chainTargets); // NOT NECESSARY
 
+	}
+	
+	public long simpleHash() {
+		final int prime = 1193;
+		long result = 1;
+		result = prime * result + (isTerminal ? 0 : 1);
+		result = prime * result + p1Hand.hashCode();
+		result = prime * result + p2Deck.hashCode();
+		result = prime * result + p2Hand.hashCode();
+		result = prime * result + p1Deck.hashCode();
+
+		for (int x = 0; x < map.width; x++)
+			for (int y = 0; y < map.height; y++)
+				if (units[x][y] != null)
+					result = prime * result + units[x][y].hash(x, y);
+
+		return result;
 	}
 
 	public long hash() {

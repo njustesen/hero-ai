@@ -25,12 +25,13 @@ public class BestNMovesSearcher {
 	//public int moves;
 	private int n;
 	private PriorityQueue<ValuedMove> valuedMoves;
+	private int budget;
 	
 	public BestNMovesSearcher(int n){
 		this.n = n;
 	}
 
-	public List<ValuedMove> bestMoves(GameState state, IStateEvaluator evaluator) {
+	public List<ValuedMove> bestMoves(GameState state, IStateEvaluator evaluator, int budget) {
 		this.evaluator = evaluator;
 
 		//moves = 0;
