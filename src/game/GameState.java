@@ -841,25 +841,25 @@ public class GameState {
 			isTerminal = true;
 		if (!isTerminal) {
 			drawCards();
-			p1Turn = !p1Turn;
-			APLeft = ACTION_POINTS;
-			turn++;
 			long hash = simpleHash();
 			if (p1Turn){
 				if (hash == lastP1State){
 					isTerminal = true;
 					p1RecurringLoss = true;
 				} else {
-					lastP1State = hash();
+					lastP1State = hash;
 				}
 			} else {
 				if (hash == lastP2State){
 					isTerminal = true;
 					p2RecurringLoss = true;
 				} else {
-					lastP2State = hash();
+					lastP2State = hash;
 				}
 			}
+			p1Turn = !p1Turn;
+			APLeft = ACTION_POINTS;
+			turn++;
 		}
 		
 	}
