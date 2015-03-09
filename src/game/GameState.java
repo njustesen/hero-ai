@@ -48,13 +48,8 @@ public class GameState {
 	public CardSet p1Hand;
 	public CardSet p2Hand;
 	public boolean isTerminal;
-	
-	public long lastP1State;
-	public long lastP2State;
 
 	public List<Position> chainTargets;
-	public boolean p1RecurringLoss;
-	public boolean p2RecurringLoss;
 
 	public GameState(HaMap map) {
 		super();
@@ -72,16 +67,11 @@ public class GameState {
 			units = new Unit[map.width][map.height];
 		else
 			units = new Unit[0][0];
-		lastP1State = simpleHash();
-		lastP2State = simpleHash();
-		p1RecurringLoss = false;
-		p2RecurringLoss = false;
 	}
 
 	public GameState(HaMap map, boolean p1Turn, int turn, int APLeft,
 			Unit[][] units, CardSet p1Hand, CardSet p2Hand, CardSet p1Deck,
-			CardSet p2Deck, List<Position> chainTargets, boolean isTerminal, 
-			long lastP1State, long lastP2State, boolean p1RecurringLoss, boolean p2RecurringLoss) {
+			CardSet p2Deck, List<Position> chainTargets, boolean isTerminal) {
 		super();
 		this.map = map;
 		this.p1Turn = p1Turn;
@@ -94,10 +84,6 @@ public class GameState {
 		this.p2Deck = p2Deck;
 		this.chainTargets = chainTargets;
 		this.isTerminal = isTerminal;
-		this.lastP1State = lastP1State;
-		this.lastP2State = lastP1State;
-		this.p1RecurringLoss = p1RecurringLoss;
-		this.p2RecurringLoss = p2RecurringLoss;
 		
 	}
 
@@ -659,12 +645,6 @@ public class GameState {
 		if (turn >= TURN_LIMIT)
 			return 0;
 		
-		if (p1RecurringLoss)
-			return 2;
-		
-		if (p2RecurringLoss)
-			return 1;
-		
 		boolean p1Alive = true;
 		boolean p2Alive = true;
 
@@ -841,22 +821,6 @@ public class GameState {
 			isTerminal = true;
 		if (!isTerminal) {
 			drawCards();
-			long hash = simpleHash();
-			if (p1Turn){
-				if (hash == lastP1State){
-					isTerminal = true;
-					p1RecurringLoss = true;
-				} else {
-					lastP1State = hash;
-				}
-			} else {
-				if (hash == lastP2State){
-					isTerminal = true;
-					p2RecurringLoss = true;
-				} else {
-					lastP2State = hash;
-				}
-			}
 			p1Turn = !p1Turn;
 			APLeft = ACTION_POINTS;
 			turn++;
@@ -958,7 +922,7 @@ public class GameState {
 		p2d.imitate(p2Deck);
 
 		return new GameState(map, p1Turn, turn, APLeft, un, p1h, p2h, p1d, p2d,
-				chainTargets, isTerminal, lastP1State, lastP2State, p1RecurringLoss, p2RecurringLoss);
+				chainTargets, isTerminal);
 	}
 
 	public void imitate(GameState state) {

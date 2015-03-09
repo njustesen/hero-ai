@@ -43,6 +43,10 @@ public class Mcts implements AI {
 	private MctsNode root;
 	private List<Action> move;
 	private int ends;
+	
+	private long lastState;
+
+	private int initTurn;
 
 	public Mcts(long budget, IStateEvaluator defaultPolicy) {
 		this.budget = budget;
@@ -59,6 +63,8 @@ public class Mcts implements AI {
 		minDepths = new ArrayList<Double>();
 		maxDepths = new ArrayList<Double>();
 		rollouts = new ArrayList<Double>();
+		lastState = 0;
+		initTurn = 0;
 	}
 
 	@Override
@@ -70,6 +76,8 @@ public class Mcts implements AI {
 		if (!move.isEmpty()) {
 			final Action action = move.get(0);
 			move.remove(0);
+			if (move.isEmpty())
+				lastState = state.simpleHash();
 			return action;
 		}
 
@@ -77,6 +85,7 @@ public class Mcts implements AI {
 		root = new MctsNode(actions(state));
 
 		// Start search
+		initTurn = state.turn;
 		final GameState clone = state.copy();
 		int rolls = 0;
 		final List<MctsEdge> traversal = new ArrayList<MctsEdge>();
@@ -115,7 +124,7 @@ public class Mcts implements AI {
 			rolls++;
 
 			// saveTree();
-
+			
 		}
 
 		// TODO: Runs out of memory -- of course..
@@ -264,11 +273,16 @@ public class Mcts implements AI {
 		node.out.add(edge);
 		final int ap = clone.APLeft;
 		clone.update(edge.action);
-		if (clone.APLeft == 0)
+		if (clone.APLeft == 0){
 			clone.update(SingletonAction.endTurnAction);
-		else if (ap == clone.APLeft) {
-			// System.out.print("!");
+			if (clone.turn == initTurn + 1 && clone.simpleHash() == lastState){
+				node.out.remove(edge);
+				node.possible.remove(node.out.size());
+				return null;
+			}
+		} else if (ap == clone.APLeft) {
 			node.out.remove(edge);
+			node.possible.remove(node.out.size());
 			return null;
 		}
 		final Long hash = clone.hash();
