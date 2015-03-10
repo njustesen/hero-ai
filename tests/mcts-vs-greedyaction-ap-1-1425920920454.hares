@@ -1,0 +1,70 @@
+########### TEST ###########
+AP: 1
+SAP: 1
+TURN LIMT: 400
+~~~~~~~~~ Player 1 ~~~~~~~~~
+GreedyAction
+State evaluatior = Heuristic Evaluator
+~~~~~~~~~ Player 2 ~~~~~~~~~
+MCTS
+Time budget = 3075
+C = 0.35355339059327373
+Leaf evaluation = Rollout Evaluator [depth=1 rolls=1 policy=Random heuristic evaluator=Heuristic Evaluator]
+Cut = false
+Collapse = false
+~~~~~~~~~~~ SETUP ~~~~~~~~~~
+Map: a-small
+Deck Size: SMALL
+Randomness: false
+Runs: 50
+~~~~~~~~~~ RUNNING ~~~~~~~~~
+~~~~~~~~~~ RESULTS ~~~~~~~~~
+P1 = 16 = 37.0%
+P2 = 29 = 63.0%
+Dr = 5
+~~~~~~~~~~~ STATS ~~~~~~~~~~
+P1 GreedyAction
+Time spend (avg) = 0.06347410759175465
+Time spend (std.dev) = 0.320049325255602
+Time spend (min) = 0.0
+Time spend (max) = 19.0
+Time spend (datapoints) = 7956
+Branching factor (avg) = 16.35105580693816
+Branching factor (std.dev) = 17.499746824036297
+Branching factor (min) = 0.0
+Branching factor (max) = 80.0
+Branching factor (datapoints) = 7956
+Pruned branching factor (avg) = 15.421442936148818
+Pruned branching factor (std.dev) = 16.8474952816243
+Pruned branching factor (min) = 0.0
+Pruned branching factor (max) = 58.0
+Pruned branching factor (datapoints) = 7956
+
+P2 MCTS
+Time spend (avg) = 1563.7868666498614
+Time spend (std.dev) = 1564.8288069895766
+Time spend (min) = 0.0
+Time spend (max) = 4144.0
+Time spend (datapoints) = 7934
+Iterations (avg) = 156009.1613309806
+Iterations (std.dev) = 98299.77016079384
+Iterations (min) = 60125.0
+Iterations (max) = 1307296.0
+Iterations (datapoints) = 3967
+Max. depths (avg) = 5.063019914292917
+Max. depths (std.dev) = 1.137424531791981
+Max. depths (min) = 1.0
+Max. depths (max) = 13.0
+Max. depths (datapoints) = 3967
+Avg. depths (avg) = 4.150728418030229
+Avg. depths (std.dev) = 0.5956347610303917
+Avg. depths (min) = 1.0
+Avg. depths (max) = 7.790375303721572
+Avg. depths (datapoints) = 3967
+Min. depths (avg) = 3.6107890093269472
+Min. depths (std.dev) = 0.6689215725173993
+Min. depths (min) = 1.0
+Min. depths (max) = 6.0
+Min. depths (datapoints) = 3967
+
+############################

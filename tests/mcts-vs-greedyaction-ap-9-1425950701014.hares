@@ -1,0 +1,70 @@
+########### TEST ###########
+AP: 9
+SAP: 8
+TURN LIMT: 400
+~~~~~~~~~ Player 1 ~~~~~~~~~
+GreedyAction
+State evaluatior = Heuristic Evaluator
+~~~~~~~~~ Player 2 ~~~~~~~~~
+MCTS
+Time budget = 3075
+C = 0.35355339059327373
+Leaf evaluation = Rollout Evaluator [depth=1 rolls=1 policy=Random heuristic evaluator=Heuristic Evaluator]
+Cut = false
+Collapse = false
+~~~~~~~~~~~ SETUP ~~~~~~~~~~
+Map: a-small
+Deck Size: SMALL
+Randomness: false
+Runs: 50
+~~~~~~~~~~ RUNNING ~~~~~~~~~
+~~~~~~~~~~ RESULTS ~~~~~~~~~
+P1 = 47 = 94.0%
+P2 = 3 = 6.0%
+Dr = 0
+~~~~~~~~~~~ STATS ~~~~~~~~~~
+P1 GreedyAction
+Time spend (avg) = 0.09416930958770432
+Time spend (std.dev) = 0.29206412090408046
+Time spend (min) = 0.0
+Time spend (max) = 1.0
+Time spend (datapoints) = 4099
+Branching factor (avg) = 24.752596163503064
+Branching factor (std.dev) = 16.525379075817582
+Branching factor (min) = 0.0
+Branching factor (max) = 93.0
+Branching factor (datapoints) = 49785
+Pruned branching factor (avg) = 23.109048910314353
+Pruned branching factor (std.dev) = 15.911904060794171
+Pruned branching factor (min) = 0.0
+Pruned branching factor (max) = 77.0
+Pruned branching factor (datapoints) = 49785
+
+P2 MCTS
+Time spend (avg) = 500.55077044646384
+Time spend (std.dev) = 1141.8641101632838
+Time spend (min) = 0.0
+Time spend (max) = 3686.0
+Time spend (datapoints) = 2531
+Iterations (avg) = 151707.2800575954
+Iterations (std.dev) = 112137.54840979792
+Iterations (min) = 43658.0
+Iterations (max) = 2302770.0
+Iterations (datapoints) = 12501
+Max. depths (avg) = 5.6634669226461885
+Max. depths (std.dev) = 1.4829971291432655
+Max. depths (min) = 0.0
+Max. depths (max) = 27.0
+Max. depths (datapoints) = 12501
+Avg. depths (avg) = 4.462277564160802
+Avg. depths (std.dev) = 0.9807164123939942
+Avg. depths (min) = 0.0
+Avg. depths (max) = 13.214943359845746
+Avg. depths (datapoints) = 12501
+Min. depths (avg) = 3.695464362850972
+Min. depths (std.dev) = 0.6584344640694486
+Min. depths (min) = 0.0
+Min. depths (max) = 7.0
+Min. depths (datapoints) = 12501
+
+############################

@@ -1,0 +1,70 @@
+########### TEST ###########
+AP: 7
+SAP: 6
+TURN LIMT: 400
+~~~~~~~~~ Player 1 ~~~~~~~~~
+GreedyAction
+State evaluatior = Heuristic Evaluator
+~~~~~~~~~ Player 2 ~~~~~~~~~
+MCTS
+Time budget = 3075
+C = 0.35355339059327373
+Leaf evaluation = Rollout Evaluator [depth=1 rolls=1 policy=Random heuristic evaluator=Heuristic Evaluator]
+Cut = false
+Collapse = false
+~~~~~~~~~~~ SETUP ~~~~~~~~~~
+Map: a-small
+Deck Size: SMALL
+Randomness: false
+Runs: 50
+~~~~~~~~~~ RUNNING ~~~~~~~~~
+~~~~~~~~~~ RESULTS ~~~~~~~~~
+P1 = 39 = 78.0%
+P2 = 11 = 22.0%
+Dr = 0
+~~~~~~~~~~~ STATS ~~~~~~~~~~
+P1 GreedyAction
+Time spend (avg) = 0.08922558922558922
+Time spend (std.dev) = 0.2850690854037536
+Time spend (min) = 0.0
+Time spend (max) = 1.0
+Time spend (datapoints) = 4158
+Branching factor (avg) = 23.606233517142172
+Branching factor (std.dev) = 16.611431288945827
+Branching factor (min) = 0.0
+Branching factor (max) = 81.0
+Branching factor (datapoints) = 41710
+Pruned branching factor (avg) = 22.11896427715176
+Pruned branching factor (std.dev) = 16.02366215081655
+Pruned branching factor (min) = 0.0
+Pruned branching factor (max) = 77.0
+Pruned branching factor (datapoints) = 41710
+
+P2 MCTS
+Time spend (avg) = 527.8543946932007
+Time spend (std.dev) = 1167.1260271325962
+Time spend (min) = 0.0
+Time spend (max) = 3392.0
+Time spend (datapoints) = 3015
+Iterations (avg) = 151074.51008324037
+Iterations (std.dev) = 115341.46451401153
+Iterations (min) = 43658.0
+Iterations (max) = 2302770.0
+Iterations (datapoints) = 11653
+Max. depths (avg) = 5.484424611687977
+Max. depths (std.dev) = 1.2730134360485619
+Max. depths (min) = 0.0
+Max. depths (max) = 27.0
+Max. depths (datapoints) = 11653
+Avg. depths (avg) = 4.358502064257494
+Avg. depths (std.dev) = 0.824216460608735
+Avg. depths (min) = 0.0
+Avg. depths (max) = 13.214943359845746
+Avg. depths (datapoints) = 11653
+Min. depths (avg) = 3.660688234789325
+Min. depths (std.dev) = 0.6521726839390128
+Min. depths (min) = 0.0
+Min. depths (max) = 7.0
+Min. depths (datapoints) = 11653
+
+############################
