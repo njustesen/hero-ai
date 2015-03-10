@@ -83,9 +83,26 @@ public class TestSuite {
 			RollingVsGreedyActionAp(Integer.parseInt(args[1]), args[2], Integer.parseInt(args[3]), Integer.parseInt(args[4]));
 		else if (args[0].equals("hybrid-vs-greedy-action"))
 			HybridVsGreedyAction(Integer.parseInt(args[1]), args[2]);
+		else if (args[0].equals("hybrid-vs-greedy-turn"))
+			HybridVsGreedyTurn(Integer.parseInt(args[1]), args[2]);
 		
 	}
 	
+	private static void HybridVsGreedyTurn(int runs, String size) {
+		
+		AI p1 = new GreedyTurnAI(new HeuristicEvaluator(false));
+		HybridAI hybrid = new HybridAI(new HeuristicEvaluator(false), 4000, 100, 
+				new RolloutEvaluator(100, 1, new RandomHeuristicAI(0.1), new HeuristicEvaluator(false), true, true), 10,
+				new RollingHorizonEvolution(32, .3, .66, 1000, new HeuristicEvaluator(true)));
+		if (size.equals("small"))
+			GameState.TURN_LIMIT = 400;
+		if (size.equals("standard"))
+			GameState.TURN_LIMIT = 600;
+		TestCase.GFX = true;
+		new TestCase(new StatisticAi(p1), new StatisticAi(hybrid), runs, "hybrid-vs-greedyturn", map(size), deck(size)).run();
+		
+	}
+
 	private static void HybridVsGreedyAction(int runs, String size) {
 		
 		AI p1 = new GreedyActionAI(new HeuristicEvaluator(false));
@@ -104,7 +121,7 @@ public class TestSuite {
 	private static void RollingVsGreedyActionAp(int runs, String size, int apFrom, int apTo) {
 
 		AI p1 = new GreedyActionAI(new HeuristicEvaluator(false));
-		AI rolling = new RollingHorizonEvolution(100, .5, .75, 5000, new RolloutEvaluator(1, 1, new RandomHeuristicAI(0.3), new HeuristicEvaluator(false)));
+		AI rolling = new RollingHorizonEvolution(100, .5, .75, 3075, new RolloutEvaluator(1, 1, new RandomHeuristicAI(0.3), new HeuristicEvaluator(false)));
 		
 		for(int ap = apFrom; ap < apTo; ap++){
 
@@ -125,8 +142,8 @@ public class TestSuite {
 	private static void MctsVsGreedyActionAp(int runs, String size, int apFrom, int apTo) {
 		
 		AI p1 = new GreedyActionAI(new HeuristicEvaluator(false));
-		Mcts mcts = new Mcts(5000, new RolloutEvaluator(1, 1, new RandomHeuristicAI(0.3), new MaterialBalanceEvaluator(true)));
-		//mcts.c = mcts.c / 2;
+		Mcts mcts = new Mcts(3075, new RolloutEvaluator(1, 1, new RandomHeuristicAI(0.3), new MaterialBalanceEvaluator(true)));
+		mcts.c = mcts.c / 2;
 		for(int ap = apFrom; ap < apTo; ap++){
 
 			GameState.STARTING_AP = Math.max(1, ap - 1);

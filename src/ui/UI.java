@@ -646,12 +646,18 @@ public class UI extends JComponent {
 
 	private void paintAP(Graphics g) throws IOException {
 
-		final BufferedImage image = ImageLib.lib.get("ap-" + state.APLeft + "");
+		final BufferedImage image;
+		
+		if (state.APLeft > 5)
+			image = ImageLib.lib.get("ap-" + 5);
+		else
+			image = ImageLib.lib.get("ap-" + state.APLeft + "");
+			
 		if (image == null)
 			System.out.println(state.APLeft);
-		g.drawImage(image, squareSize + squareSize / 4, bottom
-				+ (squareSize - image.getHeight()) / 2, null, null);
-
+			
+		g.drawImage(image, squareSize + squareSize / 4, bottom + (squareSize - image.getHeight()) / 2, null, null);
+		
 	}
 
 	private void paintHeader(Graphics g) throws IOException {

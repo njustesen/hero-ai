@@ -330,6 +330,9 @@ public class GameState {
 
 				final Unit unit = units[ua.from.x][ua.from.y];
 
+				if (unit == null)
+					return;
+				
 				if (unit.p1Owner != p1Turn)
 					return;
 
@@ -387,6 +390,9 @@ public class GameState {
 					if (distance > 1 && losBlocked(p1Turn, ua.from, ua.to))
 						return;
 
+					if (other == null)
+						return;
+					
 					attack(unit, ua.from, other, ua.to);
 					return;
 

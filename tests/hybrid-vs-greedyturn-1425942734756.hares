@@ -1,0 +1,41 @@
+########### TEST ###########
+AP: 5
+SAP: 3
+TURN LIMT: 400
+~~~~~~~~~ Player 1 ~~~~~~~~~
+GreedyTurn
+State evaluatior = Heuristic Evaluator
+~~~~~~~~~ Player 2 ~~~~~~~~~
+Hybrid
+State evaluatior = Heuristic Evaluator
+~~~~~~~~~~~ SETUP ~~~~~~~~~~
+Map: a-small
+Deck Size: SMALL
+Randomness: false
+Runs: 50
+~~~~~~~~~~ RUNNING ~~~~~~~~~
+~~~~~~~~~~ RESULTS ~~~~~~~~~
+P1 = 27 = 54.0%
+P2 = 23 = 46.0%
+Dr = 0
+~~~~~~~~~~~ STATS ~~~~~~~~~~
+P1 GreedyTurn
+Time spend (avg) = 572.14164185453
+Time spend (std.dev) = 4274.740617562634
+Time spend (min) = 0.0
+Time spend (max) = 106414.0
+Time spend (datapoints) = 2351
+moves (avg) = 364372.87562189053
+moves (std.dev) = 1018985.971626302
+moves (min) = 0.0
+moves (max) = 1.0166833E7
+moves (datapoints) = 402
+
+P2 Hybrid
+Time spend (avg) = 2360.401398601399
+Time spend (std.dev) = 5464.574311360462
+Time spend (min) = 0.0
+Time spend (max) = 71147.0
+Time spend (datapoints) = 2145
+
+############################
