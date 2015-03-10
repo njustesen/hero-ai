@@ -7,6 +7,7 @@ import game.GameState;
 import action.Action;
 import ai.evolution.RollingHorizonEvolution;
 import ai.mcts.Mcts;
+import ai.mcts.RootParallelizedMcts;
 import ai.util.AiStatistics;
 
 public class StatisticAi implements AI {
@@ -45,6 +46,8 @@ public class StatisticAi implements AI {
 			aiStatistics.statsLists.put("Avg. depths", ((Mcts)ai).avgDepths);
 			aiStatistics.statsLists.put("Min. depths", ((Mcts)ai).minDepths);
 			aiStatistics.statsLists.put("Max. depths", ((Mcts)ai).maxDepths);
+		}else if (aiClass.equals(RootParallelizedMcts.class)){
+			aiStatistics.statsLists.put("Iterations", ((RootParallelizedMcts)ai).rollouts);
 		}
 		return action;
 	}

@@ -40,14 +40,16 @@ public class Mcts implements AI {
 	private final List<Double> depths;
 	private final ActionPruner pruner;
 	private final ActionComparator comparator;
-	private MctsNode root;
-	private List<Action> move;
+	MctsNode root;
+	public List<Action> move;
 	private int ends;
-	
+	boolean resetRoot;
+
 	private long lastState;
 
 	private int initTurn;
 
+	
 	public Mcts(long budget, IStateEvaluator defaultPolicy) {
 		this.budget = budget;
 		this.defaultPolicy = defaultPolicy;
@@ -65,6 +67,7 @@ public class Mcts implements AI {
 		rollouts = new ArrayList<Double>();
 		lastState = 0;
 		initTurn = 0;
+		resetRoot = true;
 	}
 
 	@Override
@@ -144,7 +147,8 @@ public class Mcts implements AI {
 		move.remove(0);
 
 		// Reset search
-		root = null;
+		if (resetRoot)
+			root = null;
 		transTable.clear();
 		ends = 0;
 

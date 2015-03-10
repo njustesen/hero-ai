@@ -29,6 +29,7 @@ public class BestNMovesSearcher {
 	
 	public BestNMovesSearcher(int n){
 		this.n = n;
+		this.valuedMoves = new PriorityQueue<ValuedMove>();
 	}
 
 	public List<ValuedMove> bestMoves(GameState state, IStateEvaluator evaluator, int budget) {

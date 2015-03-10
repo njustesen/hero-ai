@@ -71,10 +71,13 @@ public class MaterialBalanceEvaluator implements IStateEvaluator {
 		if (!winVal)
 			return matDif(state, p1);
 		
+		
+		
 		double delta = matDif(state, p1);
+		
 		if (delta == 0)
-			delta = 0.5;
-		else if (delta > 0)
+			return 0.5;
+		if (delta > 0)
 			return 1;
 		
 		return 0;

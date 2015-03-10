@@ -12,6 +12,7 @@ import util.MapLoader;
 import ai.AI;
 import ai.GreedyActionAI;
 import ai.GreedyTurnAI;
+import ai.HybridAI;
 import ai.RandomAI;
 import ai.RandomHeuristicAI;
 import ai.StatisticAi;
@@ -23,6 +24,7 @@ import ai.evaluation.WinLoseEvaluator;
 import ai.evaluation.LeafParallelizer.LEAF_METHOD;
 import ai.evolution.RollingHorizonEvolution;
 import ai.mcts.Mcts;
+import ai.mcts.RootParallelizedMcts;
 import ai.util.RAND_METHOD;
 
 public class TestSuite {
@@ -49,6 +51,8 @@ public class TestSuite {
 			MctsCutTests(Integer.parseInt(args[1]), args[2]);
 		else if (args[0].equals("mcts-leaf"))
 			MctsLeafTests(Integer.parseInt(args[1]), args[2]);
+		else if (args[0].equals("mcts-root"))
+			MctsRootTests(Integer.parseInt(args[1]), args[2]);
 		else if (args[0].equals("rolling-mutrate"))
 			RollingMutRate(Integer.parseInt(args[1]), args[2]);
 		else if (args[0].equals("rolling-killrate"))
@@ -73,17 +77,34 @@ public class TestSuite {
 			MctsVsGreedyActionLong(Integer.parseInt(args[1]), args[2]);
 		else if (args[0].equals("mcts-vs-greedy-turn-AP"))
 			MctsVsGreedyTurnAP(Integer.parseInt(args[1]), args[2], Integer.parseInt(args[3]));
-		else if (args[0].equals("mcts-greedy-action-AP"))
+		else if (args[0].equals("mcts-vs-greedy-action-AP"))
 			MctsVsGreedyActionAp(Integer.parseInt(args[1]), args[2], Integer.parseInt(args[3]), Integer.parseInt(args[4]));
-		else if (args[0].equals("rolling-greedy-action-AP"))
+		else if (args[0].equals("rolling-vs-greedy-action-AP"))
 			RollingVsGreedyActionAp(Integer.parseInt(args[1]), args[2], Integer.parseInt(args[3]), Integer.parseInt(args[4]));
-
+		else if (args[0].equals("hybrid-vs-greedy-action"))
+			HybridVsGreedyAction(Integer.parseInt(args[1]), args[2]);
+		
 	}
 	
+	private static void HybridVsGreedyAction(int runs, String size) {
+		
+		AI p1 = new GreedyActionAI(new HeuristicEvaluator(false));
+		HybridAI hybrid = new HybridAI(new HeuristicEvaluator(false), 4000, 100, 
+				new RolloutEvaluator(100, 1, new RandomHeuristicAI(0.1), new HeuristicEvaluator(false), true, true), 10,
+				new RollingHorizonEvolution(32, .3, .66, 1000, new HeuristicEvaluator(true)));
+		if (size.equals("small"))
+			GameState.TURN_LIMIT = 400;
+		if (size.equals("standard"))
+			GameState.TURN_LIMIT = 600;
+		TestCase.GFX = true;
+		new TestCase(new StatisticAi(p1), new StatisticAi(hybrid), runs, "hybrid-vs-greedyturn", map(size), deck(size)).run();
+		
+	}
+
 	private static void RollingVsGreedyActionAp(int runs, String size, int apFrom, int apTo) {
 
 		AI p1 = new GreedyActionAI(new HeuristicEvaluator(false));
-		AI rolling = new RollingHorizonEvolution(100, .5, .75, 3075, new RolloutEvaluator(1, 1, new RandomHeuristicAI(0.3), new HeuristicEvaluator(false)));
+		AI rolling = new RollingHorizonEvolution(100, .5, .75, 5000, new RolloutEvaluator(1, 1, new RandomHeuristicAI(0.3), new HeuristicEvaluator(false)));
 		
 		for(int ap = apFrom; ap < apTo; ap++){
 
@@ -104,8 +125,8 @@ public class TestSuite {
 	private static void MctsVsGreedyActionAp(int runs, String size, int apFrom, int apTo) {
 		
 		AI p1 = new GreedyActionAI(new HeuristicEvaluator(false));
-		Mcts mcts = new Mcts(3075, new RolloutEvaluator(1, 1, new RandomHeuristicAI(0.3), new HeuristicEvaluator(true)));
-		mcts.c = mcts.c / 2;
+		Mcts mcts = new Mcts(5000, new RolloutEvaluator(1, 1, new RandomHeuristicAI(0.3), new MaterialBalanceEvaluator(true)));
+		//mcts.c = mcts.c / 2;
 		for(int ap = apFrom; ap < apTo; ap++){
 
 			GameState.STARTING_AP = Math.max(1, ap - 1);
@@ -156,6 +177,20 @@ public class TestSuite {
 		mcts.c = mcts.c / 2;
 		Mcts.RECORD_DEPTHS = false;
 		new TestCase(new StatisticAi(p1), new StatisticAi(mcts), runs, "mcts-vs-greedyaction-long", map(size), deck(size)).run();
+	}
+	
+	private static void MctsRootTests(int runs, String size) {
+
+		final RolloutEvaluator evaluator1 = new RolloutEvaluator(1, 1,
+				new RandomHeuristicAI(0.3), new MaterialBalanceEvaluator(true));
+
+		final Mcts mcts1 = new Mcts(2075, evaluator1);
+		final RootParallelizedMcts mcts2 = new RootParallelizedMcts(2075, evaluator1);
+
+		//TestCase.GFX = true;
+		
+		new TestCase(new StatisticAi(mcts1), new StatisticAi(mcts2), runs,
+				"mcts-vs-mcts-root", map(size), deck(size)).run();
 	}
 
 	private static void MctsLeafTests(int runs, String size) {
